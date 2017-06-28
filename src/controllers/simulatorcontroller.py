@@ -23,4 +23,4 @@ class SimulatorController(AbstractController):
     def update(self, dt):
         super(SimulatorController, self).update(dt)
         
-        print dt
+        self.view.update(dt)

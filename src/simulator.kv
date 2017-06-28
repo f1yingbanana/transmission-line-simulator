@@ -20,7 +20,9 @@
 #:set white (1, 1, 1, 1)
 
 <SimulatorView>:
-    id: simView
+    id: simulatorView
+    graphView: graphView
+
     canvas:
         Color:
             rgba: grey
@@ -28,8 +30,8 @@
             size: self.size
 
     BoxLayout:
-        pos: simView.pos
-        size: simView.size
+        pos: simulatorView.pos
+        size: simulatorView.size
 
         BoxLayout:
             size_hint_x: 0.65
@@ -40,8 +42,9 @@
 
             CardView:
                 size_hint_y: 0.5
-    
-            CardView:
+
+            GraphView:
+                id: graphView
                 size_hint_y: 0.5
 
         ScrollView:
@@ -73,11 +76,9 @@
                     height: 400
                     size_hint_y: None
 
-
-
 <CardView>:
     elevation: 5.0
-    canvas:
+    canvas.before:
         Color:
             rgba: dark_primary
         Rectangle:
