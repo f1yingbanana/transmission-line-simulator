@@ -10,7 +10,6 @@ from cardview import CardView
 import matplotlib.pyplot as plt
 
 import numpy as np
-from kivy.garden.matplotlib.backend_kivy import FigureCanvas
 
 from kivy.uix.boxlayout import BoxLayout
 
@@ -24,7 +23,6 @@ class GraphView(CardView):
         """
         Initializes the view with a flat graph.
         """
-        print super(GraphView, self)
         super(GraphView, self).__init__(**kwargs)
         
         x = np.linspace(0, 5, 100)
@@ -42,7 +40,7 @@ class GraphView(CardView):
         self.container = BoxLayout()
         self.container.add_widget(self.figure.canvas)
         self.add_widget(self.container)
-    
+        
     
     def update(self, dt):
         """
@@ -51,4 +49,5 @@ class GraphView(CardView):
         self.container.size = self.size
         self.container.pos = self.pos
         self.figure.canvas.draw()
+        
     
