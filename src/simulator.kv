@@ -1,0 +1,90 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jun-28-2017
+#
+
+# This is where all the views are configured. Think this as the css stylesheet 
+# of kivy.
+
+#:kivy 1.9.0
+
+#:set primary (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
+#:set light_primary (94 / 255.0, 146 / 255.0, 243 / 255.0, 1)
+#:set dark_primary (0, 60 / 255.0, 143 / 255.0, 1)
+
+#:set dark_grey (224 / 255.0, 224 / 255.0, 224 / 255.0, 1)
+#:set grey (245 / 255.0, 245 / 255.0, 245 / 255.0, 1)
+#:set light_grey (250 / 255.0, 250 / 255.0, 250 / 255.0, 1)
+#:set white (1, 1, 1, 1)
+
+<SimulatorView>:
+    id: simView
+    canvas:
+        Color:
+            rgba: grey
+        Rectangle:
+            size: self.size
+
+    BoxLayout:
+        pos: simView.pos
+        size: simView.size
+
+        BoxLayout:
+            size_hint_x: 0.65
+            orientation: 'vertical'
+
+            spacing: 200
+            padding: 80
+
+            CardView:
+                size_hint_y: 0.5
+    
+            CardView:
+                size_hint_y: 0.5
+
+        ScrollView:
+            do_scroll_x: False
+            size_hint_x: 0.35
+
+            BoxLayout:
+                height: self.minimum_height
+                size_hint: 1, None
+                orientation: 'vertical'
+
+                spacing: 80
+                padding: 80
+
+                CardView:
+                    height: 400
+                    size_hint_y: None
+    
+                CardView:
+                    height: 400
+                    size_hint_y: None
+                CardView:
+                    height: 400
+                    size_hint_y: None
+                CardView:
+                    height: 400
+                    size_hint_y: None
+                CardView:
+                    height: 400
+                    size_hint_y: None
+
+
+
+<CardView>:
+    elevation: 5.0
+    canvas:
+        Color:
+            rgba: dark_primary
+        Rectangle:
+            size: self.width, self.height + self.elevation
+            pos: self.pos[0], self.pos[1] - self.elevation
+        Color:
+            rgba: white
+        Rectangle:
+            size: self.width, self.height
+            pos: self.pos[0], self.pos[1]
