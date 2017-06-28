@@ -27,21 +27,22 @@ class GraphView(CardView):
         print super(GraphView, self)
         super(GraphView, self).__init__(**kwargs)
         
-        
-        N = 5
-        menMeans = (20, 35, 30, 35, 27)
-        menStd = (2, 3, 4, 1, 2)
-
-        ind = np.arange(N)  # the x locations for the groups
-        width = 0.35       # the width of the bars
+        x = np.linspace(0, 5, 100)
+        y = np.sin(x**2)
 
         fig, ax = plt.subplots()
-        rects1 = ax.bar(ind, menMeans, width, color='r', yerr=menStd)
+        ax.plot(x, y)
+        ax.set_xticks([])
+        
+        for item in ax.get_yticklabels():
+            item.set_fontsize(24)
+        
         self.figure = fig
         
         self.container = BoxLayout()
         self.container.add_widget(self.figure.canvas)
         self.add_widget(self.container)
+    
     
     def update(self, dt):
         """

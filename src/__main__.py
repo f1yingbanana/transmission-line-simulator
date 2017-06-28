@@ -16,10 +16,9 @@ from kivy.config import Config
 from kivy.clock import Clock
 from controllers.simulatorcontroller import SimulatorController
 
-def printme(dt):
-    print "HW"
 
-
+Config.set('graphics', 'borderless', 1)
+Config.set('graphics', 'window_state', 'maximized')
 
 class SimulatorApp(App):
     """
@@ -30,7 +29,6 @@ class SimulatorApp(App):
         """
         This returns a built widget for the app.
         """
-        Config.set('graphics', 'window_state', 'maximized')
         
         # We should now load the root controller. The root controller should
         # handle the creation of UI. Then make the controller return the widget.
