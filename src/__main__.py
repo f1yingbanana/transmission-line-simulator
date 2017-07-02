@@ -8,8 +8,13 @@
 import kivy
 kivy.require('1.9.0')
 
-from kivy.app import App
 from kivy.config import Config
+Config.set('graphics', 'window_state', 'maximized')
+
+import matplotlib
+matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
+
+from kivy.app import App
 from kivy.clock import Clock
 from controllers.simulatorcontroller import SimulatorController
 
@@ -22,14 +27,12 @@ class SimulatorApp(App):
         """
         This returns a built widget for the app.
         """
-        Config.set('graphics', 'window_state', 'maximized')
-        
         # We should now load the root controller. The root controller should
         # handle the creation of UI. Then make the controller return the widget.
-        rootController = SimulatorController()
-        Clock.schedule_interval(rootController.update, 1 / 60)
+        self.rootController = SimulatorController()
+        Clock.schedule_interval(self.rootController.update, 1.0 / 60.0)
         
-        return rootController.view
+        return self.rootController.view
 
 # Entry point.
 if __name__ == '__main__':
