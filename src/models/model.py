@@ -5,23 +5,24 @@
 # Created: May-28-2017
 #
 
-"""
-This module contains the model classes for the transmission line simulation. 
-"""
-
 from constants import *
+from collections import deque
 
 class Model(object):
     """
     An instance that keeps data on the simulation, including circuit info,
     wave generation, animations, and so on.
     
-    forwardCurrent:     a list of discretized current values (in amps) in the
-    circuit traveling forward (going out from the power source).
-    backwardCurrent:    a list of discretized current values (in amps) in the
-    circuit traveling backward (coming in to the power source).
+    forwardCurrent:     a deque of discretized current values (in amps) in the
+                        circuit traveling forward (going out from the power
+                        source).
+    backwardCurrent:    a deque of discretized current values (in amps) in the
+                        circuit traveling backward (coming in to the power
+                        source).
     circuit:            model representing the current state of electrical
                         components in the system.
+    waveSpeed:          speed of wave, in m/s.
+    simSpeed:           simulation speed, a multiplier for elapsed time.
     """
     
     
@@ -29,64 +30,55 @@ class Model(object):
         """
         Initializes a brand new model for a fresh app start.
         """
-        self.forwardCurrent = [0] * DISCRETE_STEPS
-        self.backwardCurrent = [0] * DISCRETE_STEPS
+        self.forwardCurrent = deque([0] * DISCRETE_STEPS)
+        self.backwardCurrent = deque([0] * DISCRETE_STEPS)
         self.circuit = Circuit()
+        self.speed = 299792458
+        self.simSpeed = 1
         self._elapsed = 0
+        self._lastStep = 0
+    
     
     def simulate(dt):
         """
         Simulate the system by step dt, in seconds.
         """
-        self._elapsed += dt
+        self._elapsed += dt * self.simSpeed
         
-        # We go through each discretized value in forward and backward currents,
-        # deciding whether it should move or not, and how it should move.
-        for i in range(DISCRETE_STEPS):
-            # Simulate the ith forward segment.
-            amp = self.forwardCurrent[i]
-            
-            # Simulate the ith backward segment.
-            amp = self.backwardCurrent[i]
+        # Determine how many steps must be made.
+        l = self.circuit.getLength()
+        dx = l / DISCRETE_STEPS
         
-
-
-class Circuit(object):
-    """
-    An instance that describes exactly how the circuit is set up. A circuit
-    consists of a list of resistors connected in series or in parallel.
-    """
-    def __init__(self):
-        """
-        Initializes a brand new circuit with a power source, standard lines and
-        a single load at the right.
-        """
-        self.elements = []
-    
-    def getLength(self):
-        """
-        Calculates and returns the length going from the power source to the
-        load on the right.
-        """
-        # Just sum up all the wires' lengths.
-        return 10
-    
-    
-
-class CircuitElement(object):
-    """
-    An abstract class that contains basic information on elements on a circuit.
-    """
-
-class Resistor(CircuitElement):
-    """
-    Represents a single resistor. A cable can also be thought as a resistor.
-    
-    resistance: the value of the electrical resistance in ohms.
-    """
-    
-    def __init__(self, ohm):
-        """
-        Initializes this resistor with given ohm value.
-        """
-        self.resistance = ohm
+        segs = (self._elapsed - self._lastStep) * self.waveSpeed / dx
+        
+        for s in range(segs):
+            self._lastStep = self._elapsed
+        
+            # We go through each discretized value in forward and backward
+            # currents, deciding whether it should move or not, and how it
+            # should move.
+            for i in range(DISCRETE_STEPS):
+                # Check if this segment contains a resistor. If so, we need
+                # to do a reflection.
+                es = self.circuit.getElements(i * l / DISCRETE_STEPS)
+                
+                for e in es:
+                    if type(e) == Resistor:
+                        # Reflect
+                        fwd = 0
+                        bwd = 0
+                        
+                        if i > 0:
+                            # Simulate forward
+                            pass
+                        
+                        if i < DISCRETE_STEPS - 1:
+                            # Simulate backward
+                            pass
+                        
+                        self.forwardCurrent[i] = fwd
+                        self.backwardCurrent[i] = bwd
+                
+                # Now shift
+                self.forwardCurrent.rotate(1)
+                self.backwardCurrent.rotate(1)
