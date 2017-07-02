@@ -37,15 +37,28 @@
             size_hint_x: 0.65
             orientation: 'vertical'
 
-            spacing: 200
+            spacing: 80
             padding: 80
 
             CardView:
-                size_hint_y: 0.5
+                size_hint_y: 0.48
+
+            BoxLayout:
+                size_hint_y: 0.04
+
+                ControlButton:
+                    text: '|>'
+
+
+                ControlButton:
+                    text: '||'
+
+                ControlButton:
+                    text: '[]'
 
             GraphView:
                 id: graphView
-                size_hint_y: 0.5
+                size_hint_y: 0.48
 
         ScrollView:
             do_scroll_x: False
@@ -75,6 +88,8 @@
                 CardView:
                     height: 400
                     size_hint_y: None
+
+<ControlButton@Button>:
 
 <CardView>:
     elevation: 5.0
