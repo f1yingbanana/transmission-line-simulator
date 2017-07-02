@@ -5,6 +5,10 @@
 # Created: Jul-3-2017
 #
 
+from circuitelement import CircuitElement
+from powersource import PowerSource
+from resistor import Resistor
+
 class Circuit(object):
     """
     An instance that describes exactly how the circuit is set up. A circuit
@@ -18,7 +22,16 @@ class Circuit(object):
         Initializes a brand new circuit with a power source, single cable and a
         single load at the right.
         """
-        self.elements = []
+        source = PowerSource(10, 5)
+        cable = Resistor(5)
+        load = Resistor(5)
+        load.position = 1
+        source.next = cable
+        cable.prev = source
+        cable.next = load
+        load.prev = cable
+        
+        self.elements = [source, cable, load]
     
     
     def getLength(self):
@@ -42,6 +55,6 @@ class Circuit(object):
         
         for e in self.elements:
             if e.position == position:
-                es += e
+                es.append(e)
         
         return es

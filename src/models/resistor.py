@@ -5,11 +5,12 @@
 # Created: Jul-3-2017
 #
 
+from circuitelement import CircuitElement
+
 class Resistor(CircuitElement):
     """
-    Represents a single resistor. A cable can also be thought as a resistor.
-    
-    resistance: the value of the electrical resistance in ohms.
+    Represents a single resistor. This class allows some clarification on
+    difference between resistor and oscilloscope.
     """
     
     def __init__(self, ohm):

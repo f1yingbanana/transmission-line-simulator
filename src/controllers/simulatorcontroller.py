@@ -7,6 +7,7 @@
 
 from abstractcontroller import AbstractController
 from views.simulatorview import SimulatorView
+from models.model import Model
 
 class SimulatorController(AbstractController):
     """
@@ -18,9 +19,11 @@ class SimulatorController(AbstractController):
         super(SimulatorController, self).__init__(parentWidget)
         
         self.view = SimulatorView()
+        self.model = Model()
     
     
     def update(self, dt):
         super(SimulatorController, self).update(dt)
         
+        self.model.simulate(dt)
         self.view.update(dt)

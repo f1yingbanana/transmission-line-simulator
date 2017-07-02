@@ -15,9 +15,11 @@ class CircuitElement(object):
     next:       the next connected circuit element, in current direction order.
     prev:       the previous connected circuit element, in current direction
                 order.
+    resistance: the total resistance of the element, in ohms.
     """
     
     def __init__(self):
         self.position = 0
         self.next = None
         self.prev = None
+        self.resistance = 0

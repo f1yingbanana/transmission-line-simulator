@@ -5,8 +5,9 @@
 # Created: May-28-2017
 #
 
-from constants import *
+from util.constants import *
 from collections import deque
+from circuit import Circuit
 
 class Model(object):
     """
@@ -33,13 +34,13 @@ class Model(object):
         self.forwardCurrent = deque([0] * DISCRETE_STEPS)
         self.backwardCurrent = deque([0] * DISCRETE_STEPS)
         self.circuit = Circuit()
-        self.speed = 299792458
-        self.simSpeed = 1
+        self.waveSpeed = 299792458
+        self.simSpeed = 1e-9
         self._elapsed = 0
         self._lastStep = 0
     
     
-    def simulate(dt):
+    def simulate(self, dt):
         """
         Simulate the system by step dt, in seconds.
         """
@@ -49,7 +50,7 @@ class Model(object):
         l = self.circuit.getLength()
         dx = l / DISCRETE_STEPS
         
-        segs = (self._elapsed - self._lastStep) * self.waveSpeed / dx
+        segs = int((self._elapsed - self._lastStep) * self.waveSpeed / dx)
         
         for s in range(segs):
             self._lastStep = self._elapsed
@@ -63,22 +64,51 @@ class Model(object):
                 es = self.circuit.getElements(i * l / DISCRETE_STEPS)
                 
                 for e in es:
-                    if type(e) == Resistor:
+                    if e.resistance > 0:
                         # Reflect
                         fwd = 0
                         bwd = 0
                         
-                        if i > 0:
+                        if e.prev != None:
                             # Simulate forward
-                            pass
+                            r = e.resistance
+                            z = e.prev.resistance
+                            transCoefficient = 2 * z / (r + z)
+                            reflCoefficient = 1 - transCoefficient
+                            
+                            fwd += transCoefficient * self.forwardCurrent[i]
+                            bwd += reflCoefficient * self.forwardCurrent[i]
                         
-                        if i < DISCRETE_STEPS - 1:
+                        if e.next != None:
                             # Simulate backward
-                            pass
+                            r = e.resistance
+                            z = e.next.resistance
+                            transCoefficient = 2 * z / (r + z)
+                            reflCoefficient = 1 - transCoefficient
+                            
+                            bwd += transCoefficient * self.backwardCurrent[i]
+                            fwd += reflCoefficient * self.backwardCurrent[i]
                         
                         self.forwardCurrent[i] = fwd
                         self.backwardCurrent[i] = bwd
                 
                 # Now shift
                 self.forwardCurrent.rotate(1)
-                self.backwardCurrent.rotate(1)
+                self.backwardCurrent.rotate(-1)
+                
+                # Clear out the endpoints, but if power source is still
+                # emitting wave, set it to that
+                self.forwardCurrent[0] = self.circuit.elements[0].getOutput()
+                self.backwardCurrent[-1] = 0
+                
+                
+        # Update every oscilloscope
+        # TODO
+        
+        # Print test
+        l = []
+        
+        for i in range(len(self.forwardCurrent)):
+            l.append(self.forwardCurrent[i] + self.backwardCurrent[i])
+            
+        print l
