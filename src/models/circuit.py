@@ -50,6 +50,23 @@ class Circuit(object):
         return p
     
     
+    def getOscilloscopes(self):
+        """
+        Returns all oscilloscopes in the circuit.
+        """
+        es = []
+        
+        e = self.head
+        
+        while e != None:
+            if type(e) == Oscilloscope:
+                es.append(e)
+            
+            e = e.next
+        
+        return es
+    
+    
     def getElements(self, position, isForward):
         """
         Returns the circuit elements positioned at the given position. This
@@ -65,7 +82,6 @@ class Circuit(object):
         e = self.head
         
         while e != None:
-            
             if isForward:
                 if abs(e.position - position) <= 1e-7:
                     es.append(e)

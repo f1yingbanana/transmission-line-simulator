@@ -54,15 +54,11 @@ class Model(object):
         
         segs = int((self._elapsed - self._lastStep) * self.waveSpeed / dx)
         
-        
-        
         for s in range(segs):
-            print "stepping"
             self._step()
-            print self.getVoltageDistribution()
         
         # Update every oscilloscope
-        # TODO
+        
     
     
     def getVoltageDistribution(self):
