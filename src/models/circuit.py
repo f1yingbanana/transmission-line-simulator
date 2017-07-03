@@ -23,7 +23,7 @@ class Circuit(object):
         Initializes a brand new circuit with a power source, single cable and a
         single load at the right.
         """
-        source = PowerSource(10.0, 5.0)
+        source = PowerSource(10.0, 5.0, 1, 2.0)
         cable1 = Resistor(3.0)
         cable1.length = 1.0
         cable2 = Resistor(1.0)

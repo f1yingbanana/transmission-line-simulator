@@ -33,6 +33,7 @@ class GraphView(CardView):
         self.figure, self.axes = plt.subplots()
         self.axes.set_xticks([])
         
+        
         for item in self.axes.get_yticklabels():
             item.set_fontsize(24)
         
@@ -53,8 +54,8 @@ class GraphView(CardView):
             if self.line == None:
                 x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
                 self.line = self.axes.plot(x, self.model.overallDistribution)[0]
-                amp = self.model.circuit.head.amplitude
-                self.axes.set_ylim([-amp, amp])
+                self._maxAmp = self.model.circuit.head.amplitude
+                self.axes.set_ylim([-2 * self._maxAmp, 2 * self._maxAmp])
             else:
                 self.line.set_ydata(self.model.overallDistribution)
             

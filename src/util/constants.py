@@ -9,4 +9,4 @@
 This is the number of discrete units of current we will measure. Bigger value
 means smoother graphs.
 """
-DISCRETE_STEPS = 200
+DISCRETE_STEPS = 400

@@ -112,7 +112,8 @@ class Model(object):
         
         # Clear out the endpoints, but if power source is still emitting wave,
         # set it to that
-        self.forwardCurrent[0] = self.circuit.head.getOutput()
+        v = self.circuit.head.getOutput()
+        self.forwardCurrent[0] = v
         self.backwardCurrent[-1] = 0
         
         # Recompute overall
