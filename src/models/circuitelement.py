@@ -11,7 +11,8 @@ class CircuitElement(object):
     
     position:   the position of this circuit element along the circuit. This is
                 the starting position of the element, if there is any length
-                attached to it.
+                attached to it, in meters.
+    length:     the length of this circuit element along the circuit, in meters.
     next:       the next connected circuit element, in current direction order.
     prev:       the previous connected circuit element, in current direction
                 order.
@@ -20,6 +21,7 @@ class CircuitElement(object):
     
     def __init__(self):
         self.position = 0
+        self.length = 0
         self.next = None
         self.prev = None
         self.resistance = 0

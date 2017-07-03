@@ -31,13 +31,15 @@ class Model(object):
         """
         Initializes a brand new model for a fresh app start.
         """
-        self.forwardCurrent = deque([0] * DISCRETE_STEPS)
-        self.backwardCurrent = deque([0] * DISCRETE_STEPS)
+        self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
+        self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.circuit = Circuit()
         self.waveSpeed = 299792458
         self.simSpeed = 1e-9
         self._elapsed = 0
         self._lastStep = 0
+        
+        print self.getVoltageDistribution()
     
     
     def simulate(self, dt):
@@ -52,63 +54,75 @@ class Model(object):
         
         segs = int((self._elapsed - self._lastStep) * self.waveSpeed / dx)
         
-        for s in range(segs):
-            self._lastStep = self._elapsed
         
-            # We go through each discretized value in forward and backward
-            # currents, deciding whether it should move or not, and how it
-            # should move.
-            for i in range(DISCRETE_STEPS):
-                # Check if this segment contains a resistor. If so, we need
-                # to do a reflection.
-                es = self.circuit.getElements(i * l / DISCRETE_STEPS)
-                
-                for e in es:
-                    if e.resistance > 0:
-                        # Reflect
-                        fwd = 0
-                        bwd = 0
-                        
-                        if e.prev != None:
-                            # Simulate forward
-                            r = e.resistance
-                            z = e.prev.resistance
-                            transCoefficient = 2 * z / (r + z)
-                            reflCoefficient = 1 - transCoefficient
-                            
-                            fwd += transCoefficient * self.forwardCurrent[i]
-                            bwd += reflCoefficient * self.forwardCurrent[i]
-                        
-                        if e.next != None:
-                            # Simulate backward
-                            r = e.resistance
-                            z = e.next.resistance
-                            transCoefficient = 2 * z / (r + z)
-                            reflCoefficient = 1 - transCoefficient
-                            
-                            bwd += transCoefficient * self.backwardCurrent[i]
-                            fwd += reflCoefficient * self.backwardCurrent[i]
-                        
-                        self.forwardCurrent[i] = fwd
-                        self.backwardCurrent[i] = bwd
-                
-                # Now shift
-                self.forwardCurrent.rotate(1)
-                self.backwardCurrent.rotate(-1)
-                
-                # Clear out the endpoints, but if power source is still
-                # emitting wave, set it to that
-                self.forwardCurrent[0] = self.circuit.elements[0].getOutput()
-                self.backwardCurrent[-1] = 0
-                
-                
+        
+        for s in range(segs):
+            print "stepping"
+            self._step()
+            print self.getVoltageDistribution()
+        
         # Update every oscilloscope
         # TODO
-        
-        # Print test
+    
+    
+    def getVoltageDistribution(self):
+        """
+        Returns the overall voltage distribution across the wire, as divided
+        into DISCRETE_STEPS.
+        """
         l = []
         
         for i in range(len(self.forwardCurrent)):
             l.append(self.forwardCurrent[i] + self.backwardCurrent[i])
+        
+        return l
+    
+    
+    def _step(self):
+        """
+        Simulates a discrete step for each part of the circuit.
+        """
+        self._lastStep = self._elapsed
+        
+        # We go through each discretized value in forward and backward
+        # currents, deciding whether it should move or not, and how it
+        # should move.
+        for i in range(DISCRETE_STEPS + 1):
+            # Check if this segment contains a resistor. If so, we need
+            # to do a reflection.
+            l = self.circuit.getLength()
+            es = self.circuit.getElements(i * l / DISCRETE_STEPS, True)
+            fwd = self.forwardCurrent[i]
+            bwd = self.backwardCurrent[i]
             
-        print l
+            for e in es:
+                if abs(self.forwardCurrent[i]) > 0 and e.prev != None:
+                    # Simulate forward
+                    r = e.resistance
+                    z = e.prev.resistance
+                    reflCoefficient = (r - z) / (r + z)
+                    fwd -= reflCoefficient * self.forwardCurrent[i]
+                    bwd += reflCoefficient * self.forwardCurrent[i]
+            
+            es = self.circuit.getElements(i * l / DISCRETE_STEPS, False)
+            
+            for e in es:
+                if abs(self.backwardCurrent[i]) > 0 and e.next != None:
+                    # Simulate backward
+                    r = e.resistance
+                    z = e.next.resistance
+                    reflCoefficient = (r - z) / (r + z)
+                    fwd += reflCoefficient * self.backwardCurrent[i]
+                    bwd -= reflCoefficient * self.backwardCurrent[i]
+        
+            self.forwardCurrent[i] = fwd
+            self.backwardCurrent[i] = bwd
+        
+        # Now shift
+        self.forwardCurrent.rotate(1)
+        self.backwardCurrent.rotate(-1)
+        
+        # Clear out the endpoints, but if power source is still emitting wave,
+        # set it to that
+        self.forwardCurrent[0] = self.circuit.head.getOutput()
+        self.backwardCurrent[-1] = 0
