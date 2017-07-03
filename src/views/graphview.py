@@ -52,11 +52,11 @@ class GraphView(CardView):
             
             if self.line == None:
                 x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
-                self.line = self.axes.plot(x, self.model.getVoltageDistribution())[0]
+                self.line = self.axes.plot(x, self.model.overallDistribution)[0]
                 amp = self.model.circuit.head.amplitude
                 self.axes.set_ylim([-amp, amp])
             else:
-                self.line.set_ydata(self.model.getVoltageDistribution())
+                self.line.set_ydata(self.model.overallDistribution)
             
             self.figure.canvas.draw()
         
