@@ -8,6 +8,7 @@
 from circuitelement import CircuitElement
 from powersource import PowerSource
 from resistor import Resistor
+from oscilloscope import Oscilloscope
 
 class Circuit(object):
     """

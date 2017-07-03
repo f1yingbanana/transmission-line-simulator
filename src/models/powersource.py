@@ -24,14 +24,14 @@ class PowerSource(CircuitElement):
     shape:  the shape of the wave.
     """
     
-    def __init__(self, power, resistance):
+    def __init__(self, amplitude, resistance):
         """
         Initializes this power supply with given power and resistance.
         """
         super(PowerSource, self).__init__()
         
         self.resistance = resistance
-        self.power = power
+        self.amplitude = amplitude
         self.shape = WaveShape.Gauss
         
         self._output = [1, 4, 9, 16, 9, 4, 1]

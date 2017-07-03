@@ -13,6 +13,8 @@ import numpy as np
 
 from kivy.uix.boxlayout import BoxLayout
 
+from util.constants import *
+
 class GraphView(CardView):
     """
     This displays and constantly updates a graph with the given list of data
@@ -25,17 +27,14 @@ class GraphView(CardView):
         """
         super(GraphView, self).__init__(**kwargs)
         
-        x = np.linspace(0, 5, 100)
-        y = np.sin(x**2)
-
-        fig, ax = plt.subplots()
-        ax.plot(x, y)
-        ax.set_xticks([])
+        self.model = None
+        self.line = None
         
-        for item in ax.get_yticklabels():
+        self.figure, self.axes = plt.subplots()
+        self.axes.set_xticks([])
+        
+        for item in self.axes.get_yticklabels():
             item.set_fontsize(24)
-        
-        self.figure = fig
         
         self.container = BoxLayout()
         self.container.add_widget(self.figure.canvas)
@@ -48,6 +47,17 @@ class GraphView(CardView):
         """
         self.container.size = self.size
         self.container.pos = self.pos
-        self.figure.canvas.draw()
+        
+        if self.model != None:
+            
+            if self.line == None:
+                x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
+                self.line = self.axes.plot(x, self.model.getVoltageDistribution())[0]
+                amp = self.model.circuit.head.amplitude
+                self.axes.set_ylim([-amp, amp])
+            else:
+                self.line.set_ydata(self.model.getVoltageDistribution())
+            
+            self.figure.canvas.draw()
         
     
