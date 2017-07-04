@@ -9,6 +9,13 @@ from util.constants import *
 from collections import deque
 from circuit import Circuit
 
+class AppState(object):
+    """
+    Describes the valid states in this app.
+    """
+    Editing, Simulating = range(2)
+
+
 class Model(object):
     """
     An instance that keeps data on the simulation, including circuit info,
@@ -24,6 +31,7 @@ class Model(object):
                         components in the system.
     waveSpeed:          speed of wave, in m/s.
     simSpeed:           simulation speed, a multiplier for elapsed time.
+    appState:           the application state.
     """
     
     
@@ -39,6 +47,7 @@ class Model(object):
         self.simSpeed = 1e-9
         self._elapsed = 0
         self._lastStep = 0
+        self.appState = AppState.Editing
     
     
     def simulate(self, dt):

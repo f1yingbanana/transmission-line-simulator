@@ -8,6 +8,7 @@
 from abstractcontroller import AbstractController
 from views.simulatorview import SimulatorView
 from models.model import Model
+from models.model import AppState
 
 class SimulatorController(AbstractController):
     """
@@ -26,5 +27,7 @@ class SimulatorController(AbstractController):
     def update(self, dt):
         super(SimulatorController, self).update(dt)
         
-        self.model.simulate(dt)
+        if self.model.appState == AppState.Simulating:
+            self.model.simulate(dt)
+        
         self.view.update(dt)
