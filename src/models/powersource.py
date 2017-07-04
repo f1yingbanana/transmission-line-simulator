@@ -36,7 +36,7 @@ class PowerSource(CircuitElement):
         self.amplitude = amplitude
         self.width = width
         self.totalWidth = totalWidth
-        self.shape = WaveShape.Gaussian
+        self.shape = WaveShape.Square
     
     @property
     def shape(self):
@@ -49,7 +49,8 @@ class PowerSource(CircuitElement):
         points = int(self.width / self.totalWidth * DISCRETE_STEPS)
         
         if value == WaveShape.Gaussian:
-            self._output = signal.gaussian(points, self.width * 10.0).tolist()
+            self._output = signal.gaussian(points, points / 7).tolist()
+            print len(self._output)
         elif value == WaveShape.Square:
             self._output = [1] * points
         elif value == WaveShape.Triangle:

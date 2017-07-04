@@ -52,7 +52,7 @@ class GraphView(CardView):
             
             if self.line == None:
                 x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
-                self.line = self.axes.plot(x, self.model.overallDistribution)[0]
+                self.line = self.axes.plot(x, self.model.overallDistribution, linewidth = 5, color = PRIMARY)[0]
                 self._maxAmp = self.model.circuit.head.amplitude
                 self.axes.set_ylim([-2 * self._maxAmp, 2 * self._maxAmp])
             else:

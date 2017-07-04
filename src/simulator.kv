@@ -9,15 +9,7 @@
 # of kivy.
 
 #:kivy 1.9.0
-
-#:set primary (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
-#:set light_primary (94 / 255.0, 146 / 255.0, 243 / 255.0, 1)
-#:set dark_primary (0, 60 / 255.0, 143 / 255.0, 1)
-
-#:set dark_grey (224 / 255.0, 224 / 255.0, 224 / 255.0, 1)
-#:set grey (245 / 255.0, 245 / 255.0, 245 / 255.0, 1)
-#:set light_grey (250 / 255.0, 250 / 255.0, 250 / 255.0, 1)
-#:set white (1, 1, 1, 1)
+#:import * util.constants
 
 <SimulatorView>:
     id: simulatorView
@@ -25,7 +17,7 @@
 
     canvas:
         Color:
-            rgba: grey
+            rgba: (245 / 255.0, 245 / 255.0, 245 / 255.0, 1)
         Rectangle:
             size: self.size
 
