@@ -91,16 +91,21 @@
 
 <ControlButton@Button>:
 
+
 <CardView>:
-    elevation: 5.0
+    elevation: 2.0
+
     canvas.before:
         Color:
-            rgba: dark_primary
+            rgba: 1, 1, 1, 1
         Rectangle:
-            size: self.width, self.height + self.elevation
-            pos: self.pos[0], self.pos[1] - self.elevation
-        Color:
-            rgba: white
+            size: self.width + 6 * self.elevation / 2.0, self.height + 6 * self.elevation / 2.0
+            pos: self.x - 3 * self.elevation / 2.0, self.y - 5 * self.elevation / 2.0
+            texture: self.keyShadowTexture
         Rectangle:
-            size: self.width, self.height
-            pos: self.pos[0], self.pos[1]
+            size: self.width + 6 * self.elevation * 3.0 / 2.0, self.height + 6 * self.elevation * 3.0 / 2.0
+            pos: self.x - 3 * self.elevation * 3.0 / 2.0, self.y - 3 * self.elevation * 3.0 / 2.0
+            texture: self.ambientShadowTexture
+        Rectangle:
+            size: self.size
+            pos: self.pos

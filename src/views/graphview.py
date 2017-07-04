@@ -31,10 +31,9 @@ class GraphView(CardView):
         self.line = None
         
         self.figure, self.axes = plt.subplots()
-        self.axes.set_xticks([])
+        self.axes.grid(True)
         
-        
-        for item in self.axes.get_yticklabels():
+        for item in self.axes.get_yticklabels() + self.axes.get_xticklabels():
             item.set_fontsize(24)
         
         self.container = BoxLayout()
