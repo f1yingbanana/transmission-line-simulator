@@ -118,5 +118,7 @@ class Model(object):
         
         # Recompute overall
         for i in range(len(self.forwardCurrent)):
+            # print '[' + str(self.forwardCurrent[i]) + ', ' + \
+            # str(self.backwardCurrent[i]) + ']'
             v = self.forwardCurrent[i] + self.backwardCurrent[i]
             self.overallDistribution[i] = v

@@ -36,11 +36,13 @@ class PowerSource(CircuitElement):
         self.amplitude = amplitude
         self.width = width
         self.totalWidth = totalWidth
-        self.shape = WaveShape.Square
+        self.shape = WaveShape.Gaussian
+    
     
     @property
     def shape(self):
         return self._shape
+    
     
     @shape.setter
     def shape(self, value):

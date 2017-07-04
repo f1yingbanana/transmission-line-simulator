@@ -31,10 +31,16 @@ class GraphView(CardView):
         self.line = None
         
         self.figure, self.axes = plt.subplots()
+        self.figure.set_tight_layout({"pad": 3})
         self.axes.grid(True)
-        
+        # self.axes.set_ylabel('voltage (V)', fontsize = 24)
+        self.axes.tick_params(axis = 'both', length = 0)
+        self.axes.set_xticklabels([])
         for item in self.axes.get_yticklabels() + self.axes.get_xticklabels():
             item.set_fontsize(24)
+        
+        for i in self.axes.spines.itervalues():
+            i.set_linewidth(4)
         
         self.container = BoxLayout()
         self.container.add_widget(self.figure.canvas)
@@ -54,7 +60,8 @@ class GraphView(CardView):
                 x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
                 self.line = self.axes.plot(x, self.model.overallDistribution, linewidth = 5, color = PRIMARY)[0]
                 self._maxAmp = self.model.circuit.head.amplitude
-                self.axes.set_ylim([-2 * self._maxAmp, 2 * self._maxAmp])
+                self.axes.set_ylim([-3 * self._maxAmp, 3 * self._maxAmp])
+                self.axes.set_xlim([0, self.model.circuit.getLength()])
             else:
                 self.line.set_ydata(self.model.overallDistribution)
             
