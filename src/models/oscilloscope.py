@@ -5,6 +5,8 @@
 # Created: Jul-3-2017
 #
 
+from circuitelement import CircuitElement
+
 class Oscilloscope(CircuitElement):
     """
     Represents a single oscilloscope. This records any voltage passing by this

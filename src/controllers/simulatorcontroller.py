@@ -18,8 +18,9 @@ class SimulatorController(AbstractController):
     def __init__(self, parentWidget = None):
         super(SimulatorController, self).__init__(parentWidget)
         
-        self.view = SimulatorView()
         self.model = Model()
+        self.view = SimulatorView()
+        self.view.graphView.model = self.model
     
     
     def update(self, dt):

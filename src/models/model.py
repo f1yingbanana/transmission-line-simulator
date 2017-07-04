@@ -33,13 +33,12 @@ class Model(object):
         """
         self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
+        self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
         self.circuit = Circuit()
         self.waveSpeed = 299792458
         self.simSpeed = 1e-9
         self._elapsed = 0
         self._lastStep = 0
-        
-        print self.getVoltageDistribution()
     
     
     def simulate(self, dt):
@@ -66,19 +65,6 @@ class Model(object):
             scope.record(self._elapsed, v)
     
     
-    def getVoltageDistribution(self):
-        """
-        Returns the overall voltage distribution across the wire, as divided
-        into DISCRETE_STEPS.
-        """
-        l = []
-        
-        for i in range(len(self.forwardCurrent)):
-            l.append(self.forwardCurrent[i] + self.backwardCurrent[i])
-        
-        return l
-    
-    
     def _step(self):
         """
         Simulates a discrete step for each part of the circuit.
@@ -88,10 +74,11 @@ class Model(object):
         # We go through each discretized value in forward and backward
         # currents, deciding whether it should move or not, and how it
         # should move.
+        l = self.circuit.getLength()
+        
         for i in range(DISCRETE_STEPS + 1):
             # Check if this segment contains a resistor. If so, we need
             # to do a reflection.
-            l = self.circuit.getLength()
             es = self.circuit.getElements(i * l / DISCRETE_STEPS, True)
             fwd = self.forwardCurrent[i]
             bwd = self.backwardCurrent[i]
@@ -125,5 +112,13 @@ class Model(object):
         
         # Clear out the endpoints, but if power source is still emitting wave,
         # set it to that
-        self.forwardCurrent[0] = self.circuit.head.getOutput()
+        v = self.circuit.head.getOutput()
+        self.forwardCurrent[0] = v
         self.backwardCurrent[-1] = 0
+        
+        # Recompute overall
+        for i in range(len(self.forwardCurrent)):
+            # print '[' + str(self.forwardCurrent[i]) + ', ' + \
+            # str(self.backwardCurrent[i]) + ']'
+            v = self.forwardCurrent[i] + self.backwardCurrent[i]
+            self.overallDistribution[i] = v
