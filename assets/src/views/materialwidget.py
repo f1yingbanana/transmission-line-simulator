@@ -11,9 +11,11 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from PIL import Image, ImageDraw, ImageFilter
 
-class CardView(Widget):
+class MaterialWidget(Widget):
     """
     The basic UI element layout, automatically draws and updates its shadows.
+
+    raised: whether this widget has an edge and shadow.
     """
     
     keyShadowTexture = ObjectProperty(None)
@@ -22,7 +24,9 @@ class CardView(Widget):
     
     
     def __init__(self, **kwargs):
-        super(CardView, self).__init__(**kwargs)
+        super(MaterialWidget, self).__init__(**kwargs)
+
+        self.raised = True
     
 
     def on_size(self, *args, **kwargs):

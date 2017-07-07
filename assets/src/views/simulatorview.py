@@ -6,8 +6,9 @@
 #
 
 from kivy.uix.widget import Widget
-from cardview import CardView
+from materialwidget import MaterialWidget
 from graphview import GraphView
+from materialbutton import MaterialButton
 from kivy.properties import ObjectProperty
 
 class SimulatorView(Widget):

@@ -1,0 +1,146 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jun-28-2017
+#
+
+# This is where all the views are configured. Think this as the css stylesheet 
+# of kivy.
+
+#:kivy 1.10.0
+#:import constants util.constants
+
+<SimulatorView>:
+    id: simulatorView
+    graphView: graphView
+
+    canvas:
+        Color:
+            rgba: (245 / 255.0, 245 / 255.0, 245 / 255.0, 1)
+        Rectangle:
+            size: self.size
+
+    BoxLayout:
+        pos: simulatorView.pos
+        size: simulatorView.size
+
+        BoxLayout:
+            size_hint_x: 0.65
+            orientation: 'vertical'
+
+            spacing: 80
+            padding: 80
+
+            MaterialWidget:
+                size_hint_y: 0.48
+
+            AnchorLayout:
+                size_hint_y: 0.04
+
+                BoxLayout:
+                    width: self.minimum_width
+                    size_hint_x: None
+                    spacing: 20
+
+                    MaterialButton:
+                        size: 80, 80
+                        icon: unichr(0xf3aa)
+
+                    MaterialButton:
+                        size: 80, 80
+                        icon: unichr(0xf3a7)
+
+                    MaterialButton:
+                        size: 80, 80
+                        icon: unichr(0xf3b6)
+
+
+            GraphView:
+                id: graphView
+                size_hint_y: 0.48
+
+        ScrollView:
+            do_scroll_x: False
+            size_hint_x: 0.35
+
+            BoxLayout:
+                height: self.minimum_height
+                size_hint: 1, None
+                orientation: 'vertical'
+
+                spacing: 80
+                padding: 80
+
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                    raised: False
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+
+
+<MaterialWidget>:
+    elevation: 2.0
+    raised: True
+    backgroundColor: 1, 1, 1, 1
+
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: (self.width + 6 * self.elevation / 2.0, self.height + 6 * self.elevation / 2.0) if self.raised else (0, 0)
+            pos: self.x - 3 * self.elevation / 2.0, self.y - 5 * self.elevation / 2.0
+            texture: self.keyShadowTexture if self.raised else None
+        Rectangle:
+            size: (self.width + 6 * self.elevation * 3.0 / 2.0, self.height + 6 * self.elevation * 3.0 / 2.0) if self.raised else (0, 0)
+            pos: self.x - 3 * self.elevation * 3.0 / 2.0, self.y - 3 * self.elevation * 3.0 / 2.0
+            texture: self.ambientShadowTexture if self.raised else None
+        Color:
+            rgba: self.backgroundColor
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+<MaterialButton>:
+    id: materialButton
+    titleLabel: materialButtonLabel
+    iconLabel: materialButtonIcon
+    title: ''
+    icon: unichr(0xf26b)
+    backgroundColor: constants.PRIMARY
+    width: materialButtonLayout.minimum_width
+    size_hint_x: None
+
+    BoxLayout:
+        id: materialButtonLayout
+        pos: materialButton.pos
+        height: materialButton.height
+        width: self.minimum_width
+        padding: 16, 8
+
+        Label:
+            id: materialButtonIcon
+            font_name: 'fonts/MDIcons.ttf'
+            text: materialButton.icon
+            size: self.texture_size
+            size_hint_x: None
+            color: 1, 1, 1, 1
+            font_size: 40
+
+        Label:
+            id: materialButtonLabel
+            text: materialButton.title
+            size: self.texture_size
+            size_hint_x: None

@@ -8,6 +8,9 @@
 import kivy
 kivy.require('1.9.0')
 
+import kivy.resources
+kivy.resources.resource_add_path('..')
+
 from kivy.config import Config
 Config.set('graphics', 'window_state', 'maximized')
 Config.set('graphics', 'minimum_width', 800)
