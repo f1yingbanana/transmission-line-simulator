@@ -100,5 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-# Komodo
-*.komodoproject
+# Sublime
+*.sublime-project
+*.sublime-workspace

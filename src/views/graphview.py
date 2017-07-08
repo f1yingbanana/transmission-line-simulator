@@ -5,7 +5,7 @@
 # Created: Jun-28-2017
 #
 
-from cardview import CardView
+from materialwidget import MaterialWidget
 
 import matplotlib.pyplot as plt
 
@@ -15,7 +15,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from util.constants import *
 
-class GraphView(CardView):
+class GraphView(MaterialWidget):
     """
     This displays and constantly updates a graph with the given list of data
     using matplotlib with a kivy backend script.

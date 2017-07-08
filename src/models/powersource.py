@@ -52,7 +52,6 @@ class PowerSource(CircuitElement):
         
         if value == WaveShape.Gaussian:
             self._output = signal.gaussian(points, points / 7).tolist()
-            print len(self._output)
         elif value == WaveShape.Square:
             self._output = [1] * points
         elif value == WaveShape.Triangle:
@@ -70,4 +69,10 @@ class PowerSource(CircuitElement):
             return 0
         else:
             return self._output.pop(0) * self.amplitude
-        
+    
+
+    def reset(self):
+        """
+        Resets the power source, allowing it to output a fresh wave.
+        """
+        self.shape = self.shape
