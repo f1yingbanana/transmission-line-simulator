@@ -21,7 +21,10 @@ class SimulatorController(AbstractController):
         
         self.model = Model()
         self.view = SimulatorView()
-        self.view.graphView.model = self.model
+        self.view.model = self.model
+
+        if parentWidget != None:
+            parentWidget.add_widget(self.view)
     
     
     def update(self, dt):

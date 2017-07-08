@@ -1,0 +1,16 @@
+Searching 28 files for "print"
+
+/Users/flyingbanana/Documents/Programming/Projects/Transmission Line Simulator/src/models/model.py:
+  139          # Recompute overall
+  140          for i in range(len(self.forwardCurrent)):
+  141:             # print '[' + str(self.forwardCurrent[i]) + ', ' + \
+  142              # str(self.backwardCurrent[i]) + ']'
+  143              v = self.forwardCurrent[i] + self.backwardCurrent[i]
+
+/Users/flyingbanana/Documents/Programming/Projects/Transmission Line Simulator/src/models/powersource.py:
+   53          if value == WaveShape.Gaussian:
+   54              self._output = signal.gaussian(points, points / 7).tolist()
+   56          elif value == WaveShape.Square:
+   57              self._output = [1] * points
+
+2 matches across 2 files

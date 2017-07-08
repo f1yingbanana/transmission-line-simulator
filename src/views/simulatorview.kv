@@ -7,10 +7,12 @@
 
 #:include src/views/materialwidget.kv
 #:include src/views/materialbutton.kv
+#:include src/views/playbackcontrolview.kv
 
 <SimulatorView>:
     id: simulatorView
     graphView: graphView
+    playbackControlView: playbackControlView
 
     canvas:
         Color:
@@ -35,20 +37,8 @@
             AnchorLayout:
                 size_hint_y: 0.04
 
-                BoxLayout:
-                    width: self.minimum_width
-                    size_hint_x: None
-                    spacing: 20
-
-                    MaterialButton:
-                        icon: unichr(0xf3aa)
-
-                    MaterialButton:
-                        icon: unichr(0xf3a7)
-
-                    MaterialButton:
-                        icon: unichr(0xf3b6)
-
+                PlaybackControlView:
+                    id: playbackControlView
 
             GraphView:
                 id: graphView

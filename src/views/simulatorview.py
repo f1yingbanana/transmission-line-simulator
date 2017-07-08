@@ -10,14 +10,26 @@ from materialwidget import MaterialWidget
 from graphview import GraphView
 from materialbutton import MaterialButton
 from kivy.properties import ObjectProperty
+from playbackcontrolview import PlaybackControlView
 
 class SimulatorView(Widget):
     """
     The root widget containing all the views.
     """
-    
+    model = ObjectProperty(None)
     graphView = ObjectProperty(None)
+    playbackControlView = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super(SimulatorView, self).__init__(**kwargs)
+
+
+    def on_model(self, *args, **kwargs):
+        self.graphView.model = self.model
+        self.playbackControlView.model = self.model
     
+
     def update(self, dt):
         self.graphView.update(dt)
+        self.playbackControlView.update(dt)
     

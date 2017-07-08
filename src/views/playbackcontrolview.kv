@@ -1,0 +1,32 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+#:include src/views/materialbutton.kv
+
+<PlaybackControlView>:
+    id: playbackControlView
+    width: self.minimum_width
+    size_hint_x: None
+    spacing: 20
+    _playButton: playButton
+    _pauseButton: pauseButton
+    _stopButton: stopButton
+
+    MaterialButton:
+        id: playButton
+        icon: unichr(0xf3aa)
+        onClick: [lambda: playbackControlView.onPlayButtonClick()]
+
+    MaterialButton:
+        id: pauseButton
+        icon: unichr(0xf3a7)
+        onClick: [lambda: playbackControlView.onPauseButtonClick()]
+
+    MaterialButton:
+        id: stopButton
+        icon: unichr(0xf3b6)
+        onClick: [lambda: playbackControlView.onStopButtonClick()]

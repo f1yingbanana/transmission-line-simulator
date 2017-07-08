@@ -13,7 +13,7 @@ class AppState(object):
     """
     Describes the valid states in this app.
     """
-    Editing, Simulating = range(2)
+    Editing, Simulating, Paused = range(3)
 
 
 class Model(object):
@@ -73,7 +73,18 @@ class Model(object):
             v = self.forwardCurrent[i] + self.backwardCurrent[i]
             scope.record(self._elapsed, v)
     
-    
+
+    def reset(self):
+        """
+        Resets the simulation, but not the circuit.
+        """
+        self._elapsed = 0
+        self._lastStep = 0
+        self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
+        self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
+        self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
+        self.circuit.head.reset()
+
     def _step(self):
         """
         Simulates a discrete step for each part of the circuit.

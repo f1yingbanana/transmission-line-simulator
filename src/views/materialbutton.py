@@ -33,6 +33,9 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
 
 
     def on_enter(self):
+        if self.disabled:
+            return
+
         self.hovering = True
 
         if self._hoverAnim != None:
@@ -43,6 +46,9 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
 
 
     def on_leave(self):
+        if self.disabled:
+            return
+
         self.hovering = False
 
         if self._hoverAnim != None:
@@ -53,9 +59,15 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
 
 
     def on_press(self):
+        if self.disabled:
+            return
+
         self._rippleView.ripple(self.last_touch.pos)
 
 
     def on_release(self):
+        if self.disabled:
+            return
+        
         for e in self.onClick:
             e()
