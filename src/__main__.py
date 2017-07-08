@@ -5,11 +5,11 @@
 # Created: May-28-2017
 #
 
-import kivy
+import os, sys, kivy
 kivy.require('1.9.0')
 
 import kivy.resources
-kivy.resources.resource_add_path('..')
+kivy.resources.resource_add_path(os.path.dirname(sys.argv[0]))
 
 from kivy.config import Config
 Config.set('graphics', 'window_state', 'maximized')

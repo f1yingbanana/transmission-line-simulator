@@ -1,0 +1,28 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+<MaterialWidget>:
+    elevation: 2.0
+    raised: True
+    backgroundColor: 1, 1, 1, 1
+
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: (self.width + 6 * self.elevation / 2.0, self.height + 6 * self.elevation / 2.0) if self.raised else (0, 0)
+            pos: self.x - 3 * self.elevation / 2.0, self.y - 5 * self.elevation / 2.0
+            texture: self.keyShadowTexture if self.raised else None
+        Rectangle:
+            size: (self.width + 6 * self.elevation * 3.0 / 2.0, self.height + 6 * self.elevation * 3.0 / 2.0) if self.raised else (0, 0)
+            pos: self.x - 3 * self.elevation * 3.0 / 2.0, self.y - 3 * self.elevation * 3.0 / 2.0
+            texture: self.ambientShadowTexture if self.raised else None
+        Color:
+            rgba: self.backgroundColor
+        Rectangle:
+            size: self.size
+            pos: self.pos

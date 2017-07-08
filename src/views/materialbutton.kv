@@ -1,0 +1,40 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+#:include src/views/materialwidget.kv
+
+<MaterialButton>:
+    id: materialButton
+    titleLabel: materialButtonLabel
+    iconLabel: materialButtonIcon
+    title: ''
+    icon: unichr(0xf26b)
+    backgroundColor: constants.PRIMARY
+    width: materialButtonLayout.minimum_width
+    size_hint_x: None
+
+    BoxLayout:
+        id: materialButtonLayout
+        pos: materialButton.pos
+        height: materialButton.height
+        width: self.minimum_width
+        padding: 20, 10
+
+        Label:
+            id: materialButtonIcon
+            font_name: 'assets/fonts/MDIcons.ttf'
+            text: materialButton.icon
+            size: self.texture_size
+            size_hint_x: None
+            color: 1, 1, 1, 1
+            font_size: 40
+
+        Label:
+            id: materialButtonLabel
+            text: materialButton.title
+            size: self.texture_size
+            size_hint_x: None
