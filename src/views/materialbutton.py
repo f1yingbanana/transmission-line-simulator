@@ -46,6 +46,7 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         self.hovering = False
         self._animateHover()
 
+
     def on_leave(self):
         if self.disabled:
             return

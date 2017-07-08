@@ -32,6 +32,7 @@ class Model(object):
     waveSpeed:          speed of wave, in m/s.
     simSpeed:           simulation speed, a multiplier for elapsed time.
     appState:           the application state.
+    elapsed:            amount of elapsed time, in seconds.
     """
     
     
@@ -45,7 +46,7 @@ class Model(object):
         self.circuit = Circuit()
         self.waveSpeed = 299792458
         self.simSpeed = 1e-9
-        self._elapsed = 0
+        self.elapsed = 0
         self._lastStep = 0
         self.appState = AppState.Editing
     
@@ -54,13 +55,13 @@ class Model(object):
         """
         Simulate the system by step dt, in seconds.
         """
-        self._elapsed += dt * self.simSpeed
+        self.elapsed += dt * self.simSpeed
         
         # Determine how many steps must be made.
         l = self.circuit.getLength()
         dx = l / DISCRETE_STEPS
         
-        segs = int((self._elapsed - self._lastStep) * self.waveSpeed / dx)
+        segs = int((self.elapsed - self._lastStep) * self.waveSpeed / dx)
         
         for s in range(segs):
             self._step()
@@ -71,14 +72,14 @@ class Model(object):
         for scope in scopes:
             i = int(DISCRETE_STEPS * scope.position / l)
             v = self.forwardCurrent[i] + self.backwardCurrent[i]
-            scope.record(self._elapsed, v)
+            scope.record(self.elapsed, v)
     
 
     def reset(self):
         """
         Resets the simulation, but not the circuit.
         """
-        self._elapsed = 0
+        self.elapsed = 0
         self._lastStep = 0
         self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
@@ -89,7 +90,7 @@ class Model(object):
         """
         Simulates a discrete step for each part of the circuit.
         """
-        self._lastStep = self._elapsed
+        self._lastStep = self.elapsed
         
         # We go through each discretized value in forward and backward
         # currents, deciding whether it should move or not, and how it

@@ -19,6 +19,31 @@
     _slowDownButton: slowDownButton
     _speedUpButton: speedUpButton
     _speedLabel: speedLabel
+    _timeLabel: elapsedLabel
+
+    MaterialWidget:
+        id: elapsedWidget
+        width: elapsedLayout.minimum_width
+        size_hint_x: None
+
+        BoxLayout:
+            id: elapsedLayout
+            pos: elapsedWidget.pos
+            width: self.minimum_width
+            height: elapsedWidget.height
+            padding: 20, 10
+
+            Label:
+                id: elapsedLabel
+                size: self.texture_size
+                size_hint_x: None
+                text: '0 ns'
+                font_size: 24
+                color: constants.TEXT_BLACK
+
+    Widget:
+        size_hint_x: None
+        width: 40
 
     MaterialButton:
         id: playButton
