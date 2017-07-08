@@ -5,6 +5,7 @@
 # Created: Jul-8-2017
 #
 
+#:import constants util.constants
 #:include src/views/materialbutton.kv
 
 <PlaybackControlView>:
@@ -15,6 +16,9 @@
     _playButton: playButton
     _pauseButton: pauseButton
     _stopButton: stopButton
+    _slowDownButton: slowDownButton
+    _speedUpButton: speedUpButton
+    _speedLabel: speedLabel
 
     MaterialButton:
         id: playButton
@@ -30,3 +34,37 @@
         id: stopButton
         icon: unichr(0xf3b6)
         onClick: [lambda: playbackControlView.onStopButtonClick()]
+
+    Widget:
+        size_hint_x: None
+        width: 40
+
+    MaterialButton:
+        id: slowDownButton
+        icon: unichr(0xf3a0)
+        onClick: [lambda: playbackControlView.onSlowDownButtonClick()]
+
+    MaterialWidget:
+        id: speedBoxWidget
+        width: speedBoxLayout.minimum_width
+        size_hint_x: None
+
+        BoxLayout:
+            id: speedBoxLayout
+            pos: speedBoxWidget.pos
+            width: self.minimum_width
+            height: speedBoxWidget.height
+            padding: 20, 10
+
+            Label:
+                id: speedLabel
+                size: self.texture_size
+                size_hint_x: None
+                text: '1x'
+                font_size: 24
+                color: constants.TEXT_BLACK
+
+    MaterialButton:
+        id: speedUpButton
+        icon: unichr(0xf39f)
+        onClick: [lambda: playbackControlView.onSpeedUpButtonClick()]
