@@ -41,15 +41,16 @@
 
     MaterialWidget:
         id: elapsedWidget
-        width: elapsedLayout.minimum_width
+        width: max(elapsedLayout.minimum_width, 110)
         size_hint_x: None
 
         BoxLayout:
             id: elapsedLayout
             pos: elapsedWidget.pos
-            width: self.minimum_width
-            height: elapsedWidget.height
+            size: elapsedWidget.size
             padding: 20, 10
+
+            Widget
 
             Label:
                 id: elapsedLabel
@@ -59,9 +60,12 @@
                 font_size: 24
                 color: constants.TEXT_BLACK
 
+            Widget
+                
+
     Widget:
         size_hint_x: None
-        width: 50
+        width: 40
 
     MaterialButton:
         id: slowDownButton
@@ -95,7 +99,7 @@
 
     Widget:
         size_hint_x: None
-        width: 50
+        width: 40
 
     MaterialButton:
         id: playButton
