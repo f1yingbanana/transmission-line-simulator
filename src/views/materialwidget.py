@@ -30,31 +30,31 @@ class MaterialWidget(Widget):
     
 
     def on_size(self, *args, **kwargs):
-        self._createShadow()
+        self._updateShadow()
 
 
     def on_pos(self, *args, **kwargs):
-        self._createShadow()
+        self._updateShadow()
 
 
     def on_elevation(self, *args, **kwargs):
-        self._createShadow()
+        self._updateShadow()
 
 
-    def _createShadow(self):
+    def _updateShadow(self):
         # Shadow 1
         offset_y = self.elevation
         radius = self.elevation / 2.0
-        t1 = self._generateShadowTexture(self.size[0], self.size[1], radius, 0.26)
+        t1 = self._genShadow(self.size[0], self.size[1], radius, 0.26)
         self.keyShadowTexture = t1
 
         # Shadow 2
         radius = self.elevation * 2.0 / 3.0
-        t2 = self._generateShadowTexture(self.size[0], self.size[1], radius, 0.08)
+        t2 = self._genShadow(self.size[0], self.size[1], radius, 0.08)
         self.ambientShadowTexture = t2
 
 
-    def _generateShadowTexture(self, ow, oh, radius, alpha):
+    def _genShadow(self, ow, oh, radius, alpha):
         # We need a bigger texture to correctly blur the edges
         w = ow + radius * 6.0
         h = oh + radius * 6.0

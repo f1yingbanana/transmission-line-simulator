@@ -1,0 +1,30 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+#:import constants util.constants
+
+<RippleView>:
+    rippleColor: 1, 1, 1, 0.2
+    _currColor: 1, 1, 1, 0.2
+    _rippleCenter: 0, 0
+    _rippleRadius: 0.0
+
+    canvas.after:
+        ScissorPush:
+            x: int(round(self.x))
+            y: int(round(self.y))
+            width: int(round(self.width))
+            height: int(round(self.height))
+
+        Color:
+            rgba: self._currColor
+
+        Ellipse:
+            size: self._rippleRadius * 2, self._rippleRadius * 2
+            pos: self._rippleCenter[0] - self._rippleRadius, self._rippleCenter[1] - self._rippleRadius
+
+        ScissorPop:

@@ -5,7 +5,9 @@
 # Created: Jul-8-2017
 #
 
+#:import constants util.constants
 #:include src/views/materialwidget.kv
+#:include src/views/rippleview.kv
 
 <MaterialButton>:
     id: materialButton
@@ -16,6 +18,13 @@
     backgroundColor: constants.PRIMARY
     width: materialButtonLayout.minimum_width
     size_hint_x: None
+    _rippleView: materialButtonRippleView
+
+    RippleView:
+        id: materialButtonRippleView
+        rippleColor: 1, 1, 1, 0.3
+        pos: materialButton.pos
+        size: materialButton.size
 
     BoxLayout:
         id: materialButtonLayout
@@ -38,3 +47,6 @@
             text: materialButton.title
             size: self.texture_size
             size_hint_x: None
+
+
+

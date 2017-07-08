@@ -6,23 +6,23 @@
 #
 
 from materialwidget import MaterialWidget
+from rippleview import RippleView
 from kivy.properties import *
 from kivy.uix.behaviors import ButtonBehavior
 from util.hoverbehavior import HoverBehavior
 from kivy.animation import Animation
 
 
-class MaterialButton(MaterialWidget, ButtonBehavior, HoverBehavior):
+class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     """
     This is a button in material widget style.
     """
+
+    _rippleView = ObjectProperty(None)
+
     titleLabel = ObjectProperty(None)
 
     iconLabel = ObjectProperty(None)
-
-    _currHighlightColor = ListProperty([0, 0, 0, 0])
-
-    highlightColor = ListProperty(None)
 
     def __init__(self, **kwargs):
         super(MaterialButton, self).__init__(**kwargs)
@@ -53,8 +53,7 @@ class MaterialButton(MaterialWidget, ButtonBehavior, HoverBehavior):
 
 
     def on_press(self):
-        # Dispatch ink ripple
-        pass
+        self._rippleView.ripple(self.last_touch.pos)
 
 
     def on_release(self):
