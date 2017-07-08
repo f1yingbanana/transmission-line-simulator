@@ -13,7 +13,9 @@ class AppState(object):
     """
     Describes the valid states in this app.
     """
-    Editing, Simulating, Paused = range(3)
+    Editing = 'editing'
+    Simulating = 'simulating'
+    Paused = 'paused'
 
 
 class Model(object):

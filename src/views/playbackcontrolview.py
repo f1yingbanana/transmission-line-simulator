@@ -22,6 +22,7 @@ class PlaybackControlView(BoxLayout):
     _speedUpButton = ObjectProperty(None)
     _speedLabel = ObjectProperty(None)
     _timeLabel = ObjectProperty(None)
+    _statusLabel = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(PlaybackControlView, self).__init__(**kwargs)
@@ -34,6 +35,7 @@ class PlaybackControlView(BoxLayout):
             self._slowDownButton.disabled = self.model.simSpeed <= 1e-9
             self._speedUpButton.disabled = self.model.simSpeed >= 8e-9
             self._timeLabel.text = str(int(self.model.elapsed * 1e9)) + ' ns'
+            self._statusLabel.text = 'Status: ' + self.model.appState
 
 
     def onPlayButtonClick(self):

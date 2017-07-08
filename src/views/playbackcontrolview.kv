@@ -10,8 +10,6 @@
 
 <PlaybackControlView>:
     id: playbackControlView
-    width: self.minimum_width
-    size_hint_x: None
     spacing: 20
     _playButton: playButton
     _pauseButton: pauseButton
@@ -20,6 +18,26 @@
     _speedUpButton: speedUpButton
     _speedLabel: speedLabel
     _timeLabel: elapsedLabel
+    _statusLabel: statusLabel
+
+    MaterialWidget:
+        id: statusWidget
+        width: 230
+        size_hint_x: None
+
+        BoxLayout:
+            id: statisLayout
+            pos: statusWidget.pos
+            size: statusWidget.size
+            padding: 20, 10
+
+            Label:
+                id: statusLabel
+                size: self.texture_size
+                size_hint_x: None
+                text: 'Status: editing'
+                font_size: 24
+                color: constants.TEXT_BLACK
 
     MaterialWidget:
         id: elapsedWidget
@@ -43,26 +61,7 @@
 
     Widget:
         size_hint_x: None
-        width: 40
-
-    MaterialButton:
-        id: playButton
-        icon: unichr(0xf3aa)
-        onClick: [lambda: playbackControlView.onPlayButtonClick()]
-
-    MaterialButton:
-        id: pauseButton
-        icon: unichr(0xf3a7)
-        onClick: [lambda: playbackControlView.onPauseButtonClick()]
-
-    MaterialButton:
-        id: stopButton
-        icon: unichr(0xf3b6)
-        onClick: [lambda: playbackControlView.onStopButtonClick()]
-
-    Widget:
-        size_hint_x: None
-        width: 40
+        width: 50
 
     MaterialButton:
         id: slowDownButton
@@ -93,3 +92,25 @@
         id: speedUpButton
         icon: unichr(0xf39f)
         onClick: [lambda: playbackControlView.onSpeedUpButtonClick()]
+
+    Widget:
+        size_hint_x: None
+        width: 50
+
+    MaterialButton:
+        id: playButton
+        icon: unichr(0xf3aa)
+        onClick: [lambda: playbackControlView.onPlayButtonClick()]
+
+    MaterialButton:
+        id: pauseButton
+        icon: unichr(0xf3a7)
+        onClick: [lambda: playbackControlView.onPauseButtonClick()]
+
+    MaterialButton:
+        id: stopButton
+        icon: unichr(0xf3b6)
+        onClick: [lambda: playbackControlView.onStopButtonClick()]
+
+    Widget
+
