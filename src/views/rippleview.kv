@@ -14,17 +14,9 @@
     _rippleRadius: 0.0
 
     canvas.after:
-        ScissorPush:
-            x: int(round(self.x))
-            y: int(round(self.y))
-            width: int(round(self.width))
-            height: int(round(self.height))
-
         Color:
             rgba: self._currColor
 
         Ellipse:
             size: self._rippleRadius * 2, self._rippleRadius * 2
             pos: self._rippleCenter[0] - self._rippleRadius, self._rippleCenter[1] - self._rippleRadius
-
-        ScissorPop:

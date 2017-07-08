@@ -70,4 +70,6 @@ class MaterialWidget(Widget):
         draw.rectangle((x0, y0, x1, y1), fill=(0, 0, 0, int(255 * alpha)))
         im = im.filter(ImageFilter.GaussianBlur(radius))
         texture.blit_buffer(im.tobytes(), colorfmt='rgba', bufferfmt='ubyte')
+
         return texture
+
