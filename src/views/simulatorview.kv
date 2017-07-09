@@ -8,10 +8,12 @@
 #:include src/views/materialwidget.kv
 #:include src/views/materialbutton.kv
 #:include src/views/playbackcontrolview.kv
+#:include src/views/circuitview.kv
 
 <SimulatorView>:
     id: simulatorView
     graphView: graphView
+    circuitView: circuitView
     playbackControlView: playbackControlView
 
     canvas:
@@ -31,7 +33,8 @@
             spacing: 40
             padding: 80
 
-            MaterialWidget:
+            CircuitView:
+                id: circuitView
                 size_hint_y: 0.48
 
             PlaybackControlView:

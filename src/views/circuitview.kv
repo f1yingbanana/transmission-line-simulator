@@ -1,0 +1,55 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-9-2017
+#
+
+#import constants util.constants
+
+<CircuitView>:
+    _begin: self.x + self.width * 0.2, self.y + self.height * 0.2
+    _end: self.x + self.width * 0.8, self.y + self.height * 0.8
+
+    canvas:
+        # We draw a bunch of wires that are a part of every diagram
+        Color:
+            rgba: 0, 0, 0, 1
+
+        Ellipse:
+            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+        Ellipse:
+            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._end[1] - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+        Ellipse:
+            pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+        Ellipse:
+            pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._end[1] - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+        Color:
+            rgba: constants.DARK_GRAY
+
+        RoundedRectangle:
+            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS
+            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 2 * constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+        RoundedRectangle:
+            pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS
+            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 2 * constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+        RoundedRectangle:
+            pos: self._begin[0] + constants.WIRE_THICKNESS, self._begin[1] - constants.WIRE_THICKNESS / 2.0
+            size: self._end[0] - self._begin[0] - 2 * constants.WIRE_THICKNESS , constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+
+<Wire>:
+    

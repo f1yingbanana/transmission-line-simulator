@@ -31,6 +31,8 @@ class GraphView(MaterialWidget):
         
         self.model = None
         self._line = None
+        self._p0 = [0, 0]
+        self._p1 = self.size
         
         self._fig, self._ax = plt.subplots()
         self._fig.set_tight_layout({"pad": 3})
@@ -70,17 +72,11 @@ class GraphView(MaterialWidget):
                 self._line.set_ydata(self.model.overallDistribution)
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
-
-
-                print self.pos
-                print self.size
-                print self._p0
-                print self._p1
             
             self._fig.canvas.draw()
 
     
-    def getGraphBox(self):
+    def getBounds(self):
         """
         Returns the bounding box of the actual graph (sans labels) in our widget
         coordinates. Returns [x, y, width, height].
