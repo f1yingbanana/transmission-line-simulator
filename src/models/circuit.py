@@ -25,13 +25,18 @@ class Circuit(object):
         """
         source = PowerSource(10.0, 5.0, 1, 2.0)
         cable = Resistor(5.0)
-        load = Resistor(5.0)
-        cable.length = 5.0
+        cable2 = Resistor(5.0)
+        load = Resistor(0.0)
+        cable.length = 2.5
+        cable2.length = 2.5
+        cable2.position = 2.5
         load.position = 5.0
         source.next = cable
         cable.prev = source
-        cable.next = load
-        load.prev = cable
+        cable.next = cable2
+        cable2.prev = cable
+        cable2.next = load
+        load.prev = cable2
         
         self.head = source
     

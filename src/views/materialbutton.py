@@ -28,7 +28,6 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         super(MaterialButton, self).__init__(**kwargs)
 
         self.onClick = []
-        self.hovering = False
         self._hoverAnim = None
 
 
@@ -36,14 +35,14 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         if self.disabled:
             return
 
-        self.hovering = True
+        print 'entered'
+
         self._animateHover()
 
 
     def on_disabled(self, instance, value):
         super(MaterialButton, self).on_disabled(instance, value)
 
-        self.hovering = False
         self._animateHover()
 
 
@@ -51,7 +50,8 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         if self.disabled:
             return
 
-        self.hovering = False
+        print 'left'
+
         self._animateHover()
 
 
@@ -59,7 +59,7 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         if self._hoverAnim != None:
             self._hoverAnim.cancel(self)
 
-        e = 8 if self.hovering else 2
+        e = 8 if self.hovered else 2
         self._hoverAnim = Animation(elevation = e, d = 0.2, t = 'in_out_cubic')
         self._hoverAnim.start(self)
 

@@ -14,7 +14,7 @@
     canvas:
         # We draw a bunch of wires that are a part of every diagram
         Color:
-            rgba: 0, 0, 0, 1
+            rgba: 0, 0, 0, 0.86
 
         Ellipse:
             pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] - constants.WIRE_THICKNESS / 2.0
@@ -31,9 +31,6 @@
         Ellipse:
             pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._end[1] - constants.WIRE_THICKNESS / 2.0
             size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
-
-        Color:
-            rgba: constants.DARK_GRAY
 
         RoundedRectangle:
             pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS * 1.5
@@ -54,26 +51,49 @@
 <Wire>:
     canvas:
         Color:
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+
+        RoundedRectangle:
+            pos: self.x, self.center_y - constants.WIRE_THICKNESS
+            size: max(0, self.width), 2 * constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+        Color:
             rgba: constants.PRIMARY
 
         RoundedRectangle:
-            pos: self.x + constants.WIRE_THICKNESS * 1.5, self.y - constants.WIRE_THICKNESS / 2
-            size: max(0, self.width - 3 * constants.WIRE_THICKNESS), constants.WIRE_THICKNESS
+            pos: self.x + constants.WIRE_THICKNESS / 2, self.center_y - constants.WIRE_THICKNESS / 2
+            size: max(0, self.width - constants.WIRE_THICKNESS), constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
 
 <Connector>:
     canvas:
         Color:
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+
+        Ellipse:
+            pos: self.center_x - constants.WIRE_THICKNESS, self.center_y - constants.WIRE_THICKNESS
+            size: 2 * constants.WIRE_THICKNESS, 2 * constants.WIRE_THICKNESS
+
+        Color:
             rgba: constants.DARK_PRIMARY
 
         Ellipse:
-            pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0
+            pos: self.center_x - constants.WIRE_THICKNESS / 2.0, self.center_y - constants.WIRE_THICKNESS / 2.0
             size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
 
 
 <Load>:
     canvas:
+        Color:
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+
+        Rectangle:
+            pos: self.pos[0] - constants.WIRE_THICKNESS / 2.0, self.pos[1] - constants.WIRE_THICKNESS / 2.0
+            size: self.size[0] + constants.WIRE_THICKNESS, self.size[1] + constants.WIRE_THICKNESS
+
         Color:
             rgba: constants.PRIMARY
 
@@ -94,6 +114,13 @@
 
     canvas:
         Color:
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+
+        Ellipse:
+            pos: self.pos[0] - constants.WIRE_THICKNESS / 2.0, self.pos[1] - constants.WIRE_THICKNESS / 2.0
+            size: self.size[0] + constants.WIRE_THICKNESS, self.size[1] + constants.WIRE_THICKNESS
+
+        Color:
             rgba: constants.PRIMARY
 
         Ellipse:
@@ -107,7 +134,6 @@
             pos: self.x + constants.WIRE_THICKNESS, self.y + constants.WIRE_THICKNESS
             size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
 
-
     Label:
         pos: source.pos
         size: source.size
@@ -115,3 +141,4 @@
         text: unichr(0xf387)
         color: 0, 0, 0, 0.86
         font_size: 50
+

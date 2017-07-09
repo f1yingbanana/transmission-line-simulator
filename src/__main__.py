@@ -15,6 +15,7 @@ from kivy.config import Config
 Config.set('graphics', 'window_state', 'maximized')
 Config.set('graphics', 'minimum_width', 800)
 Config.set('graphics', 'minimum_height', 600)
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
