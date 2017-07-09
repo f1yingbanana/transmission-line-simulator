@@ -8,8 +8,8 @@
 #import constants util.constants
 
 <CircuitView>:
-    _begin: self.x + self.width * 0.2, self.y + self.height * 0.2
-    _end: self.x + self.width * 0.8, self.y + self.height * 0.8
+    _begin: 0, 0
+    _end: 0, 0
 
     canvas:
         # We draw a bunch of wires that are a part of every diagram
@@ -36,20 +36,39 @@
             rgba: constants.DARK_GRAY
 
         RoundedRectangle:
-            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS
-            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 2 * constants.WIRE_THICKNESS
+            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS * 1.5
+            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 3 * constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
         RoundedRectangle:
-            pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS
-            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 2 * constants.WIRE_THICKNESS
+            pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS * 1.5
+            size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 3 * constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
         RoundedRectangle:
-            pos: self._begin[0] + constants.WIRE_THICKNESS, self._begin[1] - constants.WIRE_THICKNESS / 2.0
-            size: self._end[0] - self._begin[0] - 2 * constants.WIRE_THICKNESS , constants.WIRE_THICKNESS
+            pos: self._begin[0] + constants.WIRE_THICKNESS * 1.5, self._begin[1] - constants.WIRE_THICKNESS / 2.0
+            size: self._end[0] - self._begin[0] - 3 * constants.WIRE_THICKNESS , constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
 
 <Wire>:
-    
+    canvas:
+        Color:
+            rgba: constants.PRIMARY
+
+        RoundedRectangle:
+            pos: self.x + constants.WIRE_THICKNESS * 1.5, self.y - constants.WIRE_THICKNESS / 2
+            size: max(0, self.width - 3 * constants.WIRE_THICKNESS), constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+
+<Connector>:
+    canvas:
+        Color:
+            rgba: constants.DARK_PRIMARY
+
+        Ellipse:
+            pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
+
+

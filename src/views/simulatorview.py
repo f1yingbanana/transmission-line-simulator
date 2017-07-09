@@ -28,6 +28,7 @@ class SimulatorView(Widget):
 
     def on_model(self, *args, **kwargs):
         self.graphView.model = self.model
+        self.circuitView.model = self.model
         self.playbackControlView.model = self.model
     
 
