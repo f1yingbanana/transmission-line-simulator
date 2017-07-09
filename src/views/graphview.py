@@ -39,7 +39,7 @@ class GraphView(MaterialWidget):
         self._ax.grid(True)
         # self._ax.set_ylabel('voltage (V)', fontsize = 24)
         self._ax.tick_params(axis = 'both', length = 0)
-        self._ax.set_xticklabels([])
+        # self._ax.set_xticklabels([])
         for item in self._ax.get_yticklabels() + self._ax.get_xticklabels():
             item.set_fontsize(24)
         

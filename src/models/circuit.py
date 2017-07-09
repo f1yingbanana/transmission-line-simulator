@@ -24,19 +24,14 @@ class Circuit(object):
         single load at the right.
         """
         source = PowerSource(10.0, 5.0, 1, 2.0)
-        cable1 = Resistor(3.0)
-        cable1.length = 1.0
-        cable2 = Resistor(1.0)
-        cable2.length = 1.0
-        cable2.position = 1.0
-        load = Resistor(0)
-        load.position = 2.0
-        source.next = cable1
-        cable1.prev = source
-        cable1.next = cable2
-        cable2.prev = cable1
-        cable2.next = load
-        load.prev = cable2
+        cable = Resistor(5.0)
+        load = Resistor(5.0)
+        cable.length = 5.0
+        load.position = 5.0
+        source.next = cable
+        cable.prev = source
+        cable.next = load
+        load.prev = cable
         
         self.head = source
     

@@ -72,3 +72,46 @@
             size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
 
 
+<Load>:
+    canvas:
+        Color:
+            rgba: constants.PRIMARY
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            pos: self.x + constants.WIRE_THICKNESS, self.y + constants.WIRE_THICKNESS
+            size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
+
+
+<Source>:
+    id: source
+
+    canvas:
+        Color:
+            rgba: constants.PRIMARY
+
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Ellipse:
+            pos: self.x + constants.WIRE_THICKNESS, self.y + constants.WIRE_THICKNESS
+            size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
+
+
+    Label:
+        pos: source.pos
+        size: source.size
+        font_name: 'assets/fonts/MDIcons.ttf'
+        text: unichr(0xf387)
+        color: 0, 0, 0, 0.86
+        font_size: 50

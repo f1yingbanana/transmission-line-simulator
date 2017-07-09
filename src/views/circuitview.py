@@ -64,7 +64,10 @@ class CircuitView(MaterialWidget):
         self.clear_widgets()
 
         # Add a source.
-        self.add_widget(Source())
+        source = Source()
+        source.size = 80, 80
+        source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
+        self.add_widget(source)
 
         # Add each wire and oscilloscpe with a connector inbetween.
         e = self.model.circuit.head.next
@@ -92,7 +95,10 @@ class CircuitView(MaterialWidget):
             e = e.next
 
         # Add a load.
-        self.add_widget(Load())
+        load = Load()
+        load.size = 40, 120
+        load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
+        self.add_widget(load)
 
 
 # Below are graphics helper classes for drawing various elements.
