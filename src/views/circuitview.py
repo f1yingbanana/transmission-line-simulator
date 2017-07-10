@@ -14,7 +14,7 @@ from util.constants import *
 from util.hoverbehavior import HoverBehavior
 from source import Source
 from kivy.core.window import Window
-
+from contextmenu import ContextMenu
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -24,29 +24,41 @@ class CircuitWidget(Widget, HoverBehavior):
     def __init__(self, **kwargs):
         super(CircuitWidget, self).__init__(**kwargs)
 
+        self.contextMenuLayer = None
+
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.pos[0], touch.pos[1]):
             if touch.button == 'left':
-                self.on_left_click()
+                self.on_left_click(touch.pos)
             elif touch.button == 'right':
-                self.on_right_click()
+                self.on_right_click(touch.pos)
 
             return True
 
         return super(CircuitWidget, self).on_touch_down(touch)
 
-    def on_left_click(self):
-        print 'editing element!'
+    def on_left_click(self, pos):
+        pass
 
-    def on_right_click(self):
-        print 'generating menu!'
+    def on_right_click(self, pos):
+        if self.menu == None:
+            return
+
+        self.menu.pos = pos
+
+        if self.menu.parent != None:
+            self.menu.dismiss(False)
+        
+        self.contextMenuLayer.add_widget(self.menu)
+
+        self.menu.show(True)
 
     def on_enter(self):
-        print 'hovering'
+        pass
 
     def on_leave(self):
-        print 'left'
+        pass
 
 
 
@@ -55,23 +67,86 @@ class Connector(CircuitWidget):
     """
     This renders a connector between two wires.
     """
+    def __init__(self, **kwargs):
+        super(Connector, self).__init__(**kwargs)
+
+        titles = ['Add Monitor']
+        actions = [self.onAddMonitorClicked]
+        self.menu = ContextMenu(titles, actions)
+
+
+    def onAddMonitorClicked(self):
+        pass
 
 
 class Wire(CircuitWidget):
     """
     This renders a wire.
     """
+    def __init__(self, **kwargs):
+        super(Wire, self).__init__(**kwargs)
+
+        titles = ['Edit Wire', 'Split Wire', 'Add Monitor', 'Delete Wire']
+        actions = [self.onEditClicked, self.onSplitClicked, \
+            self.onAddMonitorClicked, self.onDeleteClicked]
+        self.menu = ContextMenu(titles, actions)
+
+
+    def onEditClicked(self):
+        pass
+
+
+    def onSplitClicked(self):
+        pass
+
+
+    def onAddMonitorClicked(self):
+        pass
+
+
+    def onDeleteClicked(self):
+        pass
+
 
 
 class Load(CircuitWidget):
     """
     This renders a load.
     """
+    def __init__(self, **kwargs):
+        super(Load, self).__init__(**kwargs)
+
+        titles = ['Edit Load', 'Reset Circuit']
+        actions = [self.onEditClicked, self.onResetClicked]
+        self.menu = ContextMenu(titles, actions)
+
+
+    def onEditClicked(self):
+        pass
+
+
+    def onResetClicked(self):
+        pass
+
 
 class Source(CircuitWidget):
     """
     This renders a power source.
     """
+    def __init__(self, **kwargs):
+        super(Source, self).__init__(**kwargs)
+
+        titles = ['Edit Source', 'Reset Circuit']
+        actions = [self.onEditClicked, self.onResetClicked]
+        self.menu = ContextMenu(titles, actions)
+
+
+    def onEditClicked(self):
+        pass
+
+
+    def onResetClicked(self):
+        pass
 
 
 class CircuitView(MaterialWidget):
@@ -85,6 +160,8 @@ class CircuitView(MaterialWidget):
     _end = ListProperty([0, 0])
 
     model = ObjectProperty(None)
+
+    contextMenuLayer = ObjectProperty(None)
 
 
     def __init__(self, **kwargs):
@@ -136,6 +213,7 @@ class CircuitView(MaterialWidget):
 
         # Add a source.
         source = Source()
+        source.contextMenuLayer = self.contextMenuLayer
         source.size = 80, 80
         source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(source)
@@ -150,8 +228,9 @@ class CircuitView(MaterialWidget):
             if needConnector:
                 # Create a connector in place.
                 c = Connector()
+                c.contextMenuLayer = self.contextMenuLayer
                 c.size = 2 * WIRE_THICKNESS, 2 * WIRE_THICKNESS + 48
-                c.center = float(self._begin[0] + e.position * scale), self._end[1]
+                c.center = float(self._begin[0] + e.position * scale), self._begin[1]
                 self.add_widget(c)
                 needConnector = False
 
@@ -159,10 +238,11 @@ class CircuitView(MaterialWidget):
             if type(e) == Resistor:
                 needConnector = True
                 w = Wire()
+                w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
                 w.height = 2 * WIRE_THICKNESS + 48
-                w.center_y = self._end[1]
+                w.center_y = self._begin[1]
                 self.add_widget(w)
             elif type(e) == Oscilloscope:
                 pass
@@ -172,6 +252,7 @@ class CircuitView(MaterialWidget):
 
         # Add a load.
         load = Load()
+        load.contextMenuLayer = self.contextMenuLayer
         load.size = 40, 120
         load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(load)

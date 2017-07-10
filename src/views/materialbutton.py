@@ -11,24 +11,54 @@ from kivy.properties import *
 from kivy.uix.behaviors import ButtonBehavior
 from util.hoverbehavior import HoverBehavior
 from kivy.animation import Animation
-
+from util.constants import *
 
 class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     """
     This is a button in material widget style.
     """
 
-    _rippleView = ObjectProperty(None)
+    rippleView = ObjectProperty(None)
 
     titleLabel = ObjectProperty(None)
 
     iconLabel = ObjectProperty(None)
+
+    title = StringProperty(None)
+
+    icon = StringProperty(None)
+
+    container = ObjectProperty(None)
+
+    highlightColor = ListProperty([1, 1, 1, 0])
 
     def __init__(self, **kwargs):
         super(MaterialButton, self).__init__(**kwargs)
 
         self.onClick = []
         self._hoverAnim = None
+
+
+    def changeStyle(self, style):
+        """
+        Changes the style of this button.
+
+        style:  either 'raised' or 'flat'
+        """
+        if style == 'raised':
+            self.backgroundColor = PRIMARY
+            self.titleLabel.color = WHITE
+            self.iconLabel.color = WHITE
+            self.rippleView.rippleColor = RIPPLE_LIGHT
+            self.raised = True
+            self.highlightColor = 1, 1, 1, 0
+        else:
+            self.backgroundColor = WHITE
+            self.titleLabel.color = TEXT_BLACK
+            self.iconLabel.color = TEXT_BLACK
+            self.rippleView.rippleColor = RIPPLE_DARK
+            self.raised = False
+            self.highlightColor = GRAY
 
 
     def on_enter(self):
@@ -69,7 +99,7 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         if self.disabled:
             return
 
-        self._rippleView.ripple(self.last_touch.pos)
+        self.rippleView.ripple(self.last_touch.pos)
 
 
     def on_release(self):

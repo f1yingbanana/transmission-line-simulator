@@ -21,6 +21,7 @@ class SimulatorView(Widget):
     graphView = ObjectProperty(None)
     playbackControlView = ObjectProperty(None)
     circuitView = ObjectProperty(None)
+    contextMenuLayer = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(SimulatorView, self).__init__(**kwargs)

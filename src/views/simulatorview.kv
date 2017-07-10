@@ -15,6 +15,7 @@
     graphView: graphView
     circuitView: circuitView
     playbackControlView: playbackControlView
+    contextMenuLayer: contextMenuLayer
 
     canvas:
         Color:
@@ -35,6 +36,7 @@
 
             CircuitView:
                 id: circuitView
+                contextMenuLayer: contextMenuLayer
                 size_hint_y: 0.48
 
             PlaybackControlView:
@@ -74,3 +76,8 @@
                 MaterialWidget:
                     height: 400
                     size_hint_y: None
+
+    Widget:
+        id: contextMenuLayer
+        pos: simulatorView.pos
+        size: simulatorView.size

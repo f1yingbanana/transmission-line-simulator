@@ -16,13 +16,35 @@
     title: ''
     icon: unichr(0xf26b)
     backgroundColor: constants.PRIMARY
+    container: materialButtonLayout
     width: materialButtonLayout.minimum_width
     size_hint_x: None
-    _rippleView: materialButtonRippleView
+    highlightColor: 1, 1, 1, 0
+    rippleView: materialButtonRippleView
+
+    canvas.before:
+        StencilPush
+
+        RoundedRectangle:
+            radius: [4]
+            size: self.size
+            pos: self.pos
+
+        StencilUse
+
+        Color:
+            rgba: self.highlightColor if self.hovered else (1, 1, 1, 0)
+
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    canvas.after:
+        StencilPop
 
     RippleView:
         id: materialButtonRippleView
-        rippleColor: 1, 1, 1, 0.3
+        rippleColor: constants.RIPPLE_LIGHT
         pos: materialButton.pos
         size: materialButton.size
 

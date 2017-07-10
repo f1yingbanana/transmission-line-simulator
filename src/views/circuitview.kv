@@ -6,6 +6,7 @@
 #
 
 #import constants util.constants
+#:include src/views/contextmenu.kv
 
 <CircuitView>:
     _begin: 0, 0
@@ -43,7 +44,7 @@
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
         RoundedRectangle:
-            pos: self._begin[0] + constants.WIRE_THICKNESS * 1.5, self._begin[1] - constants.WIRE_THICKNESS / 2.0
+            pos: self._begin[0] + constants.WIRE_THICKNESS * 1.5, self._end[1] - constants.WIRE_THICKNESS / 2.0
             size: self._end[0] - self._begin[0] - 3 * constants.WIRE_THICKNESS , constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
