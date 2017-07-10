@@ -25,6 +25,8 @@ class CircuitWidget(Widget, HoverBehavior):
         super(CircuitWidget, self).__init__(**kwargs)
 
         self.contextMenuLayer = None
+        self.element = None
+        self.update = None
 
 
     def on_touch_down(self, touch):
@@ -105,7 +107,8 @@ class Wire(CircuitWidget):
 
 
     def onDeleteClicked(self):
-        pass
+        self.element.prev.next = self.element.next
+        self.update()
 
 
 
@@ -238,6 +241,8 @@ class CircuitView(MaterialWidget):
             if type(e) == Resistor:
                 needConnector = True
                 w = Wire()
+                w.element = e
+                w.update = self.updateCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
