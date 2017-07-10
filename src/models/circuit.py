@@ -95,3 +95,6 @@ class Circuit(object):
             es.reverse()
         
         return es
+        
+
+

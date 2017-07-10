@@ -27,10 +27,14 @@ class CircuitWidget(Widget, HoverBehavior):
         self.contextMenuLayer = None
         self.element = None
         self.update = None
+        self._menuPos = 0
+        self.wireScale = 0
 
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.pos[0], touch.pos[1]):
+            self._menuPos = touch.pos
+
             if touch.button == 'left':
                 self.on_left_click(touch.pos)
             elif touch.button == 'right':
@@ -40,8 +44,10 @@ class CircuitWidget(Widget, HoverBehavior):
 
         return super(CircuitWidget, self).on_touch_down(touch)
 
+
     def on_left_click(self, pos):
         pass
+
 
     def on_right_click(self, pos):
         if self.menu == None:
@@ -56,8 +62,10 @@ class CircuitWidget(Widget, HoverBehavior):
 
         self.menu.show(True)
 
+
     def on_enter(self):
         pass
+
 
     def on_leave(self):
         pass
@@ -108,7 +116,16 @@ class Wire(CircuitWidget):
 
 
     def onSplitClicked(self):
-        pass
+        """
+        Splits the wire at the menu pos, cutting it in two identical halves.
+        """
+        wirePos = (self._menuPos[0] - self.x) / self.wireScale
+        copy = Resistor(self.element.resistance)
+        copy.length = self.element.length - wirePos
+        copy.next = self.element.next
+        self.element.length = wirePos
+        self.element.next = copy
+        self.update()
 
 
     def onAddMonitorClicked(self):
@@ -207,12 +224,6 @@ class CircuitView(MaterialWidget):
         self.updateCircuit()
 
 
-    def update(self, dt):
-        """
-        Updates this instance.
-        """
-
-
     def updateCircuit(self):
         """
         Removes all circuit elements from the diagram and add everything from
@@ -250,6 +261,7 @@ class CircuitView(MaterialWidget):
             if type(e) == Resistor:
                 needConnector = True
                 w = Wire(e)
+                w.wireScale = scale
                 w.update = self.updateCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
