@@ -85,13 +85,22 @@ class Wire(CircuitWidget):
     """
     This renders a wire.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, wireModel, **kwargs):
         super(Wire, self).__init__(**kwargs)
 
-        titles = ['Edit Wire', 'Split Wire', 'Add Monitor', 'Delete Wire']
-        actions = [self.onEditClicked, self.onSplitClicked, \
-            self.onAddMonitorClicked, self.onDeleteClicked]
+        self.element = wireModel
+        titles = ['Edit Wire', 'Split Wire', 'Add Monitor']
+        actions = [self.onEditClicked, self.onSplitClicked, self.onAddMonitorClicked]
+
+        if self._canDelete():
+            titles.append('Delete Wire')
+            actions.append(self.onDeleteClicked)
+
         self.menu = ContextMenu(titles, actions)
+
+
+    def _canDelete(self):
+        return self.element.prev.prev != None or self.element.next.next != None
 
 
     def onEditClicked(self):
@@ -184,8 +193,8 @@ class CircuitView(MaterialWidget):
 
         box:    a bounding box in the format of [x, y, width, height]
         """
-        bx, by = box[0], self.y + self.height * 0.2
-        ex, ey = box[0] + box[2], self.y + self.height * 0.8
+        bx, by = box[0], self.y + 80
+        ex, ey = box[0] + box[2], self.y + self.height - 80
 
         if abs(bx - self._begin[0]) < 1e-7 and \
             abs(by - self._begin[1]) < 1e-7 and \
@@ -240,8 +249,7 @@ class CircuitView(MaterialWidget):
             # This element is either a wire or oscilloscope.
             if type(e) == Resistor:
                 needConnector = True
-                w = Wire()
-                w.element = e
+                w = Wire(e)
                 w.update = self.updateCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)

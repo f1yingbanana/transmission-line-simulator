@@ -59,20 +59,21 @@ class GraphView(MaterialWidget):
         self.container.pos = self.pos
         
         if self.model != None:
+            l = self.model.circuit.getLength()
             
             if self._line == None:
-                l = self.model.circuit.getLength()
                 x = np.linspace(0, l, DISCRETE_STEPS + 1)
                 self._line = self._ax.plot(x, self.model.overallDistribution, \
                     linewidth = 5, color = PRIMARY)[0]
                 self._maxAmp = self.model.circuit.head.amplitude
                 self._ax.set_ylim([-4 * self._maxAmp, 4 * self._maxAmp])
-                self._ax.set_xlim([0, l])
             else:
+                self._line.set_xdata(np.linspace(0, l, DISCRETE_STEPS + 1))
                 self._line.set_ydata(self.model.overallDistribution)
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
             
+            self._ax.set_xlim([0, l])
             self._fig.canvas.draw()
 
     
