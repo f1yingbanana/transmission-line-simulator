@@ -15,7 +15,7 @@
     canvas:
         # We draw a bunch of wires that are a part of every diagram
         Color:
-            rgba: 0, 0, 0, 0.86
+            rgba: constants.TEXT_BLACK
 
         Ellipse:
             pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] - constants.WIRE_THICKNESS / 2.0
@@ -41,11 +41,6 @@
         RoundedRectangle:
             pos: self._end[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] + constants.WIRE_THICKNESS * 1.5
             size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 3 * constants.WIRE_THICKNESS
-            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
-
-        RoundedRectangle:
-            pos: self._begin[0] + constants.WIRE_THICKNESS * 1.5, self._end[1] - constants.WIRE_THICKNESS / 2.0
-            size: self._end[0] - self._begin[0] - 3 * constants.WIRE_THICKNESS , constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
 

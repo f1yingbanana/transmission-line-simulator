@@ -64,18 +64,39 @@ class ContextMenu(MaterialWidget):
 
 
 
-    def show(self, animated):
+    def show(self, layer, pos, animated):
+        # Determine orientation
+        self.orientation = 'upright'
+
+        h = len(self._container.children) * 60
+
+        if pos[1] + h > layer.height:
+            self.orientation = 'downright'
+
+        layer.add_widget(self)
+
+        self.pos = pos
+        self._cachedPos = pos
+
         if animated:
+            self.size = 0, 0
+            self.opacity = 0.0
+
             self._animate(True)
         else:
             self.size = self._container.minimum_size
             self.opacity = 1.0
 
+            if self.orientation == 'downright':
+                self.y = pos[1] - h
+
+
+
 
     def dismiss(self, animated):
         if not animated:
             self.parent.remove_widget(self)
-            size = 0, 0
+            self.size = 0, 0
             self.opacity = 0.0
         else:
             self._animate(False)
@@ -87,10 +108,14 @@ class ContextMenu(MaterialWidget):
             self._anim.cancel(self)
 
         if isEntering:
-            self._anim = Animation(size = self._container.minimum_size, opacity = 1.0, d = 0.15, t = 'in_out_quad')
+            if self.orientation == 'downright':
+                h = self._cachedPos[1] - self._container.minimum_height
+                self._anim = Animation(size = self._container.minimum_size, y = h, opacity = 1.0, d = 0.2, t = 'in_out_quad')
+            else:
+                self._anim = Animation(size = self._container.minimum_size, opacity = 1.0, d = 0.2, t = 'in_out_quad')
             self._anim.start(self)
         else:
-            self._anim = Animation(size = [0, 0], d = 0.15, opacity = 0.0, t = 'in_out_quad')
+            self._anim = Animation(size = [0, 0], pos = self._cachedPos, d = 0.2, opacity = 0.0, t = 'in_out_quad')
             self._anim.start(self)
 
 

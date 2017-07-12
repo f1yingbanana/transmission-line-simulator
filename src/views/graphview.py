@@ -72,6 +72,7 @@ class GraphView(MaterialWidget):
                 self._line.set_ydata(self.model.overallDistribution)
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
+
             
             self._ax.set_xlim([0, l])
             self._fig.canvas.draw()

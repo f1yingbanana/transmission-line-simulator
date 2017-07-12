@@ -53,14 +53,10 @@ class CircuitWidget(Widget, HoverBehavior):
         if self.menu == None:
             return
 
-        self.menu.pos = pos
-
         if self.menu.parent != None:
             self.menu.dismiss(False)
         
-        self.contextMenuLayer.add_widget(self.menu)
-
-        self.menu.show(True)
+        self.menu.show(self.contextMenuLayer, pos, True)
 
 
     def on_enter(self):
@@ -77,16 +73,6 @@ class Connector(CircuitWidget):
     """
     This renders a connector between two wires.
     """
-    def __init__(self, **kwargs):
-        super(Connector, self).__init__(**kwargs)
-
-        titles = ['Add Monitor']
-        actions = [self.onAddMonitorClicked]
-        self.menu = ContextMenu(titles, actions)
-
-
-    def onAddMonitorClicked(self):
-        pass
 
 
 class Wire(CircuitWidget):
@@ -255,11 +241,19 @@ class CircuitView(MaterialWidget):
                 c.size = 2 * WIRE_THICKNESS, 2 * WIRE_THICKNESS + 48
                 c.center = float(self._begin[0] + e.position * scale), self._begin[1]
                 self.add_widget(c)
+
+                c = Connector()
+                c.contextMenuLayer = self.contextMenuLayer
+                c.size = 2 * WIRE_THICKNESS, 2 * WIRE_THICKNESS + 48
+                c.center = float(self._begin[0] + e.position * scale), self._end[1]
+                self.add_widget(c)
+
                 needConnector = False
 
             # This element is either a wire or oscilloscope.
             if type(e) == Resistor:
                 needConnector = True
+
                 w = Wire(e)
                 w.wireScale = scale
                 w.update = self.updateCircuit
@@ -268,6 +262,16 @@ class CircuitView(MaterialWidget):
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
                 w.height = 2 * WIRE_THICKNESS + 48
                 w.center_y = self._begin[1]
+                self.add_widget(w)
+
+                w = Wire(e)
+                w.wireScale = scale
+                w.update = self.updateCircuit
+                w.contextMenuLayer = self.contextMenuLayer
+                w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
+                w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
+                w.height = 2 * WIRE_THICKNESS + 48
+                w.center_y = self._end[1]
                 self.add_widget(w)
             elif type(e) == Oscilloscope:
                 pass
