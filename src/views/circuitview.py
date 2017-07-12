@@ -29,6 +29,7 @@ class CircuitWidget(Widget, HoverBehavior):
         self.update = None
         self._menuPos = 0
         self.wireScale = 0
+        self.menu = None
 
 
     def on_touch_down(self, touch):

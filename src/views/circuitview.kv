@@ -66,14 +66,7 @@
 <Connector>:
     canvas:
         Color:
-            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
-
-        Ellipse:
-            pos: self.center_x - constants.WIRE_THICKNESS, self.center_y - constants.WIRE_THICKNESS
-            size: 2 * constants.WIRE_THICKNESS, 2 * constants.WIRE_THICKNESS
-
-        Color:
-            rgba: constants.DARK_PRIMARY
+            rgba: constants.TEXT_BLACK
 
         Ellipse:
             pos: self.center_x - constants.WIRE_THICKNESS / 2.0, self.center_y - constants.WIRE_THICKNESS / 2.0
