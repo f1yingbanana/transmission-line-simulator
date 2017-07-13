@@ -1,0 +1,88 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-12-2017
+#
+
+#:set defaultColor (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
+<MaterialTextField>:
+    height: dp(16) + sp(28)
+    width: dp(200)
+
+    label: label
+    inputText: inputText
+    suffix: suffix
+    bottomLine: bottomLine
+    primaryColor: defaultColor
+    unfocusedLabelColor: 0, 0, 0, 0.54
+    disabledLabelColor: 0, 0, 0, 0.42
+    unfocusedLineColor: 0, 0, 0, 0.42
+    focusedLineColor: 0, 0, 0, 0.87
+    textColor: 0, 0, 0, 0.87
+
+    errorColor: 1, 0, 0, 1
+
+    Label:
+        id: label
+        size: self.parent.width, self.texture_size[1]
+        text_size: self.size
+        font_size: '16sp'
+        color: self.parent.unfocusedLabelColor
+        pos: 0, dp(8)
+        text: 'Label'
+        halign: 'left'
+
+    BoxLayout:
+        y: dp(8)
+        size: self.parent.width, inputText.line_height
+        size_hint: None, None
+
+        TextInput:
+            id: inputText
+            pos: 0, dp(8)
+            multiline: False
+            backgroud_active: None
+            background_color: 1, 1, 1, 0
+            background_normal: ''
+            background_disabled_normal: ''
+            cursor_color: self.parent.parent.primaryColor
+            font_size: '16sp'
+            foreground_color: self.parent.parent.textColor
+            padding: [0]
+
+        Widget:
+            width: dp(8) if len(suffix.text) > 0 else 0
+            size_hint_x: None
+
+        Label:
+            id: suffix
+            width: self.texture_size[0]
+            size_hint_x: None
+            font_size: '16sp'
+            color: self.parent.parent.unfocusedLabelColor
+            text: ''
+            opacity: 0
+
+
+    Underline:
+        id: bottomLine
+        size: self.parent.width, dp(1)
+        color: self.parent.unfocusedLineColor
+        focused: inputText.focused
+        hovered: self.parent.hovered
+
+
+<Underline>:
+    color: 1, 1, 1, 1
+    focused: False
+    hovered: False
+    size_hint: None, None
+
+    canvas:
+        Color:
+            rgba: self.color
+
+        Rectangle:
+            size: self.size
+

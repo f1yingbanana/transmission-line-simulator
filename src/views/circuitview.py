@@ -7,6 +7,7 @@
 
 from kivy.uix.widget import Widget
 from materialwidget import MaterialWidget
+from materialtextfield import MaterialTextField
 from kivy.properties import *
 from models.resistor import Resistor
 from models.oscilloscope import Oscilloscope
