@@ -12,6 +12,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from util.hoverbehavior import HoverBehavior
 from kivy.animation import Animation
 from util.constants import *
+from kivy.metrics import *
 
 class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     """
@@ -89,7 +90,7 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
         if self._hoverAnim != None:
             self._hoverAnim.cancel(self)
 
-        e = 8 if self.hovered else 2
+        e = dp(8) if self.hovered else dp(2)
         self._hoverAnim = Animation(elevation = e, d = 0.2, t = 'in_out_cubic')
         self._hoverAnim.start(self)
 

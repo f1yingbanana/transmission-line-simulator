@@ -10,13 +10,13 @@
     size: 0, 0
     _container: container
     opacity: 0
-    elevation: 8
+    elevation: dp(8)
 
     canvas.before:
         StencilPush
 
         RoundedRectangle:
-            radius: [4]
+            radius: [dp(2)]
             size: self.size
             pos: self.pos
 
