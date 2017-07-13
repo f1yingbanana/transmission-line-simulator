@@ -16,6 +16,7 @@ from util.hoverbehavior import HoverBehavior
 from source import Source
 from kivy.core.window import Window
 from contextmenu import ContextMenu
+from models.circuit import Circuit
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -59,14 +60,6 @@ class CircuitWidget(Widget, HoverBehavior):
             self.menu.dismiss(False)
         
         self.menu.show(self.contextMenuLayer, pos, True)
-
-
-    def on_enter(self):
-        pass
-
-
-    def on_leave(self):
-        pass
 
 
 
@@ -143,7 +136,7 @@ class Load(CircuitWidget):
 
 
     def onResetClicked(self):
-        pass
+        self.resetCircuit()
 
 
 class Source(CircuitWidget):
@@ -163,7 +156,7 @@ class Source(CircuitWidget):
 
 
     def onResetClicked(self):
-        pass
+        self.resetCircuit()
 
 
 class CircuitView(MaterialWidget):
@@ -212,6 +205,11 @@ class CircuitView(MaterialWidget):
         self.updateCircuit()
 
 
+    def resetCircuit(self):
+        self.model.reset()
+        self.model.circuit = Circuit()
+
+
     def updateCircuit(self):
         """
         Removes all circuit elements from the diagram and add everything from
@@ -225,6 +223,7 @@ class CircuitView(MaterialWidget):
         # Add a source.
         source = Source()
         source.contextMenuLayer = self.contextMenuLayer
+        source.resetCircuit = self.resetCircuit
         source.size = 80, 80
         source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(source)
@@ -284,6 +283,7 @@ class CircuitView(MaterialWidget):
         # Add a load.
         load = Load()
         load.contextMenuLayer = self.contextMenuLayer
+        load.resetCircuit = self.resetCircuit
         load.size = 40, 120
         load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(load)
