@@ -12,6 +12,7 @@
 
     label: label
     inputText: inputText
+    prefix: prefix
     suffix: suffix
     bottomLine: bottomLine
     primaryColor: defaultColor
@@ -37,6 +38,19 @@
         y: dp(8)
         size: self.parent.width, inputText.line_height
         size_hint: None, None
+
+        Label:
+            id: prefix
+            width: self.texture_size[0]
+            size_hint_x: None
+            font_size: '16sp'
+            color: self.parent.parent.unfocusedLabelColor
+            text: ''
+            opacity: 0
+
+        Widget:
+            width: dp(8) if len(prefix.text) > 0 else 0
+            size_hint_x: None
 
         TextInput:
             id: inputText

@@ -23,6 +23,7 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
     label = ObjectProperty(None)
     inputText = ObjectProperty(None)
     bottomLine = ObjectProperty(None)
+    prefix = ObjectProperty(None)
     suffix = ObjectProperty(None)
 
     primaryColor = ListProperty()
@@ -39,6 +40,7 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
         self._labelAnim = None
         self._bottomLineAnim = None
         self._suffixAnim = None
+        self._prefixAnim = None
 
         Clock.schedule_once(self._completeSetup, 0)
 
@@ -56,6 +58,8 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
         if self._labelAnim != None:
             self._labelAnim.cancel(self.label)
             self._bottomLineAnim.cancel(self.bottomLine)
+            self._prefixAnim.cancel(self.prefix)
+            self._suffixAnim.cancel(self.suffix)
 
         y0 = dp(8)
         y1 = self.inputText.y + self.inputText.line_height + dp(8)
@@ -74,9 +78,11 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
 
         if shrink:
             self._labelAnim = Animation(y = y1, font_size = f1, d = 0.15, t = 'in_out_quad')
+            self._prefixAnim = Animation(opacity = 1, d = 0.15, t = 'in_out_quad')
             self._suffixAnim = Animation(opacity = 1, d = 0.15, t = 'in_out_quad')
         else:
             self._labelAnim = Animation(y = y0, color = lc0, font_size = f0, d = 0.15, t = 'in_out_quad')
+            self._prefixAnim = Animation(opacity = 0, d = 0.15, t = 'in_out_quad')
             self._suffixAnim = Animation(opacity = 0, d = 0.15, t = 'in_out_quad')
 
         if self.inputText.focus:
@@ -87,6 +93,7 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
             self._bottomLineAnim = Animation(color = c0, height = h0, d = 0.15, t = 'in_out_quad')
 
         self._suffixAnim.start(self.suffix)
+        self._prefixAnim.start(self.prefix)
         self._labelAnim.start(self.label)
         self._bottomLineAnim.start(self.bottomLine)
 
