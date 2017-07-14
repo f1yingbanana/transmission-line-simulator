@@ -2,14 +2,15 @@
 # Transmission Line Simulator
 # 
 # Author(s): Jiacong Xu
-# Created: Jul-14-2017
+# Created: Jul-15-2017
 #
 
-<LoadEditor>:
-    _fullSize: dp(200), dp(122)
+<WireEditor>:
+    _fullSize: dp(200), dp(182)
     _container: container
 
     resistanceTextField: resistanceTextField
+    lengthTextField: lengthTextField
 
     prevButton: prevButton
     nextButton: nextButton
@@ -22,6 +23,7 @@
         padding: dp(8)
 
         BoxLayout:
+            orientation: 'vertical'
             size_hint_y: None
             height: self.minimum_height
             padding: dp(8)
@@ -30,6 +32,16 @@
                 size_hint_y: None
                 title: 'Resistance'
                 suffix: 'ohm'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: lengthTextField
+                size_hint_y: None
+                title: 'Length'
+                suffix: 'm'
 
         Widget:
             height: dp(16)

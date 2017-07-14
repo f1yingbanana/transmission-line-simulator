@@ -9,6 +9,7 @@
 #:include src/views/contextmenu.kv
 #:include src/views/materialtextfield.kv
 #:include src/views/loadeditor.kv
+#:include src/views/wireeditor.kv
 
 <CircuitView>:
     _begin: 0, 0
@@ -64,16 +65,16 @@
             size: max(0, self.width - constants.WIRE_THICKNESS), constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
-
-<Connector>:
-    canvas:
         Color:
             rgba: constants.TEXT_BLACK
 
         Ellipse:
-            pos: self.center_x - constants.WIRE_THICKNESS / 2.0, self.center_y - constants.WIRE_THICKNESS / 2.0
+            pos: self.x - constants.WIRE_THICKNESS * 1.5, self.center_y - constants.WIRE_THICKNESS / 2.0
             size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
 
+        Ellipse:
+            pos: self.x + self.width + constants.WIRE_THICKNESS * 0.5, self.center_y - constants.WIRE_THICKNESS / 2.0
+            size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
 
 
 <Load>:

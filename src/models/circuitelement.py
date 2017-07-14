@@ -21,9 +21,9 @@ class CircuitElement(object):
     
     def __init__(self):
         self.position = 0
-        self.length = 0
-        self.next = None
-        self.prev = None
+        self._length = 0
+        self._next = None
+        self._prev = None
         self.resistance = 0
 
 
@@ -69,4 +69,22 @@ class CircuitElement(object):
                 prv.position = value.position - prv.length
                 value = prv
                 prv = prv.prev
+
+
+    @property
+    def length(self):
+        return self._length
+
+
+    @length.setter
+    def length(self, value):
+        self._length = value
+
+        this = self
+        nxt = self.next
+
+        while nxt != None:
+            nxt.position = this.position + this.length
+            this = nxt
+            nxt = nxt.next
 

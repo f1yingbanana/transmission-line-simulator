@@ -40,7 +40,7 @@ class PopupEditor(MaterialWidget):
         # Determine orientation
         self.orientation = 'upright'
 
-        if pos[1] + self.height > layer.height:
+        if pos[1] + self._fullSize[1] > layer.height:
             self.orientation = 'downright'
 
         layer.add_widget(self)

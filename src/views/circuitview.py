@@ -18,6 +18,8 @@ from kivy.core.window import Window
 from contextmenu import ContextMenu
 from models.circuit import Circuit
 from loadeditor import LoadEditor
+from wireeditor import WireEditor
+from kivy.metrics import *
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -63,14 +65,6 @@ class CircuitWidget(Widget, HoverBehavior):
         self.menu.show(self.contextMenuLayer, pos, True)
 
 
-
-# Below are graphics helper classes for drawing various elements.
-class Connector(CircuitWidget):
-    """
-    This renders a connector between two wires.
-    """
-
-
 class Wire(CircuitWidget):
     """
     This renders a wire.
@@ -94,7 +88,8 @@ class Wire(CircuitWidget):
 
 
     def onEditClicked(self):
-        popup = EditPopup()
+        popup = WireEditor(self.element)
+        popup.update = self.update
         popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
@@ -108,7 +103,7 @@ class Wire(CircuitWidget):
         copy.next = self.element.next
         self.element.length = wirePos
         self.element.next = copy
-        self.update()
+        self.rebuild()
 
 
     def onAddMonitorClicked(self):
@@ -117,7 +112,7 @@ class Wire(CircuitWidget):
 
     def onDeleteClicked(self):
         self.element.prev.next = self.element.next
-        self.update()
+        self.rebuild()
 
 
 
@@ -186,7 +181,7 @@ class CircuitView(MaterialWidget):
     
 
     def on_model(self, *args, **kwargs):
-        self.updateCircuit()
+        self.rebuildCircuit()
 
 
     def setGraphBounds(self, box):
@@ -206,7 +201,7 @@ class CircuitView(MaterialWidget):
 
         self._begin = bx, by
         self._end = ex, ey
-        self.updateCircuit()
+        self.rebuildCircuit()
 
 
     def resetCircuit(self):
@@ -215,6 +210,21 @@ class CircuitView(MaterialWidget):
 
 
     def updateCircuit(self):
+        """
+        Updates the length of all the wires in the diagram and also positioning
+        of oscilloscopes.
+        """
+        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
+        lastX = 0
+
+        for c in self.children:
+            if type(c) == Wire:
+                c.x = float(self._begin[0] + c.element.position * scale + WIRE_THICKNESS)
+                c.width = float(max(0, c.element.length * scale - 2 * WIRE_THICKNESS))
+                lastX = c.x + c.element.position
+
+
+    def rebuildCircuit(self):
         """
         Removes all circuit elements from the diagram and add everything from
         model.
@@ -228,33 +238,16 @@ class CircuitView(MaterialWidget):
         source = Source()
         source.contextMenuLayer = self.contextMenuLayer
         source.resetCircuit = self.resetCircuit
-        source.size = 80, 80
+        source.size = dp(40), dp(40)
         source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(source)
 
         # Add each wire and oscilloscpe with a connector inbetween.
         e = self.model.circuit.head.next
-        needConnector = False
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
         c = None
 
         while e.next != None:
-            if needConnector:
-                # Create a connector in place.
-                c = Connector()
-                c.contextMenuLayer = self.contextMenuLayer
-                c.size = 2 * WIRE_THICKNESS, 2 * WIRE_THICKNESS + 48
-                c.center = float(self._begin[0] + e.position * scale), self._begin[1]
-                self.add_widget(c)
-
-                c = Connector()
-                c.contextMenuLayer = self.contextMenuLayer
-                c.size = 2 * WIRE_THICKNESS, 2 * WIRE_THICKNESS + 48
-                c.center = float(self._begin[0] + e.position * scale), self._end[1]
-                self.add_widget(c)
-
-                needConnector = False
-
             # This element is either a wire or oscilloscope.
             if type(e) == Resistor:
                 needConnector = True
@@ -262,6 +255,7 @@ class CircuitView(MaterialWidget):
                 w = Wire(e)
                 w.wireScale = scale
                 w.update = self.updateCircuit
+                w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
@@ -272,6 +266,7 @@ class CircuitView(MaterialWidget):
                 w = Wire(e)
                 w.wireScale = scale
                 w.update = self.updateCircuit
+                w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
