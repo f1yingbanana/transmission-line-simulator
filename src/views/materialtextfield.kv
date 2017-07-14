@@ -7,13 +7,18 @@
 
 #:set defaultColor (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
 <MaterialTextField>:
-    height: dp(16) + sp(28)
-    width: dp(200)
+    size: dp(200), dp(16) + sp(28)
+    size_hint_y: None
 
-    label: label
+
     inputText: inputText
-    prefix: prefix
-    suffix: suffix
+    prefix: prefix.text
+    suffix: suffix.text
+    title: label.text
+    text: inputText.text
+    titleLabel: label
+    prefixLabel: prefix
+    suffixLabel: suffix
     bottomLine: bottomLine
     primaryColor: defaultColor
     unfocusedLabelColor: 0, 0, 0, 0.54
@@ -31,7 +36,7 @@
         font_size: '16sp'
         color: self.parent.unfocusedLabelColor
         pos: 0, dp(8)
-        text: 'Label'
+        text: self.parent.title
         halign: 'left'
 
     BoxLayout:
@@ -45,7 +50,7 @@
             size_hint_x: None
             font_size: '16sp'
             color: self.parent.parent.unfocusedLabelColor
-            text: ''
+            text: self.parent.parent.prefix
             opacity: 0
 
         Widget:
@@ -64,6 +69,7 @@
             font_size: '16sp'
             foreground_color: self.parent.parent.textColor
             padding: [0]
+            text: self.parent.parent.text
 
         Widget:
             width: dp(8) if len(suffix.text) > 0 else 0
@@ -75,7 +81,7 @@
             size_hint_x: None
             font_size: '16sp'
             color: self.parent.parent.unfocusedLabelColor
-            text: ''
+            text: self.parent.parent.suffix
             opacity: 0
 
 

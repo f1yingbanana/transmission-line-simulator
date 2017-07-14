@@ -20,11 +20,15 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
     this project.
     """
 
-    label = ObjectProperty(None)
+    titleLabel = ObjectProperty(None)
     inputText = ObjectProperty(None)
     bottomLine = ObjectProperty(None)
-    prefix = ObjectProperty(None)
-    suffix = ObjectProperty(None)
+    prefixLabel = ObjectProperty(None)
+    suffixLabel = ObjectProperty(None)
+    prefix = StringProperty(None)
+    suffix = StringProperty(None)
+    title = StringProperty(None)
+    text = StringProperty(None)
 
     primaryColor = ListProperty()
     errorColor = ListProperty()
@@ -47,19 +51,22 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
 
     def _completeSetup(self, dt):
         self.inputText.bind(focus = self.on_focus)
+        self.animateLabel(False)
 
 
     def on_focus(self, instance, focus):
-        t = focus or (instance.text != None and len(instance.text) > 0)
-        self._animateLabel(t)
+        self.animateLabel(True)
 
 
-    def _animateLabel(self, shrink):
+    def animateLabel(self, animated):
+        shrink = self.inputText.focus or len(self.text) > 0
+        t = 0.15 if animated else 0
+
         if self._labelAnim != None:
-            self._labelAnim.cancel(self.label)
+            self._labelAnim.cancel(self.titleLabel)
             self._bottomLineAnim.cancel(self.bottomLine)
-            self._prefixAnim.cancel(self.prefix)
-            self._suffixAnim.cancel(self.suffix)
+            self._prefixAnim.cancel(self.prefixLabel)
+            self._suffixAnim.cancel(self.suffixLabel)
 
         y0 = dp(8)
         y1 = self.inputText.y + self.inputText.line_height + dp(8)
@@ -77,25 +84,32 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
         lc1 = self.primaryColor
 
         if shrink:
-            self._labelAnim = Animation(y = y1, font_size = f1, d = 0.15, t = 'in_out_quad')
-            self._prefixAnim = Animation(opacity = 1, d = 0.15, t = 'in_out_quad')
-            self._suffixAnim = Animation(opacity = 1, d = 0.15, t = 'in_out_quad')
+            self._labelAnim = Animation(y = y1, font_size = f1, d = t, t = 'in_out_quad')
+            self._prefixAnim = Animation(opacity = 1, d = t, t = 'in_out_quad')
+            self._suffixAnim = Animation(opacity = 1, d = t, t = 'in_out_quad')
         else:
-            self._labelAnim = Animation(y = y0, color = lc0, font_size = f0, d = 0.15, t = 'in_out_quad')
-            self._prefixAnim = Animation(opacity = 0, d = 0.15, t = 'in_out_quad')
-            self._suffixAnim = Animation(opacity = 0, d = 0.15, t = 'in_out_quad')
+            self._labelAnim = Animation(y = y0, color = lc0, font_size = f0, d = t, t = 'in_out_quad')
+            self._prefixAnim = Animation(opacity = 0, d = t, t = 'in_out_quad')
+            self._suffixAnim = Animation(opacity = 0, d = t, t = 'in_out_quad')
 
         if self.inputText.focus:
-            self._labelAnim &= Animation(color = lc1, d = 0.15, t = 'in_out_quad')
-            self._bottomLineAnim = Animation(color = c1, height = h1, d = 0.15, t = 'in_out_quad')
+            self._labelAnim &= Animation(color = lc1, d = t, t = 'in_out_quad')
+            self._bottomLineAnim = Animation(color = c1, height = h1, d = t, t = 'in_out_quad')
         else:
-            self._labelAnim &= Animation(color = lc0, d = 0.15, t = 'in_out_quad')
-            self._bottomLineAnim = Animation(color = c0, height = h0, d = 0.15, t = 'in_out_quad')
+            self._labelAnim &= Animation(color = lc0, d = t, t = 'in_out_quad')
+            self._bottomLineAnim = Animation(color = c0, height = h0, d = t, t = 'in_out_quad')
 
-        self._suffixAnim.start(self.suffix)
-        self._prefixAnim.start(self.prefix)
-        self._labelAnim.start(self.label)
-        self._bottomLineAnim.start(self.bottomLine)
+        if self.suffixLabel != None:
+            self._suffixAnim.start(self.suffixLabel)
+
+        if self.prefixLabel != None:
+            self._prefixAnim.start(self.prefixLabel)
+
+        if self.titleLabel != None:
+            self._labelAnim.start(self.titleLabel)
+
+        if self.bottomLine != None:
+            self._bottomLineAnim.start(self.bottomLine)
 
 
     def on_enter(self):
@@ -114,7 +128,6 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
 
             self._bottomLineAnim = Animation(color = self.unfocusedLineColor, height = dp(1), d = 0.15, t = 'in_out_quad')
             self._bottomLineAnim.start(self.bottomLine)
-
 
 
 class Underline(Widget):

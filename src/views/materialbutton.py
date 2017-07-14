@@ -13,6 +13,7 @@ from util.hoverbehavior import HoverBehavior
 from kivy.animation import Animation
 from util.constants import *
 from kivy.metrics import *
+from kivy.clock import Clock
 
 class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     """
@@ -55,8 +56,8 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
             self.highlightColor = 1, 1, 1, 0
         else:
             self.backgroundColor = WHITE
-            self.titleLabel.color = TEXT_BLACK
-            self.iconLabel.color = TEXT_BLACK
+            self.titleLabel.color = PRIMARY
+            self.iconLabel.color = PRIMARY
             self.rippleView.rippleColor = RIPPLE_DARK
             self.raised = False
             self.highlightColor = GRAY
@@ -65,8 +66,6 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     def on_enter(self):
         if self.disabled:
             return
-
-        print 'entered'
 
         self._animateHover()
 
@@ -80,8 +79,6 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
     def on_leave(self):
         if self.disabled:
             return
-
-        print 'left'
 
         self._animateHover()
 

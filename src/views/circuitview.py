@@ -17,6 +17,7 @@ from source import Source
 from kivy.core.window import Window
 from contextmenu import ContextMenu
 from models.circuit import Circuit
+from loadeditor import LoadEditor
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -93,7 +94,8 @@ class Wire(CircuitWidget):
 
 
     def onEditClicked(self):
-        pass
+        popup = EditPopup()
+        popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
     def onSplitClicked(self):
@@ -123,16 +125,18 @@ class Load(CircuitWidget):
     """
     This renders a load.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, loadModel, **kwargs):
         super(Load, self).__init__(**kwargs)
 
         titles = ['Edit Load', 'Reset Circuit']
         actions = [self.onEditClicked, self.onResetClicked]
         self.menu = ContextMenu(titles, actions)
+        self._load = loadModel
 
 
     def onEditClicked(self):
-        pass
+        popup = LoadEditor(self._load)
+        popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
     def onResetClicked(self):
@@ -281,7 +285,7 @@ class CircuitView(MaterialWidget):
             e = e.next
 
         # Add a load.
-        load = Load()
+        load = Load(e)
         load.contextMenuLayer = self.contextMenuLayer
         load.resetCircuit = self.resetCircuit
         load.size = 40, 120
