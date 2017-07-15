@@ -37,15 +37,6 @@ class SourceEditor(PopupEditor):
         super(SourceEditor, self).__init__(**kwargs)
 
         self._source = source
-        self.resistanceTextField.text = '{:g}'.format(source.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-        self.voltageTextField.text = '{:g}'.format(source.amplitude)
-        self.voltageTextField.input_filter = 'float'
-        self.voltageTextField.inputText.bind(focus = self.on_focus)
-        self.widthTextField.text = '{:g}'.format(source.width)
-        self.widthTextField.input_filter = 'float'
-        self.widthTextField.inputText.bind(focus = self.on_focus)
 
         self.gaussButton.changeStyle('flat')
         self.squareButton.changeStyle('flat')
@@ -60,9 +51,6 @@ class SourceEditor(PopupEditor):
         self.gaussButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Gaussian)
         self.squareButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Square)
         self.triangleButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Triangle)
-
-        self.prevButton.disabled = source.prev == None
-        self.nextButton.disabled = source.next == None
 
         self.animateSwitch(source.shape, False)
 
@@ -134,6 +122,23 @@ class SourceEditor(PopupEditor):
     def onWaveShapeClicked(self, shape):
         self._source.shape = shape
         self.animateSwitch(shape, True)
+
+
+    def updateValues(self):
+        self.prevButton.disabled = self._source.prev == None
+        self.nextButton.disabled = self._source.next == None
+        self.resistanceTextField.text = '{:g}'.format(self._source.resistance)
+        self.resistanceTextField.input_filter = 'float'
+        self.resistanceTextField.inputText.bind(focus = self.on_focus)
+        self.voltageTextField.text = '{:g}'.format(self._source.amplitude)
+        self.voltageTextField.input_filter = 'float'
+        self.voltageTextField.inputText.bind(focus = self.on_focus)
+        self.widthTextField.text = '{:g}'.format(self._source.width)
+        self.widthTextField.input_filter = 'float'
+        self.widthTextField.inputText.bind(focus = self.on_focus)
+        self.resistanceTextField.animateLabel(False)
+        self.voltageTextField.animateLabel(False)
+        self.widthTextField.animateLabel(False)
 
 
     def animateSwitch(self, mode, animated):

@@ -22,10 +22,7 @@ class LoadEditor(PopupEditor):
     def __init__(self, load, **kwargs):
         super(LoadEditor, self).__init__(**kwargs)
 
-        self.resistanceTextField.text = '{:g}'.format(load.resistance)
-        self.resistanceTextField.input_filter = 'float'
         self._load = load
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
         self.prevButton.changeStyle('flat')
         self.nextButton.changeStyle('flat')
         self.prevButton.iconLabel.color = PRIMARY
@@ -33,8 +30,6 @@ class LoadEditor(PopupEditor):
 
         self.prevButton.on_press = self.showPrev
         self.nextButton.on_press = self.showNext
-        self.prevButton.disabled = load.prev == None
-        self.nextButton.disabled = load.next == None
 
 
     def on_focus(self, instance, focus):
@@ -44,6 +39,15 @@ class LoadEditor(PopupEditor):
                 self._load.resistance = 0
             else:
                 self._load.resistance = float(self.resistanceTextField.text)
+
+
+    def updateValues(self):
+        self.prevButton.disabled = self._load.prev == None
+        self.nextButton.disabled = self._load.next == None
+        self.resistanceTextField.text = '{:g}'.format(self._load.resistance)
+        self.resistanceTextField.input_filter = 'float'
+        self.resistanceTextField.inputText.bind(focus = self.on_focus)
+        self.resistanceTextField.animateLabel(False)
 
 
     def showPrev(self):

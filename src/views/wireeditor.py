@@ -25,21 +25,10 @@ class WireEditor(PopupEditor):
 
         self._wire = wire
         
-        self.resistanceTextField.text = '{:g}'.format(wire.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-
-        self.lengthTextField.text = '{:g}'.format(wire.length)
-        self.lengthTextField.input_filter = 'float'
-        self.lengthTextField.inputText.bind(focus = self.on_focus)
-
         self.prevButton.changeStyle('flat')
         self.nextButton.changeStyle('flat')
         self.prevButton.iconLabel.color = PRIMARY
         self.nextButton.iconLabel.color = PRIMARY
-
-        self.prevButton.disabled = wire.prev == None
-        self.nextButton.disabled = wire.next == None
 
         self.prevButton.on_press = self.showPrev
         self.nextButton.on_press = self.showNext
@@ -61,7 +50,22 @@ class WireEditor(PopupEditor):
                 self._wire.length = max(0, float(self.lengthTextField.text))
                 self.lengthTextField.text = '{:g}'.format(self._wire.length)
 
-            self.update()
+            self.updateCircuit()
+
+
+    def updateValues(self):
+        self.resistanceTextField.text = '{:g}'.format(self._wire.resistance)
+        self.resistanceTextField.input_filter = 'float'
+        self.resistanceTextField.inputText.bind(focus = self.on_focus)
+        self.resistanceTextField.animateLabel(False)
+
+        self.lengthTextField.text = '{:g}'.format(self._wire.length)
+        self.lengthTextField.input_filter = 'float'
+        self.lengthTextField.inputText.bind(focus = self.on_focus)
+        self.lengthTextField.animateLabel(False)
+
+        self.prevButton.disabled = self._wire.prev == None
+        self.nextButton.disabled = self._wire.next == None
 
 
     def showPrev(self):

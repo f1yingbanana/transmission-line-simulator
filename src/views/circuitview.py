@@ -32,7 +32,7 @@ class CircuitWidget(Widget, HoverBehavior):
 
         self.contextMenuLayer = None
         self.element = None
-        self.update = None
+        self.updateCircuit = None
         self._menuPos = 0
         self.wireScale = 0
         self.menu = None
@@ -67,7 +67,9 @@ class CircuitWidget(Widget, HoverBehavior):
 
 
     def onEditClicked(self):
+        self.popup.updateCircuit = self.updateCircuit
         self.popup.show(self.contextMenuLayer, self._menuPos, True)
+        self.popup.updateValues()
 
 
     def onNext(self):
@@ -105,7 +107,6 @@ class Wire(CircuitWidget):
 
         self.menu = ContextMenu(titles, actions)
         self.popup = WireEditor(self.element)
-        self.popup.update = self.update
         self.popup.onPrev = self.onPrev
         self.popup.onNext = self.onNext
 
@@ -276,7 +277,7 @@ class CircuitView(MaterialWidget):
 
                 w = Wire(e)
                 w.wireScale = scale
-                w.update = self.updateCircuit
+                w.updateCircuit = self.updateCircuit
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
@@ -292,7 +293,7 @@ class CircuitView(MaterialWidget):
 
                 w = Wire(e)
                 w.wireScale = scale
-                w.update = self.updateCircuit
+                w.updateCircuit = self.updateCircuit
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
