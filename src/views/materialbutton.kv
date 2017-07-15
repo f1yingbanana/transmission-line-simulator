@@ -13,40 +13,63 @@
     id: materialButton
     titleLabel: materialButtonLabel
     iconLabel: materialButtonIcon
-    title: ''
-    icon: unichr(0xf26b)
+    title: materialButtonLabel.text
+    icon: materialButtonIcon.text
     backgroundColor: constants.PRIMARY
-    width: materialButtonLayout.minimum_width
+    container: materialButtonLayout
+    size: max(materialButtonLayout.minimum_width, dp(30)), dp(30)
     size_hint_x: None
-    _rippleView: materialButtonRippleView
+    highlightColor: 1, 1, 1, 0
+    rippleView: materialButtonRippleView
 
-    RippleView:
-        id: materialButtonRippleView
-        rippleColor: 1, 1, 1, 0.3
-        pos: materialButton.pos
-        size: materialButton.size
+    canvas.before:
+        StencilPush
+
+        RoundedRectangle:
+            radius: [4]
+            size: self.size
+            pos: self.pos
+
+        StencilUse
+
+        Color:
+            rgba: self.highlightColor if self.hovered and not self.disabled else (1, 1, 1, 0)
+
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    canvas.after:
+        StencilPop
 
     BoxLayout:
         id: materialButtonLayout
         pos: materialButton.pos
-        height: materialButton.height
-        width: self.minimum_width
-        padding: 20, 10
+        size: self.parent.size
+        padding: (dp(16) if materialButton.raised else dp(8), 0)
 
         Label:
             id: materialButtonIcon
             font_name: 'assets/fonts/MDIcons.ttf'
             text: materialButton.icon
-            size: self.texture_size
+            width: self.texture_size[0]
             size_hint_x: None
             color: 1, 1, 1, 1
-            font_size: 40
+            font_size: sp(20)
 
         Label:
             id: materialButtonLabel
             text: materialButton.title
-            size: self.texture_size
+            width: self.texture_size[0]
             size_hint_x: None
+            color: 1, 1, 1, 1
+            font_size: '14sp'
 
+
+    RippleView:
+        id: materialButtonRippleView
+        rippleColor: constants.RIPPLE_LIGHT
+        pos: materialButton.pos
+        size: materialButton.size
 
 

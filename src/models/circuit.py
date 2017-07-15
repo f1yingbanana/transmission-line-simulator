@@ -9,6 +9,7 @@ from circuitelement import CircuitElement
 from powersource import PowerSource
 from resistor import Resistor
 from oscilloscope import Oscilloscope
+from util.constants import *
 
 class Circuit(object):
     """
@@ -23,21 +24,16 @@ class Circuit(object):
         Initializes a brand new circuit with a power source, single cable and a
         single load at the right.
         """
-        source = PowerSource(10.0, 5.0, 1, 2.0)
-        cable1 = Resistor(3.0)
-        cable1.length = 1.0
-        cable2 = Resistor(1.0)
-        cable2.length = 1.0
-        cable2.position = 1.0
-        load = Resistor(0)
-        load.position = 2.0
-        source.next = cable1
-        cable1.prev = source
-        cable1.next = cable2
-        cable2.prev = cable1
+        source = PowerSource(10.0, 5.0, 1, 5.0)
+        source.getLength = self.getLength
+        cable = Resistor(5.0)
+        cable2 = Resistor(10.0)
+        load = Resistor(0.0)
+        cable.length = 2.5
+        cable2.length = 2.5
+        source.next = cable
+        cable.next = cable2
         cable2.next = load
-        load.prev = cable2
-        
         self.head = source
     
     
@@ -75,9 +71,7 @@ class Circuit(object):
     
     def getElements(self, position, isForward):
         """
-        Returns the circuit elements positioned at the given position. This
-        search assumes position is discretized through DISCRETE_STEPS in module
-        'constants'.
+        Returns the circuit elements positioned at the given position.
         
         position:   the discretized position along the circuit, in meters.
         isForward:  whether we are looking for junctions of elements going
@@ -86,13 +80,15 @@ class Circuit(object):
         es = []
         
         e = self.head
+
+        step = self.getLength() / DISCRETE_STEPS
         
         while e != None:
             if isForward:
-                if abs(e.position - position) <= 1e-7:
+                if position <= e.position and e.position < position + step:
                     es.append(e)
             else:
-                if abs(e.position + e.length - position) <= 1e-7:
+                if position >= e.position and e.position > position - step:
                     es.append(e)
             
             e = e.next
@@ -101,3 +97,6 @@ class Circuit(object):
             es.reverse()
         
         return es
+        
+
+

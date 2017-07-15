@@ -19,6 +19,8 @@ class GraphView(MaterialWidget):
     """
     This displays and constantly updates a graph with the given list of data
     using matplotlib with a kivy backend script.
+
+    model:  the model of the simulation.
     """
     
     def __init__(self, **kwargs):
@@ -28,22 +30,24 @@ class GraphView(MaterialWidget):
         super(GraphView, self).__init__(**kwargs)
         
         self.model = None
-        self.line = None
+        self._line = None
+        self._p0 = [0, 0]
+        self._p1 = self.size
         
-        self.figure, self.axes = plt.subplots()
-        self.figure.set_tight_layout({"pad": 3})
-        self.axes.grid(True)
-        # self.axes.set_ylabel('voltage (V)', fontsize = 24)
-        self.axes.tick_params(axis = 'both', length = 0)
-        self.axes.set_xticklabels([])
-        for item in self.axes.get_yticklabels() + self.axes.get_xticklabels():
+        self._fig, self._ax = plt.subplots()
+        self._fig.set_tight_layout({"pad": 3})
+        self._ax.grid(True)
+        # self._ax.set_ylabel('voltage (V)', fontsize = 24)
+        self._ax.tick_params(axis = 'both', length = 0)
+        # self._ax.set_xticklabels([])
+        for item in self._ax.get_yticklabels() + self._ax.get_xticklabels():
             item.set_fontsize(24)
         
-        for i in self.axes.spines.itervalues():
+        for i in self._ax.spines.itervalues():
             i.set_linewidth(4)
         
         self.container = BoxLayout()
-        self.container.add_widget(self.figure.canvas)
+        self.container.add_widget(self._fig.canvas)
         self.add_widget(self.container)
         
     
@@ -55,16 +59,30 @@ class GraphView(MaterialWidget):
         self.container.pos = self.pos
         
         if self.model != None:
+            l = self.model.circuit.getLength()
             
-            if self.line == None:
-                x = np.linspace(0, self.model.circuit.getLength(), DISCRETE_STEPS + 1)
-                self.line = self.axes.plot(x, self.model.overallDistribution, linewidth = 5, color = PRIMARY)[0]
-                self._maxAmp = self.model.circuit.head.amplitude
-                self.axes.set_ylim([-3 * self._maxAmp, 3 * self._maxAmp])
-                self.axes.set_xlim([0, self.model.circuit.getLength()])
+            if self._line == None:
+                x = np.linspace(0, l, DISCRETE_STEPS + 1)
+                self._line = self._ax.plot(x, self.model.overallDistribution, \
+                    linewidth = 5, color = PRIMARY)[0]
             else:
-                self.line.set_ydata(self.model.overallDistribution)
+                self._line.set_xdata(np.linspace(0, l, DISCRETE_STEPS + 1))
+                self._line.set_ydata(self.model.overallDistribution)
+                self._p0 = self._ax.transAxes.transform_point([0, 0])
+                self._p1 = self._ax.transAxes.transform_point([1, 1])
+                v = self.model.maxAmplitude
+                self._ax.set_ylim([-1.2 * v, 1.2 * v])
+
             
-            self.figure.canvas.draw()
-        
+            self._ax.set_xlim([0, l])
+            self._fig.canvas.draw()
+
     
+    def getBounds(self):
+        """
+        Returns the bounding box of the actual graph (sans labels) in our widget
+        coordinates. Returns [x, y, width, height].
+        """
+        return [self.pos[0] + self._p0[0], self.pos[1] + self._p0[1], \
+            self._p1[0] - self._p0[0], self._p1[1] - self._p0[1]]
+

@@ -6,9 +6,10 @@
 #
 
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
+from kivy.properties import *
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
+from kivy.graphics import *
 from PIL import Image, ImageDraw, ImageFilter
 
 class MaterialWidget(Widget):
@@ -22,13 +23,18 @@ class MaterialWidget(Widget):
     
     ambientShadowTexture = ObjectProperty(None)
     
+    raised = BooleanProperty(True)
+
+    clipSubviews = BooleanProperty(False)
+
+    elevation = NumericProperty(2.0)
+
+    backgroundColor = ListProperty([1, 1, 1, 1])
     
     def __init__(self, **kwargs):
         super(MaterialWidget, self).__init__(**kwargs)
-
-        self.raised = True
+        
     
-
     def on_size(self, *args, **kwargs):
         self._updateShadow()
 
@@ -49,8 +55,8 @@ class MaterialWidget(Widget):
         self.keyShadowTexture = t1
 
         # Shadow 2
-        radius = self.elevation * 2.0 / 3.0
-        t2 = self._genShadow(self.size[0], self.size[1], radius, 0.08)
+        radius = self.elevation
+        t2 = self._genShadow(self.size[0], self.size[1], radius, 0.05)
         self.ambientShadowTexture = t2
 
 

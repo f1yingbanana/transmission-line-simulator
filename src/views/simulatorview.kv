@@ -8,11 +8,14 @@
 #:include src/views/materialwidget.kv
 #:include src/views/materialbutton.kv
 #:include src/views/playbackcontrolview.kv
+#:include src/views/circuitview.kv
 
 <SimulatorView>:
     id: simulatorView
     graphView: graphView
+    circuitView: circuitView
     playbackControlView: playbackControlView
+    contextMenuLayer: contextMenuLayer
 
     canvas:
         Color:
@@ -31,17 +34,30 @@
             spacing: 40
             padding: 80
 
-            MaterialWidget:
+            CircuitView:
+                id: circuitView
+                contextMenuLayer: contextMenuLayer
                 size_hint_y: 0.48
 
             PlaybackControlView:
-                size_hint_y: 0.04
+                height: dp(30)
+                size_hint_y: None
                 id: playbackControlView
 
             GraphView:
                 id: graphView
                 size_hint_y: 0.48
 
+        Widget:
+            size_hint_x: None
+            width: dp(1)
+
+            canvas:
+                Color:
+                    rgba: 0,0,0,0.12
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
 
         ScrollView:
             do_scroll_x: False
@@ -58,16 +74,14 @@
                 MaterialWidget:
                     height: 400
                     size_hint_y: None
-                    raised: False
                 MaterialWidget:
                     height: 400
                     size_hint_y: None
                 MaterialWidget:
                     height: 400
                     size_hint_y: None
-                MaterialWidget:
-                    height: 400
-                    size_hint_y: None
-                MaterialWidget:
-                    height: 400
-                    size_hint_y: None
+
+    Widget:
+        id: contextMenuLayer
+        pos: simulatorView.pos
+        size: simulatorView.size

@@ -44,3 +44,7 @@ class RippleView(Widget):
         endColor[3] = 0
         self._anim = Animation(_rippleRadius = r, _currColor = endColor, d = RIPPLE_DURATION)
         self._anim.start(self)
+
+
+    def on_touch_down(self, touch):
+        return False

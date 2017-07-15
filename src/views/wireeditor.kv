@@ -1,0 +1,64 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-15-2017
+#
+
+<WireEditor>:
+    _fullSize: dp(200), dp(182)
+    _container: container
+
+    resistanceTextField: resistanceTextField
+    lengthTextField: lengthTextField
+
+    prevButton: prevButton
+    nextButton: nextButton
+
+    BoxLayout:
+        id: container
+        orientation: 'vertical'
+        size: self.parent.width, self.minimum_height
+        pos: self.parent.pos
+        padding: dp(8)
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(8)
+            MaterialTextField:
+                id: resistanceTextField
+                size_hint_y: None
+                title: 'Resistance'
+                suffix: 'ohm'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: lengthTextField
+                size_hint_y: None
+                title: 'Length'
+                suffix: 'm'
+
+        Widget:
+            height: dp(16)
+            size_hint_y: None
+
+        BoxLayout:
+            size: self.parent.width, nextButton.height
+            size_hint_y: None
+
+            MaterialButton:
+                id: prevButton
+                raised: False
+                icon: unichr(0xf2fa)
+
+            Widget
+
+            MaterialButton:
+                id: nextButton
+                raised: False
+                icon: unichr(0xf2fb)
