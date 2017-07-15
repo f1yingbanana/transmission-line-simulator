@@ -35,6 +35,8 @@ class Model(object):
     simSpeed:           simulation speed, a multiplier for elapsed time.
     appState:           the application state.
     elapsed:            amount of elapsed time, in seconds.
+    maxAmplitude:       the maximum amplitude reached within the current 
+                        simulation.
     """
     
     
@@ -50,6 +52,7 @@ class Model(object):
         self.simSpeed = 1e-9
         self.elapsed = 0
         self._lastStep = 0
+        self.maxAmplitude = 10
         self.appState = AppState.Editing
     
     
@@ -144,4 +147,5 @@ class Model(object):
             # print '[' + str(self.forwardCurrent[i]) + ', ' + \
             # str(self.backwardCurrent[i]) + ']'
             v = self.forwardCurrent[i] + self.backwardCurrent[i]
+            self.maxAmplitude = max(self.maxAmplitude, abs(v))
             self.overallDistribution[i] = v

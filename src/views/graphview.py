@@ -65,13 +65,13 @@ class GraphView(MaterialWidget):
                 x = np.linspace(0, l, DISCRETE_STEPS + 1)
                 self._line = self._ax.plot(x, self.model.overallDistribution, \
                     linewidth = 5, color = PRIMARY)[0]
-                self._maxAmp = self.model.circuit.head.amplitude
-                self._ax.set_ylim([-4 * self._maxAmp, 4 * self._maxAmp])
             else:
                 self._line.set_xdata(np.linspace(0, l, DISCRETE_STEPS + 1))
                 self._line.set_ydata(self.model.overallDistribution)
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
+                v = self.model.maxAmplitude
+                self._ax.set_ylim([-1.2 * v, 1.2 * v])
 
             
             self._ax.set_xlim([0, l])
