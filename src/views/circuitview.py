@@ -99,6 +99,8 @@ class Wire(CircuitWidget):
         Splits the wire at the menu pos, cutting it in two identical halves.
         """
         wirePos = (self._menuPos[0] - self.x) / self.wireScale
+        # Discretize the above.
+        
         copy = Resistor(self.element.resistance)
         copy.length = self.element.length - wirePos
         copy.next = self.element.next

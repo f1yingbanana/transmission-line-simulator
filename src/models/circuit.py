@@ -9,6 +9,7 @@ from circuitelement import CircuitElement
 from powersource import PowerSource
 from resistor import Resistor
 from oscilloscope import Oscilloscope
+from util.constants import *
 
 class Circuit(object):
     """
@@ -70,9 +71,7 @@ class Circuit(object):
     
     def getElements(self, position, isForward):
         """
-        Returns the circuit elements positioned at the given position. This
-        search assumes position is discretized through DISCRETE_STEPS in module
-        'constants'.
+        Returns the circuit elements positioned at the given position.
         
         position:   the discretized position along the circuit, in meters.
         isForward:  whether we are looking for junctions of elements going
@@ -81,13 +80,15 @@ class Circuit(object):
         es = []
         
         e = self.head
+
+        step = self.getLength() / DISCRETE_STEPS
         
         while e != None:
             if isForward:
-                if abs(e.position - position) <= 1e-7:
+                if position <= e.position and e.position < position + step:
                     es.append(e)
             else:
-                if abs(e.position + e.length - position) <= 1e-7:
+                if position >= e.position and e.position > position - step:
                     es.append(e)
             
             e = e.next
