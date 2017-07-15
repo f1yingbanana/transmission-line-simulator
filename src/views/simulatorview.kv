@@ -48,6 +48,16 @@
                 id: graphView
                 size_hint_y: 0.48
 
+        Widget:
+            size_hint_x: None
+            width: dp(1)
+
+            canvas:
+                Color:
+                    rgba: 0,0,0,0.12
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
 
         ScrollView:
             do_scroll_x: False
@@ -61,12 +71,6 @@
                 spacing: 80
                 padding: 80
 
-                MaterialWidget:
-                    height: 400
-                    size_hint_y: None
-                MaterialWidget:
-                    height: 400
-                    size_hint_y: None
                 MaterialWidget:
                     height: 400
                     size_hint_y: None

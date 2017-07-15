@@ -74,8 +74,8 @@ class Wire(CircuitWidget):
         super(Wire, self).__init__(**kwargs)
 
         self.element = wireModel
-        titles = ['Edit Wire', 'Split Wire', 'Add Monitor']
-        actions = [self.onEditClicked, self.onSplitClicked, self.onAddMonitorClicked]
+        titles = ['Edit Wire', 'Split Wire'] #, 'Add Monitor']
+        actions = [self.onEditClicked, self.onSplitClicked] #, self.onAddMonitorClicked]
 
         if self._canDelete():
             titles.append('Delete Wire')
@@ -100,7 +100,7 @@ class Wire(CircuitWidget):
         """
         wirePos = (self._menuPos[0] - self.x) / self.wireScale
         # Discretize the above.
-        
+
         copy = Resistor(self.element.resistance)
         copy.length = self.element.length - wirePos
         copy.next = self.element.next
