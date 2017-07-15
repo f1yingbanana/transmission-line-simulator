@@ -36,7 +36,8 @@ class PowerSource(CircuitElement):
         self.amplitude = amplitude
         self.width = width
         self.totalWidth = totalWidth
-        self.shape = WaveShape.Gaussian
+        self._shape = WaveShape.Gaussian
+        self._setPts = False
     
     
     @property
@@ -65,6 +66,10 @@ class PowerSource(CircuitElement):
     
     
     def getOutput(self):
+        if not self._setPts:
+            self._setPts = True
+            self.shape = self._shape
+
         if len(self._output) == 0:
             return 0
         else:
@@ -76,3 +81,4 @@ class PowerSource(CircuitElement):
         Resets the power source, allowing it to output a fresh wave.
         """
         self.shape = self.shape
+        self._setPts = False

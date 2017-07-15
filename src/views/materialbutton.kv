@@ -10,7 +10,6 @@
 #:include src/views/rippleview.kv
 
 <MaterialButton>:
-    height: dp(30)
     id: materialButton
     titleLabel: materialButtonLabel
     iconLabel: materialButtonIcon
@@ -18,7 +17,7 @@
     icon: materialButtonIcon.text
     backgroundColor: constants.PRIMARY
     container: materialButtonLayout
-    width: max(materialButtonLayout.minimum_width, dp(30))
+    size: max(materialButtonLayout.minimum_width, dp(30)), dp(30)
     size_hint_x: None
     highlightColor: 1, 1, 1, 0
     rippleView: materialButtonRippleView

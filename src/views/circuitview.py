@@ -19,6 +19,7 @@ from contextmenu import ContextMenu
 from models.circuit import Circuit
 from loadeditor import LoadEditor
 from wireeditor import WireEditor
+from sourceeditor import SourceEditor
 from kivy.metrics import *
 
 class CircuitWidget(Widget, HoverBehavior):
@@ -126,11 +127,11 @@ class Load(CircuitWidget):
         titles = ['Edit Load', 'Reset Circuit']
         actions = [self.onEditClicked, self.onResetClicked]
         self.menu = ContextMenu(titles, actions)
-        self._load = loadModel
+        self.element = loadModel
 
 
     def onEditClicked(self):
-        popup = LoadEditor(self._load)
+        popup = LoadEditor(self.element)
         popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
@@ -142,16 +143,18 @@ class Source(CircuitWidget):
     """
     This renders a power source.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, element, **kwargs):
         super(Source, self).__init__(**kwargs)
 
         titles = ['Edit Source', 'Reset Circuit']
         actions = [self.onEditClicked, self.onResetClicked]
         self.menu = ContextMenu(titles, actions)
+        self.element = element
 
 
     def onEditClicked(self):
-        pass
+        popup = SourceEditor(self.element)
+        popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
     def onResetClicked(self):
@@ -235,7 +238,7 @@ class CircuitView(MaterialWidget):
         self.clear_widgets()
 
         # Add a source.
-        source = Source()
+        source = Source(self.model.circuit.head)
         source.contextMenuLayer = self.contextMenuLayer
         source.resetCircuit = self.resetCircuit
         source.size = dp(40), dp(40)
