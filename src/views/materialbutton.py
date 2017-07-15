@@ -60,7 +60,7 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
             self.iconLabel.color = PRIMARY
             self.rippleView.rippleColor = RIPPLE_DARK
             self.raised = False
-            self.highlightColor = GRAY
+            self.highlightColor = 0, 0, 0, 0.03
 
 
     def on_enter(self):

@@ -11,6 +11,11 @@ from materialbutton import MaterialButton
 from util.constants import *
 from kivy.animation import Animation
 from models.powersource import *
+from kivy.metrics import *
+from scipy import signal
+import matplotlib.pyplot as plt
+import numpy as np
+from kivy.uix.boxlayout import BoxLayout
 
 class SourceEditor(PopupEditor):
     """
@@ -62,6 +67,45 @@ class SourceEditor(PopupEditor):
         self.animateSwitch(source.shape, False)
 
         self._anim = None
+
+        self._setupIcons()
+
+
+    def _setupIcons(self):
+        """
+        Add icons to buttons.
+        """
+        x = np.linspace(0, 10, 50)
+        y = signal.gaussian(50, 7)
+        self.gaussButton.container.add_widget(self._generateIcon(x, y))
+
+        y0 = [0] * 10
+        y = [1] * 30
+
+        self.squareButton.container.add_widget(self._generateIcon(x, y0 + y + y0))
+
+        y = []
+
+        for i in range(15):
+            y.append(i / 15.0)
+
+        for i in range(15):
+            y.append(1 - i / 15.0)
+
+        self.triangleButton.container.add_widget(self._generateIcon(x, y0 + y + y0))
+
+
+    def _generateIcon(self, x, y):
+        fig, ax = plt.subplots()
+        fig.set_tight_layout({"pad": 0})
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(axis = 'both', length = 0)
+        ax.set_frame_on(False)
+        ax.set_ylim([-0.1, 1.1])
+        ax.plot(x, y, linewidth = dp(2), color = TEXT_BLACK)[0]
+        return fig.canvas
+
 
 
     def on_focus(self, instance, focus):
