@@ -41,6 +41,9 @@ class WireEditor(PopupEditor):
         self.prevButton.disabled = wire.prev == None
         self.nextButton.disabled = wire.next == None
 
+        self.prevButton.on_press = self.showPrev
+        self.nextButton.on_press = self.showNext
+
 
     def on_focus(self, instance, focus):
         if instance == self.resistanceTextField.inputText and not focus:
@@ -59,3 +62,11 @@ class WireEditor(PopupEditor):
                 self.lengthTextField.text = '{:g}'.format(self._wire.length)
 
             self.update()
+
+
+    def showPrev(self):
+        self.onPrev()
+
+
+    def showNext(self):
+        self.onNext()

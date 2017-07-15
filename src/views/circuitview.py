@@ -53,7 +53,7 @@ class CircuitWidget(Widget, HoverBehavior):
 
 
     def on_left_click(self, pos):
-        pass
+        self.onEditClicked()
 
 
     def on_right_click(self, pos):
@@ -64,6 +64,28 @@ class CircuitWidget(Widget, HoverBehavior):
             self.menu.dismiss(False)
         
         self.menu.show(self.contextMenuLayer, pos, True)
+
+
+    def onEditClicked(self):
+        self.popup.show(self.contextMenuLayer, self._menuPos, True)
+
+
+    def onNext(self):
+        """
+        Opens the next menu
+        """
+        self.popup.dismiss(False)
+        self.next._menuPos = self.next.center
+        self.next.onEditClicked()
+
+
+    def onPrev(self):
+        """
+        Opens the next menu
+        """
+        self.popup.dismiss(False)
+        self.prev._menuPos = self.prev.center
+        self.prev.onEditClicked()
 
 
 class Wire(CircuitWidget):
@@ -82,16 +104,14 @@ class Wire(CircuitWidget):
             actions.append(self.onDeleteClicked)
 
         self.menu = ContextMenu(titles, actions)
+        self.popup = WireEditor(self.element)
+        self.popup.update = self.update
+        self.popup.onPrev = self.onPrev
+        self.popup.onNext = self.onNext
 
 
     def _canDelete(self):
         return self.element.prev.prev != None or self.element.next.next != None
-
-
-    def onEditClicked(self):
-        popup = WireEditor(self.element)
-        popup.update = self.update
-        popup.show(self.contextMenuLayer, self._menuPos, True)
 
 
     def onSplitClicked(self):
@@ -130,11 +150,8 @@ class Load(CircuitWidget):
         actions = [self.onEditClicked, self.onResetClicked]
         self.menu = ContextMenu(titles, actions)
         self.element = loadModel
-
-
-    def onEditClicked(self):
-        popup = LoadEditor(self.element)
-        popup.show(self.contextMenuLayer, self._menuPos, True)
+        self.popup = popup = LoadEditor(self.element)
+        self.popup.onPrev = self.onPrev
 
 
     def onResetClicked(self):
@@ -152,11 +169,8 @@ class Source(CircuitWidget):
         actions = [self.onEditClicked, self.onResetClicked]
         self.menu = ContextMenu(titles, actions)
         self.element = element
-
-
-    def onEditClicked(self):
-        popup = SourceEditor(self.element)
-        popup.show(self.contextMenuLayer, self._menuPos, True)
+        self.popup = SourceEditor(self.element)
+        self.popup.onNext = self.onNext
 
 
     def onResetClicked(self):
@@ -252,6 +266,9 @@ class CircuitView(MaterialWidget):
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
         c = None
 
+        p1 = source
+        p2 = source
+
         while e.next != None:
             # This element is either a wire or oscilloscope.
             if type(e) == Resistor:
@@ -266,6 +283,11 @@ class CircuitView(MaterialWidget):
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
                 w.height = 2 * WIRE_THICKNESS + 48
                 w.center_y = self._begin[1]
+
+                w.prev = p1
+                w.prev.next = w
+                p1 = w
+
                 self.add_widget(w)
 
                 w = Wire(e)
@@ -277,6 +299,11 @@ class CircuitView(MaterialWidget):
                 w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
                 w.height = 2 * WIRE_THICKNESS + 48
                 w.center_y = self._end[1]
+
+                w.prev = p2
+                w.prev.next = w
+                p2 = w
+
                 self.add_widget(w)
             elif type(e) == Oscilloscope:
                 pass
@@ -290,4 +317,7 @@ class CircuitView(MaterialWidget):
         load.resetCircuit = self.resetCircuit
         load.size = 40, 120
         load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
+        load.prev = p1
+        p1.next = load
+        p2.next = load
         self.add_widget(load)

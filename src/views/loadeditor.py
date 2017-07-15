@@ -31,6 +31,8 @@ class LoadEditor(PopupEditor):
         self.prevButton.iconLabel.color = PRIMARY
         self.nextButton.iconLabel.color = PRIMARY
 
+        self.prevButton.on_press = self.showPrev
+        self.nextButton.on_press = self.showNext
         self.prevButton.disabled = load.prev == None
         self.nextButton.disabled = load.next == None
 
@@ -42,3 +44,11 @@ class LoadEditor(PopupEditor):
                 self._load.resistance = 0
             else:
                 self._load.resistance = float(self.resistanceTextField.text)
+
+
+    def showPrev(self):
+        self.onPrev()
+
+
+    def showNext(self):
+        self.onNext()

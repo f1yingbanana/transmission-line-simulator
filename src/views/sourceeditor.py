@@ -50,6 +50,8 @@ class SourceEditor(PopupEditor):
         self.prevButton.iconLabel.color = PRIMARY
         self.nextButton.iconLabel.color = PRIMARY
 
+        self.prevButton.on_press = self.showPrev
+        self.nextButton.on_press = self.showNext
         self.gaussButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Gaussian)
         self.squareButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Square)
         self.triangleButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Triangle)
@@ -104,3 +106,11 @@ class SourceEditor(PopupEditor):
             self._anim = Animation(center = self.triangleButton.center, d = t, t = 'in_out_quad')
 
         self._anim.start(self.selection)
+
+
+    def showPrev(self):
+        self.onPrev()
+
+
+    def showNext(self):
+        self.onNext()
