@@ -13,7 +13,6 @@ from models.resistor import Resistor
 from models.oscilloscope import Oscilloscope
 from util.constants import *
 from util.hoverbehavior import HoverBehavior
-from source import Source
 from kivy.core.window import Window
 from contextmenu import ContextMenu
 from models.circuit import Circuit
@@ -68,6 +67,10 @@ class CircuitWidget(Widget, HoverBehavior):
 
     def onEditClicked(self):
         self.popup.updateCircuit = self.updateCircuit
+
+        if self.popup.parent != None:
+            self.popup.dismiss(False)
+        
         self.popup.show(self.contextMenuLayer, self._menuPos, True)
         self.popup.updateValues()
 
