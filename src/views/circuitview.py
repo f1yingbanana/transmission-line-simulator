@@ -261,7 +261,7 @@ class CircuitView(MaterialWidget):
         source = Source(self.model.circuit.head)
         source.contextMenuLayer = self.contextMenuLayer
         source.resetCircuit = self.resetCircuit
-        source.size = dp(40), dp(40)
+        source.size = self.height / 8, self.height / 8
         source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(source)
 
@@ -319,7 +319,7 @@ class CircuitView(MaterialWidget):
         load = Load(e)
         load.contextMenuLayer = self.contextMenuLayer
         load.resetCircuit = self.resetCircuit
-        load.size = 40, 120
+        load.size = self.height / 18, self.height / 6
         load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
         load.prev = p1
         p1.next = load
