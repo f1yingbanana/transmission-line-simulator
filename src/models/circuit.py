@@ -88,7 +88,7 @@ class Circuit(object):
                 if position <= e.position and e.position < position + step:
                     es.append(e)
             else:
-                if position >= e.position and e.position > position - step:
+                if position >= e.position + e.length and e.position > position + e.length - step:
                     es.append(e)
             
             e = e.next
