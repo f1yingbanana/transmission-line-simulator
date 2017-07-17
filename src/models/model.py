@@ -91,6 +91,7 @@ class Model(object):
         self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
         self.circuit.head.reset()
 
+
     def _step(self):
         """
         Simulates a discrete step for each part of the circuit.

@@ -61,6 +61,10 @@ class PopupEditor(MaterialWidget):
                 self.y = pos[1] - h
 
 
+    def update(self):
+        pass
+
+
     def dismiss(self, animated):
         if not animated:
             self.parent.remove_widget(self)

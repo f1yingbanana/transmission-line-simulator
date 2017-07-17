@@ -8,7 +8,6 @@
 #import constants util.constants
 #:include src/views/contextmenu.kv
 #:include src/views/materialtextfield.kv
-#:include src/views/materialradiobutton.kv
 #:include src/views/loadeditor.kv
 #:include src/views/wireeditor.kv
 #:include src/views/sourceeditor.kv
@@ -134,5 +133,5 @@
         font_name: 'assets/fonts/MDIcons.ttf'
         text: unichr(0xf387)
         color: 0, 0, 0, 0.86
-        font_size: 50
+        font_size: self.height / 1.5
 

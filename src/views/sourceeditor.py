@@ -11,6 +11,11 @@ from materialbutton import MaterialButton
 from util.constants import *
 from kivy.animation import Animation
 from models.powersource import *
+from kivy.metrics import *
+from scipy import signal
+import matplotlib.pyplot as plt
+import numpy as np
+from kivy.uix.boxlayout import BoxLayout
 
 class SourceEditor(PopupEditor):
     """
@@ -32,15 +37,6 @@ class SourceEditor(PopupEditor):
         super(SourceEditor, self).__init__(**kwargs)
 
         self._source = source
-        self.resistanceTextField.text = '{:g}'.format(source.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-        self.voltageTextField.text = '{:g}'.format(source.amplitude)
-        self.voltageTextField.input_filter = 'float'
-        self.voltageTextField.inputText.bind(focus = self.on_focus)
-        self.widthTextField.text = '{:g}'.format(source.width)
-        self.widthTextField.input_filter = 'float'
-        self.widthTextField.inputText.bind(focus = self.on_focus)
 
         self.gaussButton.changeStyle('flat')
         self.squareButton.changeStyle('flat')
@@ -56,12 +52,48 @@ class SourceEditor(PopupEditor):
         self.squareButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Square)
         self.triangleButton.on_press = lambda: self.onWaveShapeClicked(WaveShape.Triangle)
 
-        self.prevButton.disabled = source.prev == None
-        self.nextButton.disabled = source.next == None
-
         self.animateSwitch(source.shape, False)
 
         self._anim = None
+
+        self._setupIcons()
+
+
+    def _setupIcons(self):
+        """
+        Add icons to buttons.
+        """
+        x = np.linspace(0, 10, 50)
+        y = signal.gaussian(50, 7)
+        self.gaussButton.container.add_widget(self._generateIcon(x, y))
+
+        y0 = [0] * 10
+        y = [1] * 30
+
+        self.squareButton.container.add_widget(self._generateIcon(x, y0 + y + y0))
+
+        y = []
+
+        for i in range(15):
+            y.append(i / 15.0)
+
+        for i in range(15):
+            y.append(1 - i / 15.0)
+
+        self.triangleButton.container.add_widget(self._generateIcon(x, y0 + y + y0))
+
+
+    def _generateIcon(self, x, y):
+        fig, ax = plt.subplots()
+        fig.set_tight_layout({"pad": 0})
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(axis = 'both', length = 0)
+        ax.set_frame_on(False)
+        ax.set_ylim([-0.1, 1.1])
+        ax.plot(x, y, linewidth = dp(2), color = TEXT_BLACK)[0]
+        return fig.canvas
+
 
 
     def on_focus(self, instance, focus):
@@ -90,6 +122,23 @@ class SourceEditor(PopupEditor):
     def onWaveShapeClicked(self, shape):
         self._source.shape = shape
         self.animateSwitch(shape, True)
+
+
+    def updateValues(self):
+        self.prevButton.disabled = self._source.prev == None
+        self.nextButton.disabled = self._source.next == None
+        self.resistanceTextField.text = '{:g}'.format(self._source.resistance)
+        self.resistanceTextField.input_filter = 'float'
+        self.resistanceTextField.inputText.bind(focus = self.on_focus)
+        self.voltageTextField.text = '{:g}'.format(self._source.amplitude)
+        self.voltageTextField.input_filter = 'float'
+        self.voltageTextField.inputText.bind(focus = self.on_focus)
+        self.widthTextField.text = '{:g}'.format(self._source.width)
+        self.widthTextField.input_filter = 'float'
+        self.widthTextField.inputText.bind(focus = self.on_focus)
+        self.resistanceTextField.animateLabel(False)
+        self.voltageTextField.animateLabel(False)
+        self.widthTextField.animateLabel(False)
 
 
     def animateSwitch(self, mode, animated):

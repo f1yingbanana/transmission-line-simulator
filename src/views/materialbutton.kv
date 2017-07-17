@@ -32,13 +32,6 @@
 
         StencilUse
 
-        Color:
-            rgba: self.highlightColor if self.hovered and not self.disabled else (1, 1, 1, 0)
-
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
     canvas.after:
         StencilPop
 
@@ -64,6 +57,15 @@
             size_hint_x: None
             color: 1, 1, 1, 1
             font_size: '14sp'
+
+    Widget:
+        canvas:
+            Color:
+                rgba: self.parent.highlightColor if self.parent.hovered and not self.parent.disabled else (1, 1, 1, 0)
+
+            Rectangle:
+                size: self.parent.size
+                pos: self.parent.pos
 
 
     RippleView:

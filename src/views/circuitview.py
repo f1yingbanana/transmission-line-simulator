@@ -13,7 +13,6 @@ from models.resistor import Resistor
 from models.oscilloscope import Oscilloscope
 from util.constants import *
 from util.hoverbehavior import HoverBehavior
-from source import Source
 from kivy.core.window import Window
 from contextmenu import ContextMenu
 from models.circuit import Circuit
@@ -32,7 +31,7 @@ class CircuitWidget(Widget, HoverBehavior):
 
         self.contextMenuLayer = None
         self.element = None
-        self.update = None
+        self.updateCircuit = None
         self._menuPos = 0
         self.wireScale = 0
         self.menu = None
@@ -67,7 +66,13 @@ class CircuitWidget(Widget, HoverBehavior):
 
 
     def onEditClicked(self):
+        self.popup.updateCircuit = self.updateCircuit
+
+        if self.popup.parent != None:
+            self.popup.dismiss(False)
+        
         self.popup.show(self.contextMenuLayer, self._menuPos, True)
+        self.popup.updateValues()
 
 
     def onNext(self):
@@ -105,7 +110,6 @@ class Wire(CircuitWidget):
 
         self.menu = ContextMenu(titles, actions)
         self.popup = WireEditor(self.element)
-        self.popup.update = self.update
         self.popup.onPrev = self.onPrev
         self.popup.onNext = self.onNext
 
@@ -257,7 +261,7 @@ class CircuitView(MaterialWidget):
         source = Source(self.model.circuit.head)
         source.contextMenuLayer = self.contextMenuLayer
         source.resetCircuit = self.resetCircuit
-        source.size = dp(40), dp(40)
+        source.size = self.height / 8, self.height / 8
         source.center = float(self._begin[0]), float((self._begin[1] + self._end[1]) / 2)
         self.add_widget(source)
 
@@ -276,7 +280,7 @@ class CircuitView(MaterialWidget):
 
                 w = Wire(e)
                 w.wireScale = scale
-                w.update = self.updateCircuit
+                w.updateCircuit = self.updateCircuit
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
@@ -292,7 +296,7 @@ class CircuitView(MaterialWidget):
 
                 w = Wire(e)
                 w.wireScale = scale
-                w.update = self.updateCircuit
+                w.updateCircuit = self.updateCircuit
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
@@ -315,7 +319,7 @@ class CircuitView(MaterialWidget):
         load = Load(e)
         load.contextMenuLayer = self.contextMenuLayer
         load.resetCircuit = self.resetCircuit
-        load.size = 40, 120
+        load.size = self.height / 18, self.height / 6
         load.center = float(self._end[0]), float((self._begin[1] + self._end[1]) / 2)
         load.prev = p1
         p1.next = load
