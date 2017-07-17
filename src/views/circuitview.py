@@ -19,6 +19,7 @@ from models.circuit import Circuit
 from loadeditor import LoadEditor
 from wireeditor import WireEditor
 from sourceeditor import SourceEditor
+from oscilloscopeeditor import OscilloscopeEditor
 from kivy.metrics import *
 
 class CircuitWidget(Widget, HoverBehavior):
@@ -101,8 +102,8 @@ class Wire(CircuitWidget):
         super(Wire, self).__init__(**kwargs)
 
         self.element = wireModel
-        titles = ['Edit Wire', 'Split Wire'] #, 'Add Monitor']
-        actions = [self.onEditClicked, self.onSplitClicked] #, self.onAddMonitorClicked]
+        titles = ['Edit Wire', 'Split Wire', 'Add Oscilloscope']
+        actions = [self.onEditClicked, self.onSplitClicked, self.onAddMonitorClicked]
 
         if self._canDelete():
             titles.append('Delete Wire')
@@ -179,6 +180,27 @@ class Source(CircuitWidget):
 
     def onResetClicked(self):
         self.resetCircuit()
+
+
+class Oscilloscope(CircuitWidget):
+    """
+    This renders an oscilloscope. Oscilloscopes may only be placed on the bottom
+    wire.
+    """
+    def __init__(self, element, **kwargs):
+        super(Oscilloscope, self).__init__(**kwargs)
+
+        titles = ['Edit Oscilloscope', 'Delete Oscilloscope']
+        actions = [self.onEditClicked, self.onDeleteClicked]
+        self.menu = ContextMenu(titles, actions)
+        self.element = element
+        self.popup = OscilloscopeEditor(self.element)
+        self.popup.onNext = self.onNext
+
+
+    def onDeleteClicked(self):
+        pass
+
 
 
 class CircuitView(MaterialWidget):

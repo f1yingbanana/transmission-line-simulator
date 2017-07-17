@@ -99,7 +99,11 @@ class ContextMenu(MaterialWidget):
             self.opacity = 0.0
         else:
             self._animate(False)
-            self._anim.on_complete = lambda x: self.parent.remove_widget(self)
+            self._anim.on_complete = self._animComplete
+
+    def _animComplete(self, x):
+        if self.parent != None:
+            self.parent.remove_widget(self)
 
 
     def _animate(self, isEntering):
