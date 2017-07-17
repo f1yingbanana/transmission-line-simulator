@@ -1,0 +1,77 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+#:import constants util.constants
+#:include src/views/materialwidget.kv
+#:include src/views/rippleview.kv
+
+<MaterialButton>:
+    id: materialButton
+    titleLabel: materialButtonLabel
+    iconLabel: materialButtonIcon
+    title: materialButtonLabel.text
+    icon: materialButtonIcon.text
+    backgroundColor: constants.PRIMARY
+    container: materialButtonLayout
+    size: max(materialButtonLayout.minimum_width, dp(30)), dp(30)
+    size_hint_x: None
+    highlightColor: 1, 1, 1, 0
+    rippleView: materialButtonRippleView
+
+    canvas.before:
+        StencilPush
+
+        RoundedRectangle:
+            radius: [4]
+            size: self.size
+            pos: self.pos
+
+        StencilUse
+
+    canvas.after:
+        StencilPop
+
+    BoxLayout:
+        id: materialButtonLayout
+        pos: materialButton.pos
+        size: self.parent.size
+        padding: (dp(16) if materialButton.raised else dp(8), 0)
+
+        Label:
+            id: materialButtonIcon
+            font_name: 'assets/fonts/MDIcons.ttf'
+            text: materialButton.icon
+            width: self.texture_size[0]
+            size_hint_x: None
+            color: 1, 1, 1, 1
+            font_size: sp(20)
+
+        Label:
+            id: materialButtonLabel
+            text: materialButton.title
+            width: self.texture_size[0]
+            size_hint_x: None
+            color: 1, 1, 1, 1
+            font_size: '14sp'
+
+    Widget:
+        canvas:
+            Color:
+                rgba: self.parent.highlightColor if self.parent.hovered and not self.parent.disabled else (1, 1, 1, 0)
+
+            Rectangle:
+                size: self.parent.size
+                pos: self.parent.pos
+
+
+    RippleView:
+        id: materialButtonRippleView
+        rippleColor: constants.RIPPLE_LIGHT
+        pos: materialButton.pos
+        size: materialButton.size
+
+

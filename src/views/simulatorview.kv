@@ -1,0 +1,87 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-8-2017
+#
+
+#:include src/views/materialwidget.kv
+#:include src/views/materialbutton.kv
+#:include src/views/playbackcontrolview.kv
+#:include src/views/circuitview.kv
+
+<SimulatorView>:
+    id: simulatorView
+    graphView: graphView
+    circuitView: circuitView
+    playbackControlView: playbackControlView
+    contextMenuLayer: contextMenuLayer
+
+    canvas:
+        Color:
+            rgba: (245 / 255.0, 245 / 255.0, 245 / 255.0, 1)
+        Rectangle:
+            size: self.size
+
+    BoxLayout:
+        pos: simulatorView.pos
+        size: simulatorView.size
+
+        BoxLayout:
+            size_hint_x: 0.65
+            orientation: 'vertical'
+
+            spacing: 40
+            padding: 80
+
+            CircuitView:
+                id: circuitView
+                contextMenuLayer: contextMenuLayer
+                size_hint_y: 0.48
+
+            PlaybackControlView:
+                height: dp(30)
+                size_hint_y: None
+                id: playbackControlView
+
+            GraphView:
+                id: graphView
+                size_hint_y: 0.48
+
+        Widget:
+            size_hint_x: None
+            width: dp(1)
+
+            canvas:
+                Color:
+                    rgba: 0,0,0,0.12
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        ScrollView:
+            do_scroll_x: False
+            size_hint_x: 0.35
+
+            BoxLayout:
+                height: self.minimum_height
+                size_hint: 1, None
+                orientation: 'vertical'
+
+                spacing: 80
+                padding: 80
+
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+                MaterialWidget:
+                    height: 400
+                    size_hint_y: None
+
+    Widget:
+        id: contextMenuLayer
+        pos: simulatorView.pos
+        size: simulatorView.size
