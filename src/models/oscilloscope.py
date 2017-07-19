@@ -51,6 +51,27 @@ class Oscilloscope(CircuitElement):
         self._isRecording = True
     
     
+    @property
+    def next(self):
+        return self._next
+
+
+    @next.setter
+    def next(self, value):
+        # Overriding to ignore length since oscilloscope has no length.
+        self._next = value
+
+
+    @property
+    def prev(self):
+        return self._prev
+
+
+    @prev.setter
+    def prev(self, value):
+        self._prev = value
+
+
     def record(self, time, voltage):
         """
         Records the given time and voltage. Checks if end recording condition

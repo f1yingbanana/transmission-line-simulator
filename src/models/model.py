@@ -72,12 +72,14 @@ class Model(object):
             self._step()
         
         # Update every oscilloscope
+        """
         scopes = self.circuit.getOscilloscopes()
         
         for scope in scopes:
             i = int(DISCRETE_STEPS * scope.position / l)
             v = self.forwardCurrent[i] + self.backwardCurrent[i]
             scope.record(self.elapsed, v)
+            """
     
 
     def reset(self):

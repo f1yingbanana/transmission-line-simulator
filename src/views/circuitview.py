@@ -103,7 +103,7 @@ class Wire(CircuitWidget):
 
         self.element = wireModel
         titles = ['Edit Wire', 'Split Wire', 'Add Oscilloscope']
-        actions = [self.onEditClicked, self.onSplitClicked, self.onAddMonitorClicked]
+        actions = [self.onEditClicked, self.onSplitClicked, self.onAddOscilloscopeClicked]
 
         if self._canDelete():
             titles.append('Delete Wire')
@@ -134,14 +134,14 @@ class Wire(CircuitWidget):
         self.rebuild()
 
 
-    def onAddMonitorClicked(self):
-        pass
+    def onAddOscilloscopeClicked(self):
+        wirePos = (self._menuPos[0] - self.x) / self.wireScale + self.element.position
+        self.addOscilloscope(wirePos)
 
 
     def onDeleteClicked(self):
         self.element.prev.next = self.element.next
         self.rebuild()
-
 
 
 class Load(CircuitWidget):
@@ -235,8 +235,8 @@ class CircuitView(MaterialWidget):
 
         box:    a bounding box in the format of [x, y, width, height]
         """
-        bx, by = box[0], self.y + 80
-        ex, ey = box[0] + box[2], self.y + self.height - 80
+        bx, by = box[0], self.y + self.height * 0.2
+        ex, ey = box[0] + box[2], self.y + self.height * 0.8
 
         if abs(bx - self._begin[0]) < 1e-7 and \
             abs(by - self._begin[1]) < 1e-7 and \
@@ -303,6 +303,7 @@ class CircuitView(MaterialWidget):
                 w = Wire(e)
                 w.wireScale = scale
                 w.updateCircuit = self.updateCircuit
+                w.addOscilloscope = self.addOscilloscope
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
@@ -319,6 +320,7 @@ class CircuitView(MaterialWidget):
                 w = Wire(e)
                 w.wireScale = scale
                 w.updateCircuit = self.updateCircuit
+                w.addOscilloscope = self.addOscilloscope
                 w.rebuild = self.rebuildCircuit
                 w.contextMenuLayer = self.contextMenuLayer
                 w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
@@ -347,3 +349,17 @@ class CircuitView(MaterialWidget):
         p1.next = load
         p2.next = load
         self.add_widget(load)
+
+
+    def addOscilloscope(self, pos):
+        """
+        Adds an oscilloscope at given circuit position, and creates the view.
+        """
+        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
+
+        o = self.model.circuit.insertOscilloscope(pos)
+        ov = Oscilloscope(o)
+        ov.contextMenuLayer = self.contextMenuLayer
+        ov.size = float(self.height / 12), float(self.height / 4)
+        ov.pos = float(self._begin[0] + pos * scale), self._begin[1]
+        self.add_widget(ov)
