@@ -65,7 +65,7 @@ class Circuit(object):
 
         if self.headOscilloscope == None:
             self.headOscilloscope = o
-            return
+            return o
 
         h = self.headOscilloscope
 
@@ -81,7 +81,7 @@ class Circuit(object):
                 break
 
             h = h.next
-        
+
         return o
         
 
