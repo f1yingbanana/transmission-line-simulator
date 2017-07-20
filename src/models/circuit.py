@@ -79,6 +79,11 @@ class Circuit(object):
                 o.next = h
 
                 break
+            elif h.next == None:
+                h.next = o
+                o.prev = h
+
+                break
 
             h = h.next
 

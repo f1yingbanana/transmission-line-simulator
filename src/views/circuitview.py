@@ -195,6 +195,7 @@ class Oscilloscope(CircuitWidget):
         self.menu = ContextMenu(titles, actions)
         self.element = element
         self.popup = OscilloscopeEditor(self.element)
+        self.popup.onPrev = self.onPrev
         self.popup.onNext = self.onNext
 
 
@@ -223,6 +224,8 @@ class CircuitView(MaterialWidget):
         Initializes the view without drawing anything.
         """
         super(CircuitView, self).__init__(**kwargs)
+
+        self.oscilloscopeViews = []
     
 
     def on_model(self, *args, **kwargs):
@@ -363,3 +366,15 @@ class CircuitView(MaterialWidget):
         ov.size = float(self.height / 12), float(self.height / 4)
         ov.pos = float(self._begin[0] + pos * scale), self._begin[1]
         self.add_widget(ov)
+
+        # Link views
+        for i in self.oscilloscopeViews:
+            if o.prev != None and i.element == o.prev:
+                i.next = ov
+                ov.prev = i
+
+            if o.next != None and i.element == o.next:
+                i.prev = ov
+                ov.next = i
+
+        self.oscilloscopeViews.append(ov)
