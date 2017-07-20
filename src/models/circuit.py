@@ -88,7 +88,7 @@ class Circuit(object):
             h = h.next
 
         return o
-        
+
 
     def getElements(self, position, isForward):
         """

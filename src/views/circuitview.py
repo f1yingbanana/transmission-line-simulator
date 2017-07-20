@@ -36,6 +36,8 @@ class CircuitWidget(Widget, HoverBehavior):
         self._menuPos = 0
         self.wireScale = 0
         self.menu = None
+        self.prev = None
+        self.next = None
 
 
     def on_touch_down(self, touch):
@@ -200,7 +202,7 @@ class Oscilloscope(CircuitWidget):
 
 
     def onDeleteClicked(self):
-        pass
+        self.deleteOscilloscope(self.element)
 
 
 
@@ -365,6 +367,7 @@ class CircuitView(MaterialWidget):
         ov.contextMenuLayer = self.contextMenuLayer
         ov.size = float(self.height / 12), float(self.height / 4)
         ov.pos = float(self._begin[0] + pos * scale), self._begin[1]
+        ov.deleteOscilloscope = self.deleteOscilloscope
         self.add_widget(ov)
 
         # Link views
@@ -378,3 +381,32 @@ class CircuitView(MaterialWidget):
                 ov.next = i
 
         self.oscilloscopeViews.append(ov)
+
+
+    def deleteOscilloscope(self, element):
+        """
+        Removes the given oscilloscope from the model and the view.
+        """
+        # Removes from model.
+        if element.prev == None and element.next == None:
+            self.model.circuit.headOscilloscope = None
+
+        if element.prev != None:
+            element.prev.next = element.next
+
+        if element.next != None:
+            element.next.prev = element.prev
+
+        # Removes from view.
+        for i in self.oscilloscopeViews:
+            if i.element == element:
+                if i.prev != None:
+                    i.prev.next = i.next
+
+                if i.next != None:
+                    i.next.prev = i.prev
+
+                self.remove_widget(i)
+
+                break
+
