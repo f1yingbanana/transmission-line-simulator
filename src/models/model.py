@@ -71,7 +71,7 @@ class Model(object):
         for s in range(segs):
             self._step()
         
-        # Update every oscilloscope
+        # Update every headOscilloscope
         h = self.circuit.headOscilloscope
         
         while h != None:

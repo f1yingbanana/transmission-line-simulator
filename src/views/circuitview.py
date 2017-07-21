@@ -127,13 +127,7 @@ class Wire(CircuitWidget):
         """
         wirePos = (self._menuPos[0] - self.x) / self.wireScale
         # Discretize the above.
-
-        copy = Resistor(self.element.resistance)
-        copy.length = self.element.length - wirePos
-        copy.next = self.element.next
-        self.element.length = wirePos
-        self.element.next = copy
-        self.rebuild()
+        self.splitWire(self.element, wirePos)
 
 
     def onAddOscilloscopeClicked(self):
@@ -142,8 +136,7 @@ class Wire(CircuitWidget):
 
 
     def onDeleteClicked(self):
-        self.element.prev.next = self.element.next
-        self.rebuild()
+        self.deleteWire(self.element)
 
 
 class Load(CircuitWidget):
@@ -273,6 +266,8 @@ class CircuitView(MaterialWidget):
                 c.width = float(max(0, c.element.length * scale - 2 * WIRE_THICKNESS))
                 lastX = c.x + c.element.position
 
+        self.repositionOscilloscopes()
+
 
     def rebuildCircuit(self):
         """
@@ -303,44 +298,8 @@ class CircuitView(MaterialWidget):
         while e.next != None:
             # This element is either a wire or oscilloscope.
             if type(e) == Resistor:
-                needConnector = True
+                p1, p2 = self._addWireView(e, p1, p2)
 
-                w = Wire(e)
-                w.wireScale = scale
-                w.updateCircuit = self.updateCircuit
-                w.addOscilloscope = self.addOscilloscope
-                w.rebuild = self.rebuildCircuit
-                w.contextMenuLayer = self.contextMenuLayer
-                w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
-                w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
-                w.height = 2 * WIRE_THICKNESS + 48
-                w.center_y = self._begin[1]
-
-                w.prev = p1
-                w.prev.next = w
-                p1 = w
-
-                self.add_widget(w)
-
-                w = Wire(e)
-                w.wireScale = scale
-                w.updateCircuit = self.updateCircuit
-                w.addOscilloscope = self.addOscilloscope
-                w.rebuild = self.rebuildCircuit
-                w.contextMenuLayer = self.contextMenuLayer
-                w.x = float(self._begin[0] + e.position * scale + WIRE_THICKNESS)
-                w.width = float(max(0, e.length * scale - 2 * WIRE_THICKNESS))
-                w.height = 2 * WIRE_THICKNESS + 48
-                w.center_y = self._end[1]
-
-                w.prev = p2
-                w.prev.next = w
-                p2 = w
-
-                self.add_widget(w)
-            elif type(e) == Oscilloscope:
-                pass
-            
             # Proceed to the next element
             e = e.next
 
@@ -355,32 +314,84 @@ class CircuitView(MaterialWidget):
         p2.next = load
         self.add_widget(load)
 
+        # Oscilloscopes
+        self.oscilloscopeViews = []
+        h = self.model.circuit.headOscilloscope
+
+        while h != None:
+            self._addOscilloscopeView(h)
+            h = h.next
+
 
     def addOscilloscope(self, pos):
         """
         Adds an oscilloscope at given circuit position, and creates the view.
         """
-        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
-
         o = self.model.circuit.insertOscilloscope(pos)
-        ov = Oscilloscope(o)
+        self._addOscilloscopeView(o)
+        
+
+    def _addOscilloscopeView(self, oscilloscope):
+        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
+        ov = Oscilloscope(oscilloscope)
         ov.contextMenuLayer = self.contextMenuLayer
         ov.size = float(self.height / 12), float(self.height / 4)
-        ov.pos = float(self._begin[0] + pos * scale), self._begin[1]
+        ov.pos = float(self._begin[0] + oscilloscope.position * scale), self._begin[1]
         ov.deleteOscilloscope = self.deleteOscilloscope
         self.add_widget(ov)
 
         # Link views
         for i in self.oscilloscopeViews:
-            if o.prev != None and i.element == o.prev:
+            if oscilloscope.prev != None and i.element == oscilloscope.prev:
                 i.next = ov
                 ov.prev = i
 
-            if o.next != None and i.element == o.next:
+            if oscilloscope.next != None and i.element == oscilloscope.next:
                 i.prev = ov
                 ov.next = i
 
         self.oscilloscopeViews.append(ov)
+
+
+    def _addWireView(self, wire, p1, p2):
+        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
+
+        w1 = Wire(wire)
+        w1.wireScale = scale
+        w1.updateCircuit = self.updateCircuit
+        w1.addOscilloscope = self.addOscilloscope
+        w1.deleteWire = self.deleteWire
+        w1.splitWire = self.splitWire
+        w1.contextMenuLayer = self.contextMenuLayer
+        w1.x = float(self._begin[0] + wire.position * scale + WIRE_THICKNESS)
+        w1.width = float(max(0, wire.length * scale - 2 * WIRE_THICKNESS))
+        w1.height = 2 * WIRE_THICKNESS + 48
+        w1.center_y = self._begin[1]
+
+        w1.prev = p1
+        w1.prev.next = w1
+
+        self.add_widget(w1)
+
+        w2 = Wire(wire)
+        w2.wireScale = scale
+        w2.updateCircuit = self.updateCircuit
+        w2.addOscilloscope = self.addOscilloscope
+        w2.deleteWire = self.deleteWire
+        w2.splitWire = self.splitWire
+        w2.contextMenuLayer = self.contextMenuLayer
+        w2.x = float(self._begin[0] + wire.position * scale + WIRE_THICKNESS)
+        w2.width = float(max(0, wire.length * scale - 2 * WIRE_THICKNESS))
+        w2.height = 2 * WIRE_THICKNESS + 48
+        w2.center_y = self._end[1]
+
+        w2.prev = p2
+        w2.prev.next = w2
+
+        self.add_widget(w2)
+
+        return w1, w2
+
 
 
     def deleteOscilloscope(self, element):
@@ -410,3 +421,57 @@ class CircuitView(MaterialWidget):
 
                 break
 
+
+    def splitWire(self, element, pos):
+        """
+        Splits the wire at the given position.
+        """
+        copy = Resistor(element.resistance)
+        copy.length = element.length - pos
+        copy.next = element.next
+        element.length = pos
+        element.next = copy
+        self.rebuildCircuit()
+
+
+
+    def deleteWire(self, element):
+        """
+        Removes the given wire from the model and the view.
+        """
+        element.prev.next = element.next
+
+        # Delete any oscilloscopes on this segment, and also changes positioning
+        # for later oscilloscopes.
+        h = self.model.circuit.headOscilloscope
+
+        while h != None:
+            if h.position > element.position:
+                if h.position < element.position + element.length:
+                    # Delete oscilloscope.
+                    if h.prev != None:
+                        h.prev.next = h.next
+
+                    if h.next != None:
+                        h.next.prev = h.prev
+
+                    if h.prev == None and h.next == None:
+                        self.model.circuit.headOscilloscope = None
+                else:
+                    # Move oscilloscope.
+                    h.position -= element.length
+
+            h = h.next
+
+        self.rebuildCircuit()
+
+
+    def repositionOscilloscopes(self):
+        """
+        Moves all oscilloscopes to their correct positions on screen.
+        """
+        scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
+
+        for ov in self.oscilloscopeViews:
+            ov.size = float(self.height / 12), float(self.height / 4)
+            ov.x = float(self._begin[0] + ov.element.position * scale)
