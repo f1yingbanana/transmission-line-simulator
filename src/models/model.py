@@ -90,7 +90,8 @@ class Model(object):
         self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
-        self.circuit.head.reset()
+        self.circuit.reset()
+        self.maxAmplitude = 10
 
 
     def _step(self):

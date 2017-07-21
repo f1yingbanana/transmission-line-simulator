@@ -111,4 +111,8 @@ class Oscilloscope(CircuitElement):
 
     def isRecording(self):
         return self._isRecording
-        
+    
+
+    def reset(self):
+        self.graph = ([0], [0])
+    

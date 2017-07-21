@@ -160,3 +160,10 @@ class Circuit(object):
         
         return es
 
+    def reset(self):
+        self.head.reset()
+        e = self.headOscilloscope
+
+        while e != None:
+            e.reset()
+            e = e.next
