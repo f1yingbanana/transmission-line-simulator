@@ -62,32 +62,7 @@ class Circuit(object):
 
         o = Oscilloscope()
         o.position = pos
-
-        if self.headOscilloscope == None:
-            self.headOscilloscope = o
-            return o
-
-        h = self.headOscilloscope
-
-        while h != None:
-            if h.position > o.position:
-                if h.prev != None:
-                    h.prev.next = o
-                else:
-                    self.headOscilloscope = o
-
-                o.prev = h.prev
-                h.prev = o
-                o.next = h
-
-                break
-            elif h.next == None:
-                h.next = o
-                o.prev = h
-
-                break
-
-            h = h.next
+        self._insert(o)
 
         return o
 
@@ -109,26 +84,36 @@ class Circuit(object):
             self.headOscilloscope = element.next
 
         # Now reinsert
+        self._insert(element)
+
+
+    def _insert(self, o):
+        if self.headOscilloscope == None:
+            self.headOscilloscope = o
+            return
+
         h = self.headOscilloscope
 
         while h != None:
-            if h.position > element.position:
-                # We need to move the element HERE. Before h.
+            if h.position > o.position:
                 if h.prev != None:
-                    h.prev.next = element
+                    h.prev.next = o
+                else:
+                    self.headOscilloscope = o
 
-                element.prev = h.prev
-                h.prev = element
-                element.next = h
+                o.prev = h.prev
+                h.prev = o
+                o.next = h
 
-                break
+                return
             elif h.next == None:
-                h.next = element
-                element.prev = h
+                h.next = o
+                o.prev = h
 
                 break
 
             h = h.next
+
 
 
     def getElements(self, position, isForward):
