@@ -60,6 +60,7 @@ class Model(object):
         """
         Simulate the system by step dt, in seconds.
         """
+        last = self.elapsed
         self.elapsed += dt * self.simSpeed
         
         # Determine how many steps must be made.
@@ -76,7 +77,7 @@ class Model(object):
             
             while h != None:
                 i = int(DISCRETE_STEPS * h.position / l)
-                h.record(self.elapsed, self.overallDistribution[i])
+                h.record(last + (self.elapsed - last) * (s + 1.0) / segs, self.overallDistribution[i])
                 h = h.next
         
     

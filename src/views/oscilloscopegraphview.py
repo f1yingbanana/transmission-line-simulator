@@ -93,7 +93,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             self._lastCheckedIndex += 1
 
             # We don't have enough points...
-            if len(self.oscilloscope.graph[0]) < self._maximaHalfWindow * 2 + 1:
+            if self._lastCheckedIndex < self._maximaHalfWindow * 2 + 1:
                 continue
 
             # We have enough points, and we can determine whether a point is max
@@ -157,7 +157,8 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             self._line.set_markevery([idx])
             x = self.oscilloscope.graph[0][idx]
             y = self.oscilloscope.graph[1][idx]
-            self.coordLabel.pos = self._ax.transData.transform([x, y]).tolist()
+            rawPos = self._ax.transData.transform([x, y]).tolist()
+            self.coordLabel.pos = rawPos[0] + self.x, rawPos[1] + self.y
             self.coordLabel.text = '({:g}, {:g})'.format(x, y)
         else:
             self._line.set_markevery([])
