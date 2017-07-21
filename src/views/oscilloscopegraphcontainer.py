@@ -44,3 +44,6 @@ class OscilloscopeGraphContainer(BoxLayout):
                 self.add_widget(g)
 
             h = h.next
+
+        for g in self.graphViews:
+            g.update(dt)

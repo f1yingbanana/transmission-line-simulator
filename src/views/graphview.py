@@ -6,14 +6,13 @@
 #
 
 from materialwidget import MaterialWidget
-
 import matplotlib.pyplot as plt
-
 import numpy as np
-
 from kivy.uix.boxlayout import BoxLayout
-
 from util.constants import *
+from kivy.clock import Clock
+from kivy.properties import *
+from kivy.metrics import *
 
 class GraphView(MaterialWidget):
     """
@@ -22,6 +21,8 @@ class GraphView(MaterialWidget):
 
     model:  the model of the simulation.
     """
+
+    container = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         """
@@ -37,27 +38,26 @@ class GraphView(MaterialWidget):
         self._fig, self._ax = plt.subplots()
         self._fig.set_tight_layout({"pad": 3})
         self._ax.grid(True)
-        # self._ax.set_ylabel('voltage (V)', fontsize = 24)
+        # self._ax.set_ylabel('Voltage (V)', fontsize = sp(16))
+        self._ax.set_xlabel('Position (m)', fontsize = sp(16))
         self._ax.tick_params(axis = 'both', length = 0)
         # self._ax.set_xticklabels([])
         for item in self._ax.get_yticklabels() + self._ax.get_xticklabels():
-            item.set_fontsize(24)
+            item.set_fontsize(sp(12))
         
         for i in self._ax.spines.itervalues():
-            i.set_linewidth(4)
+            i.set_linewidth(dp(2))
         
-        self.container = BoxLayout()
+        Clock.schedule_once(self._completeSetup)
+
+    def _completeSetup(self, dt):
         self.container.add_widget(self._fig.canvas)
-        self.add_widget(self.container)
-        
-    
+
+
     def update(self, dt):
         """
         Redraws the graph.
         """
-        self.container.size = self.size
-        self.container.pos = self.pos
-        
         if self.model != None:
             l = self.model.circuit.getLength()
             
@@ -73,7 +73,6 @@ class GraphView(MaterialWidget):
                 v = self.model.maxAmplitude
                 self._ax.set_ylim([-1.2 * v, 1.2 * v])
 
-            
             self._ax.set_xlim([0, l])
             self._fig.canvas.draw()
 
