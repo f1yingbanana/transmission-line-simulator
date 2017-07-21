@@ -18,6 +18,7 @@ class HoverBehavior(object):
 
     hovered = BooleanProperty(False)
     border_point= ObjectProperty(None)
+    pointerPos = ObjectProperty(None)
     '''Contains the last relevant point received by the Hoverable. This can
     be used in `on_enter` or `on_leave` in order to know where was dispatched the event.
     '''
@@ -31,13 +32,13 @@ class HoverBehavior(object):
     def on_mouse_pos(self, *args):
         if not self.get_root_window():
             return # do proceed if I'm not displayed <=> If have no parent
-        pos = args[1]
+        self.pointerPos = self.to_parent(*self.to_widget(*args[1]))
         #Next line to_widget allow to compensate for relative layout
-        inside = self.collide_point(*self.to_parent(*self.to_widget(*pos)))
+        inside = self.collide_point(*self.pointerPos)
         if self.hovered == inside:
             #We have already done what was needed
             return
-        self.border_point = pos
+        self.border_point = self.pointerPos
         self.hovered = inside
         if inside:
             self.dispatch('on_enter')

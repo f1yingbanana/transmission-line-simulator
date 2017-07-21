@@ -35,8 +35,9 @@ class Circuit(object):
         cable.next = cable2
         cable2.next = load
         self.head = source
+        self.headOscilloscope = None
     
-    
+
     def getLength(self):
         """
         Calculates and returns the length going from the power source to the
@@ -52,23 +53,68 @@ class Circuit(object):
         return p
     
     
-    def getOscilloscopes(self):
+    def insertOscilloscope(self, pos):
         """
-        Returns all oscilloscopes in the circuit.
+        Inserts a new oscilloscope at given circuit position. Returns the
+        inserted item.
         """
-        es = []
-        
-        e = self.head
-        
-        while e != None:
-            if type(e) == Oscilloscope:
-                es.append(e)
-            
-            e = e.next
-        
-        return es
-    
-    
+        pos = max(0, min(self.getLength(), pos))
+
+        o = Oscilloscope()
+        o.position = pos
+        self._insert(o)
+
+        return o
+
+
+    def moveOscilloscope(self, element, pos):
+        """
+        Moves the given oscilloscope to somewhere else.
+        """
+        element.position = pos
+
+        # First detach
+        if element.prev != None:
+            element.prev.next = element.next
+
+        if element.next != None:
+            element.next.prev = element.prev
+
+        if self.headOscilloscope == element:
+            self.headOscilloscope = element.next
+
+        # Now reinsert
+        self._insert(element)
+
+
+    def _insert(self, o):
+        if self.headOscilloscope == None:
+            self.headOscilloscope = o
+            return
+
+        h = self.headOscilloscope
+
+        while h != None:
+            if h.position > o.position:
+                if h.prev != None:
+                    h.prev.next = o
+                else:
+                    self.headOscilloscope = o
+
+                o.prev = h.prev
+                h.prev = o
+                o.next = h
+
+                return
+            elif h.next == None:
+                h.next = o
+                o.prev = h
+
+                break
+
+            h = h.next
+
+
     def getElements(self, position, isForward):
         """
         Returns the circuit elements positioned at the given position.
@@ -97,6 +143,11 @@ class Circuit(object):
             es.reverse()
         
         return es
-        
 
+    def reset(self):
+        self.head.reset()
+        e = self.headOscilloscope
 
+        while e != None:
+            e.reset()
+            e = e.next

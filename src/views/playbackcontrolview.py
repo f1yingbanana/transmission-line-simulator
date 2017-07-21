@@ -27,6 +27,8 @@ class PlaybackControlView(BoxLayout):
     def __init__(self, **kwargs):
         super(PlaybackControlView, self).__init__(**kwargs)
 
+        self.onReset = None
+
 
     def update(self, dt):
         if self.model != None:
@@ -47,8 +49,7 @@ class PlaybackControlView(BoxLayout):
 
 
     def onStopButtonClick(self):
-        self.model.reset()
-        self.model.appState = AppState.Editing
+        self.onReset()
 
 
     def onSlowDownButtonClick(self):

@@ -11,6 +11,7 @@
 #:include src/views/loadeditor.kv
 #:include src/views/wireeditor.kv
 #:include src/views/sourceeditor.kv
+#:include src/views/oscilloscopeeditor.kv
 
 <CircuitView>:
     _begin: 0, 0
@@ -110,8 +111,8 @@
             rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
 
         Ellipse:
-            pos: self.pos[0] - constants.WIRE_THICKNESS / 2.0, self.pos[1] - constants.WIRE_THICKNESS / 2.0
-            size: self.size[0] + constants.WIRE_THICKNESS, self.size[1] + constants.WIRE_THICKNESS
+            pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0
+            size: self.width + constants.WIRE_THICKNESS, self.height + constants.WIRE_THICKNESS
 
         Color:
             rgba: constants.PRIMARY
@@ -134,4 +135,64 @@
         text: unichr(0xf387)
         color: 0, 0, 0, 0.86
         font_size: self.height / 1.5
+
+
+<Oscilloscope>:
+    # Oscilloscope consists of a circular marking on the top and bits of wire on
+    # the bottom. We assume the square with sidelength length positioned at the
+    # top of the rect will be the circular marking, and the wire comes to a stop
+    # at the middle bottom.
+    id: osc
+    canvas:
+        Color:
+            rgba: constants.PRIMARY
+        Line:
+            points: self.center_x, self.y, self.center_x, self.y + self.height - self.width / 2
+            width: constants.WIRE_THICKNESS / 2
+        Color:
+            rgba: constants.DARK_PRIMARY
+        Ellipse:
+            size: constants.WIRE_THICKNESS * 2, constants.WIRE_THICKNESS * 2
+            pos: self.center_x - constants.WIRE_THICKNESS, self.y - constants.WIRE_THICKNESS
+
+
+    Widget:
+        pos: self.parent.x, self.parent.y + self.parent.height - self.parent.width
+        size: self.parent.width, self.parent.width
+
+        canvas:
+            Color:
+                rgba: constants.WIRE_HIGHLIGHT if osc.hovered else (0, 0, 0, 0)
+
+            Ellipse:
+                pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0
+                size: self.width + constants.WIRE_THICKNESS, self.height + constants.WIRE_THICKNESS
+
+            Color:
+                rgba: constants.PRIMARY
+
+            Ellipse:
+                pos: self.pos
+                size: self.size
+
+            Color:
+                rgba: 1, 1, 1, 1
+
+            Ellipse:
+                pos: self.x + constants.WIRE_THICKNESS, self.y + constants.WIRE_THICKNESS
+                size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
+
+            Color:
+                rgba: constants.TEXT_BLACK
+
+            Ellipse:
+                pos: self.x + constants.WIRE_THICKNESS * 2, self.y + constants.WIRE_THICKNESS * 2
+                size: self.width - constants.WIRE_THICKNESS * 4, self.height - constants.WIRE_THICKNESS * 4
+
+            Color:
+                rgba: 1, 1, 1, 1
+
+            Ellipse:
+                pos: self.x + constants.WIRE_THICKNESS * 2.5, self.y + constants.WIRE_THICKNESS * 2.5
+                size: self.width - constants.WIRE_THICKNESS * 5, self.height - constants.WIRE_THICKNESS * 5
 

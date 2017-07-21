@@ -1,0 +1,97 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-17-2017
+#
+
+<OscilloscopeEditor>:
+    _fullSize: dp(200), dp(362)
+    _container: container
+
+    maxTimeTextField: maxTimeTextField
+    minAmpTextField: minAmpTextFeld
+    maxWavesTextField: maxWavesTextField
+    minWaveAmpTextField: minWaveAmpTextField
+    positionTextField: positionTextField
+
+    prevButton: prevButton
+    nextButton: nextButton
+
+    BoxLayout:
+        id: container
+        orientation: 'vertical'
+        size: self.parent.width, self.minimum_height
+        pos: self.parent.pos
+        padding: dp(8)
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(8)
+            MaterialTextField:
+                id: maxTimeTextField
+                size_hint_y: None
+                title: 'Max. recording time'
+                suffix: 'ns'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: minAmpTextFeld
+                size_hint_y: None
+                title: 'Stop recording below...'
+                suffix: 'V'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: maxWavesTextField
+                size_hint_y: None
+                title: 'Stop recording after...'
+                suffix: 'waves'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: minWaveAmpTextField
+                size_hint_y: None
+                title: 'Wave min. amplitude'
+                suffix: 'V'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: positionTextField
+                size_hint_y: None
+                title: 'Position'
+                suffix: 'm'
+
+        Widget:
+            height: dp(16)
+            size_hint_y: None
+
+        BoxLayout:
+            size: self.parent.width, nextButton.height
+            size_hint_y: None
+
+            MaterialButton:
+                id: prevButton
+                raised: False
+                icon: unichr(0xf2fa)
+
+            Widget
+
+            MaterialButton:
+                id: nextButton
+                raised: False
+                icon: unichr(0xf2fb)
