@@ -335,8 +335,10 @@ class CircuitView(MaterialWidget):
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
         ov = Oscilloscope(oscilloscope)
         ov.contextMenuLayer = self.contextMenuLayer
+        ov.popup.reposition = self.repositionOscilloscope
         ov.size = float(self.height / 12), float(self.height / 4)
-        ov.pos = float(self._begin[0] + oscilloscope.position * scale), self._begin[1]
+        ov.center_x = float(self._begin[0] + oscilloscope.position * scale)
+        ov.y = self._begin[1]
         ov.deleteOscilloscope = self.deleteOscilloscope
         self.add_widget(ov)
 
@@ -434,7 +436,6 @@ class CircuitView(MaterialWidget):
         self.rebuildCircuit()
 
 
-
     def deleteWire(self, element):
         """
         Removes the given wire from the model and the view.
@@ -466,6 +467,30 @@ class CircuitView(MaterialWidget):
         self.rebuildCircuit()
 
 
+    def repositionOscilloscope(self, element, pos):
+        """
+        Repositions the given oscilloscope to pos, both view and model.
+        """
+        self.model.circuit.moveOscilloscope(element, pos)
+        self.repositionOscilloscopes()
+
+        for i in self.oscilloscopeViews:
+            i.prev = None
+            i.next = None
+
+        for i in self.oscilloscopeViews:
+            for j in self.oscilloscopeViews:
+                if i.element.prev == j.element:
+                    i.prev = j
+                    j.next = i
+
+                if i.element.next == j.element:
+                    i.next = j
+                    j.prev = i
+
+
+
+
     def repositionOscilloscopes(self):
         """
         Moves all oscilloscopes to their correct positions on screen.
@@ -474,4 +499,4 @@ class CircuitView(MaterialWidget):
 
         for ov in self.oscilloscopeViews:
             ov.size = float(self.height / 12), float(self.height / 4)
-            ov.x = float(self._begin[0] + ov.element.position * scale)
+            ov.center_x = float(self._begin[0] + ov.element.position * scale)

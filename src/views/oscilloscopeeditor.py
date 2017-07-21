@@ -21,6 +21,7 @@ class OscilloscopeEditor(PopupEditor):
     maxWavesTextField = ObjectProperty(None)
     minWaveAmpTextField = ObjectProperty(None)
     maxTimeTextField = ObjectProperty(None)
+    positionTextField = ObjectProperty(None)
 
 
     def __init__(self, oscilloscope, **kwargs):
@@ -62,6 +63,12 @@ class OscilloscopeEditor(PopupEditor):
             else:
                 self._oscilloscope.maxTime = max(0, float(self.maxTimeTextField.text) * 1e-9)
 
+        if instance == self.positionTextField.inputText and not focus:
+            if len(self.positionTextField.text) == 0:
+                self._oscilloscope.position = 0
+            else:
+                self.reposition(self._oscilloscope, float(self.positionTextField.text))
+
 
     def updateValues(self):
         self.prevButton.disabled = self._oscilloscope.prev == None
@@ -71,6 +78,11 @@ class OscilloscopeEditor(PopupEditor):
         self.minAmpTextField.input_filter = 'float'
         self.minAmpTextField.inputText.bind(focus = self.on_focus)
         self.minAmpTextField.animateLabel(False)
+
+        self.positionTextField.text = '{:g}'.format(self._oscilloscope.position)
+        self.positionTextField.input_filter = 'float'
+        self.positionTextField.inputText.bind(focus = self.on_focus)
+        self.positionTextField.animateLabel(False)
 
         if self._oscilloscope.maxWaves == 0:
             self.maxWavesTextField.text = ''
