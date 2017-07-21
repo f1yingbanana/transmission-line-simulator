@@ -34,6 +34,16 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         self._ax.set_ylabel('voltage (V)', fontsize = 16)
         self._ax.set_xlabel('time (ns)', fontsize = 16)
 
+        # A list of computed maximum values.
+        self._maxima = []
+
+        # This is the number of points we look before and after a given point to
+        # determine whether that point is a local maximum.
+        self._maximaHalfWindow = 5
+
+        # This is the index of the last point we computed maxima for.
+        self._lastCheckedIndex = 0
+
         # How big is the graph, in ns.
         self.window = 20
 
@@ -47,6 +57,9 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
 
     def update(self, dt):
+        # Update maxima
+        self._updateMaxima()
+
         # Draw a cursor if mouse is close to one of the data points, and display
         # it.
         self._markCoord()
@@ -72,6 +85,33 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         self._fig.canvas.draw()
 
+
+    def _updateMaxima(self):
+        # Return if we already checked.
+        while self._lastCheckedIndex < len(self.oscilloscope.graph[0]):
+            v = self.oscilloscope.graph[1][self._lastCheckedIndex]
+            self._lastCheckedIndex += 1
+
+            # We don't have enough points...
+            if len(self.oscilloscope.graph[0]) < self._maximaHalfWindow * 2 + 1:
+                continue
+
+            # We have enough points, and we can determine whether a point is max
+            winStart = self._lastCheckedIndex - self._maximaHalfWindow * 2 - 1
+
+            mx = max(self.oscilloscope.graph[1][winStart : self._lastCheckedIndex])
+            mn = min(self.oscilloscope.graph[1][winStart : self._lastCheckedIndex])
+
+            if mx - mn == 0:
+                # It is flat. Next.
+                continue
+
+            checkedPt = self._lastCheckedIndex - self._maximaHalfWindow - 1
+
+            if self.oscilloscope.graph[1][checkedPt] == mx:
+                self._maxima.append(checkedPt)
+
+
     def _markCoord(self):
         if self._line == None:
             return
@@ -87,13 +127,12 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         # Next, determine which point to highlight. If there is a local maxima
         # nearby, detect and highlight that. Otherwise, just highlight the
         # nearest point.
-
         sp1 = self._ax.get_ylim()
         sp2 = self._ax.get_xlim()
         minDist = (0.01 * (sp1[0] - sp1[1]) ** 2 + 0.01 * (sp2[0] - sp2[1]) ** 2) ** 0.5
         idx = None
 
-        for i in range(len(self.oscilloscope.graph[0])):
+        for i in self._maxima:
             x = self.oscilloscope.graph[0][i]
             y = self.oscilloscope.graph[1][i]
             d = ((mp[0] - x) ** 2 + (mp[1] - y) ** 2) ** 0.5
@@ -101,6 +140,17 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             if d < minDist:
                 minDist = d
                 idx = i
+
+        if idx == None:
+            # Now we try find an ordinary point instead
+            for i in range(len(self.oscilloscope.graph[0])):
+                x = self.oscilloscope.graph[0][i]
+                y = self.oscilloscope.graph[1][i]
+                d = ((mp[0] - x) ** 2 + (mp[1] - y) ** 2) ** 0.5
+
+                if d < minDist:
+                    minDist = d
+                    idx = i
 
         if idx != None:
             # Mark a point on the graph.
