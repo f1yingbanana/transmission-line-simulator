@@ -33,16 +33,12 @@ class Oscilloscope(CircuitElement):
         """
         super(Oscilloscope, self).__init__()
         
-        self._graph = ([], [])
-        
-        self.checkTime = True
-        self.checkWaves = False
-        self.checkMinAmp = False
+        self.graph = ([0], [0])
         
         self.maxTime = 50e-9
-        self.minAmp = 0.1
-        self.maxWaves = 5
-        self.minWaveAmp = 0.5
+        self.minAmp = 0
+        self.maxWaves = 0
+        self.minWaveAmp = 0.1
         
         self._maxAmp = 0
         self._waveCount = 0
@@ -50,28 +46,59 @@ class Oscilloscope(CircuitElement):
         
         self._isRecording = True
     
+    def checkTime(self):
+        return self.maxTime > 0
+
+
+    def checkWaves(self):
+        return self.maxWaves > 0
+
+
+    def checkMinAmp(self):
+        return self.minAmp > 0
     
+
+    @property
+    def next(self):
+        return self._next
+
+
+    @next.setter
+    def next(self, value):
+        # Overriding to ignore length since oscilloscope has no length.
+        self._next = value
+
+
+    @property
+    def prev(self):
+        return self._prev
+
+
+    @prev.setter
+    def prev(self, value):
+        self._prev = value
+
+
     def record(self, time, voltage):
         """
         Records the given time and voltage. Checks if end recording condition
         has been met.
         """
-        
         amp = abs(voltage)
         
         # Check duration
-        if self.checkTime and time > self.maxTime:
+        if self.checkTime() and time > self.maxTime:
             self._isRecording = False
         
         # Check min amplitude
-        if self.checkMinAmp:
+        if self.checkMinAmp():
             self._maxAmp = max(self._maxAmp, amp)
             
             if self._maxAmp > self.minAmp and amp < self.minAmp:
                 self._isRecording = False
         
         # Check waves
-        if self.checkWaves:
+        if self.checkWaves():
             self._maxWaveAmp = max(self._maxWaveAmp, amp)
             
             if self._maxWaveAmp > self.minWaveAmp and amp < self.minWaveAmp:
@@ -84,6 +111,14 @@ class Oscilloscope(CircuitElement):
         if not self._isRecording:
             return
         
-        self._graph[0].append(time)
-        self._graph[1].append(voltage)
-        
+        self.graph[0].append(time * 1e9)
+        self.graph[1].append(voltage)
+
+
+    def isRecording(self):
+        return self._isRecording
+    
+
+    def reset(self):
+        self.graph = ([0], [0])
+        self._isRecording = True

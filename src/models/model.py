@@ -60,6 +60,7 @@ class Model(object):
         """
         Simulate the system by step dt, in seconds.
         """
+        last = self.elapsed
         self.elapsed += dt * self.simSpeed
         
         # Determine how many steps must be made.
@@ -70,14 +71,15 @@ class Model(object):
         
         for s in range(segs):
             self._step()
+
+            # Update every oscilloscope
+            h = self.circuit.headOscilloscope
+            
+            while h != None:
+                i = int(DISCRETE_STEPS * h.position / l)
+                h.record(last + (self.elapsed - last) * (s + 1.0) / segs, self.overallDistribution[i])
+                h = h.next
         
-        # Update every oscilloscope
-        scopes = self.circuit.getOscilloscopes()
-        
-        for scope in scopes:
-            i = int(DISCRETE_STEPS * scope.position / l)
-            v = self.forwardCurrent[i] + self.backwardCurrent[i]
-            scope.record(self.elapsed, v)
     
 
     def reset(self):
@@ -89,7 +91,8 @@ class Model(object):
         self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
         self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
-        self.circuit.head.reset()
+        self.circuit.reset()
+        self.maxAmplitude = 10
 
 
     def _step(self):

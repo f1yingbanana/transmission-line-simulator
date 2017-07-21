@@ -95,4 +95,8 @@ class PopupEditor(MaterialWidget):
         if not self.collide_point(touch.pos[0], touch.pos[1]):
             self.dismiss(True)
 
-        return super(PopupEditor, self).on_touch_down(touch)
+        for c in self.children:
+            if c.on_touch_down(touch):
+                return True
+
+        return True
