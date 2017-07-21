@@ -13,6 +13,7 @@ from materialbutton import MaterialButton
 from kivy.properties import ObjectProperty
 from playbackcontrolview import PlaybackControlView
 from oscilloscopegraphcontainer import OscilloscopeGraphContainer
+from models.model import *
 
 class SimulatorView(Widget):
     """
@@ -28,6 +29,8 @@ class SimulatorView(Widget):
     def __init__(self, **kwargs):
         super(SimulatorView, self).__init__(**kwargs)
 
+        self.playbackControlView.onReset = self.onReset
+
 
     def on_model(self, *args, **kwargs):
         self.graphView.model = self.model
@@ -41,3 +44,9 @@ class SimulatorView(Widget):
         self.playbackControlView.update(dt)
         self.circuitView.setGraphBounds(self.graphView.getBounds())
         self.oscilloscopeGraphContainer.update(dt)
+
+
+    def onReset(self):
+        self.model.reset()
+        self.model.appState = AppState.Editing
+        self.oscilloscopeGraphContainer.reset()

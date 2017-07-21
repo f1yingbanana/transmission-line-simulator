@@ -164,3 +164,8 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             self._line.set_markevery([])
             self.coordLabel.text = ''
 
+
+    def reset(self):
+        self._maxima = []
+        self._lastCheckedIndex = 0
+    

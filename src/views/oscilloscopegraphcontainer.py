@@ -47,3 +47,8 @@ class OscilloscopeGraphContainer(BoxLayout):
 
         for g in self.graphViews:
             g.update(dt)
+
+
+    def reset(self):
+        for g in self.graphViews:
+            g.reset()
