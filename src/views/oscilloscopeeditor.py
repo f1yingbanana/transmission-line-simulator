@@ -74,7 +74,10 @@ class OscilloscopeEditor(PopupEditor):
         self.prevButton.disabled = self._oscilloscope.prev == None
         self.nextButton.disabled = self._oscilloscope.next == None
 
-        self.minAmpTextField.text = '{:g}'.format(self._oscilloscope.minAmp)
+        if self._oscilloscope.minAmp == 0:
+            self.minAmpTextField.text = ''
+        else:
+            self.minAmpTextField.text = '{:g}'.format(self._oscilloscope.minAmp)
         self.minAmpTextField.input_filter = 'float'
         self.minAmpTextField.inputText.bind(focus = self.on_focus)
         self.minAmpTextField.animateLabel(False)
