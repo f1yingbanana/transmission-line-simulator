@@ -115,7 +115,6 @@ class Circuit(object):
             h = h.next
 
 
-
     def getElements(self, position, isForward):
         """
         Returns the circuit elements positioned at the given position.

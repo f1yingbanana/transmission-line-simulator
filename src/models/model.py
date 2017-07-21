@@ -70,15 +70,15 @@ class Model(object):
         
         for s in range(segs):
             self._step()
+
+            # Update every oscilloscope
+            h = self.circuit.headOscilloscope
+            
+            while h != None:
+                i = int(DISCRETE_STEPS * h.position / l)
+                h.record(self.elapsed, self.overallDistribution[i])
+                h = h.next
         
-        # Update every headOscilloscope
-        h = self.circuit.headOscilloscope
-        
-        while h != None:
-            i = int(DISCRETE_STEPS * h.position / l)
-            v = self.forwardCurrent[i] + self.backwardCurrent[i]
-            h.record(self.elapsed, v)
-            h = h.next
     
 
     def reset(self):

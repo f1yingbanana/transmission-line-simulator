@@ -77,7 +77,6 @@ class Oscilloscope(CircuitElement):
         Records the given time and voltage. Checks if end recording condition
         has been met.
         """
-        
         amp = abs(voltage)
         
         # Check duration
@@ -115,4 +114,3 @@ class Oscilloscope(CircuitElement):
 
     def reset(self):
         self.graph = ([0], [0])
-    

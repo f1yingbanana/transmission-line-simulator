@@ -10,13 +10,16 @@ import numpy as np
 from materialwidget import MaterialWidget
 from kivy.properties import *
 from util.constants import *
+from util.hoverbehavior import HoverBehavior
+from kivy.metrics import *
 
-class OscilloscopeGraphView(MaterialWidget):
+class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
     This manages the display of a specific oscilloscope, with functions to zoom,
     pan, export, and value display.
     """
     container = ObjectProperty(None)
+    coordLabel = ObjectProperty(None)
 
 
     def __init__(self, oscilloscope, **kwargs):
@@ -44,12 +47,20 @@ class OscilloscopeGraphView(MaterialWidget):
 
 
     def update(self, dt):
+        # Draw a cursor if mouse is close to one of the data points, and display
+        # it.
+        self._markCoord()
+
+        # Update graph
         if not self.oscilloscope.isRecording():
             return
 
         if self._line == None:
             self._line = self._ax.plot(self.oscilloscope.graph[0], self.oscilloscope.graph[1], \
                 linewidth = 4, color = PRIMARY)[0]
+            self._line.set_marker((4, 0, 0))
+            self._line.set_markevery([])
+            self._line.set_markersize(dp(5))
         else:
             self._line.set_xdata(self.oscilloscope.graph[0])
             self._line.set_ydata(self.oscilloscope.graph[1])
@@ -60,4 +71,45 @@ class OscilloscopeGraphView(MaterialWidget):
             self._ax.set_ylim([-1.2 * v, 1.2 * v])
 
         self._fig.canvas.draw()
+
+    def _markCoord(self):
+        if self._line == None:
+            return
+
+        if not self.hovered:
+            self._line.set_markevery([])
+            self.coordLabel.text = ''
+            return
+
+        # First, transform the mouse position to plot position
+        mp = self._ax.transData.inverted().transform([self.pointerPos[0] - self.x, self.pointerPos[1] - self.y])
+
+        # Next, determine which point to highlight. If there is a local maxima
+        # nearby, detect and highlight that. Otherwise, just highlight the
+        # nearest point.
+
+        sp1 = self._ax.get_ylim()
+        sp2 = self._ax.get_xlim()
+        minDist = (0.01 * (sp1[0] - sp1[1]) ** 2 + 0.01 * (sp2[0] - sp2[1]) ** 2) ** 0.5
+        idx = None
+
+        for i in range(len(self.oscilloscope.graph[0])):
+            x = self.oscilloscope.graph[0][i]
+            y = self.oscilloscope.graph[1][i]
+            d = ((mp[0] - x) ** 2 + (mp[1] - y) ** 2) ** 0.5
+
+            if d < minDist:
+                minDist = d
+                idx = i
+
+        if idx != None:
+            # Mark a point on the graph.
+            self._line.set_markevery([idx])
+            x = self.oscilloscope.graph[0][idx]
+            y = self.oscilloscope.graph[1][idx]
+            self.coordLabel.pos = self._ax.transData.transform([x, y]).tolist()
+            self.coordLabel.text = '({:g}, {:g})'.format(x, y)
+        else:
+            self._line.set_markevery([])
+            self.coordLabel.text = ''
 

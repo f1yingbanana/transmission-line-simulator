@@ -5,13 +5,21 @@
 # Created: Jul-21-2017
 #
 
+#:import constants util.constants
+
 <OscilloscopeGraphView>:
     size_hint_y: None
     height: self.width / 2
 
     container: container
+    coordLabel: coordLabel
 
     BoxLayout:
         id: container
         size: self.parent.size
         pos: self.parent.pos
+
+    Label:
+        id: coordLabel
+        font_size: sp(12)
+        color: constants.TEXT_BLACK
