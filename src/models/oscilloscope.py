@@ -33,7 +33,7 @@ class Oscilloscope(CircuitElement):
         """
         super(Oscilloscope, self).__init__()
         
-        self._graph = ([], [])
+        self.graph = ([], [])
         
         self.checkTime = True
         self.checkWaves = False
@@ -105,6 +105,6 @@ class Oscilloscope(CircuitElement):
         if not self._isRecording:
             return
         
-        self._graph[0].append(time)
-        self._graph[1].append(voltage)
+        self.graph[0].append(time)
+        self.graph[1].append(voltage)
         

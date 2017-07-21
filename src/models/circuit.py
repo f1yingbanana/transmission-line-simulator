@@ -73,6 +73,8 @@ class Circuit(object):
             if h.position > o.position:
                 if h.prev != None:
                     h.prev.next = o
+                else:
+                    self.headOscilloscope = o
 
                 o.prev = h.prev
                 h.prev = o

@@ -395,14 +395,13 @@ class CircuitView(MaterialWidget):
         return w1, w2
 
 
-
     def deleteOscilloscope(self, element):
         """
         Removes the given oscilloscope from the model and the view.
         """
         # Removes from model.
-        if element.prev == None and element.next == None:
-            self.model.circuit.headOscilloscope = None
+        if element == self.model.circuit.headOscilloscope:
+            self.model.circuit.headOscilloscope = element.next
 
         if element.prev != None:
             element.prev.next = element.next
@@ -456,8 +455,8 @@ class CircuitView(MaterialWidget):
                     if h.next != None:
                         h.next.prev = h.prev
 
-                    if h.prev == None and h.next == None:
-                        self.model.circuit.headOscilloscope = None
+                    if h == self.model.circuit.headOscilloscope:
+                        self.model.circuit.headOscilloscope = h.next
                 else:
                     # Move oscilloscope.
                     h.position -= element.length
