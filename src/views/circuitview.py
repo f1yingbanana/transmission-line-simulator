@@ -182,6 +182,8 @@ class Oscilloscope(CircuitWidget):
     This renders an oscilloscope. Oscilloscopes may only be placed on the bottom
     wire.
     """
+    color = ListProperty([1, 1, 1])
+
     def __init__(self, element, **kwargs):
         super(Oscilloscope, self).__init__(**kwargs)
 
@@ -192,6 +194,7 @@ class Oscilloscope(CircuitWidget):
         self.popup = OscilloscopeEditor(self.element)
         self.popup.onPrev = self.onPrev
         self.popup.onNext = self.onNext
+        self.color = element.color
 
 
     def onDeleteClicked(self):

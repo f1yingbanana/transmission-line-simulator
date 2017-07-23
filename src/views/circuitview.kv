@@ -181,6 +181,7 @@
     # top of the rect will be the circular marking, and the wire comes to a stop
     # at the middle bottom.
     id: osc
+    color: 1, 1, 1
     canvas:
         Color:
             rgba: constants.PRIMARY
@@ -221,7 +222,7 @@
                 size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
 
             Color:
-                rgba: constants.TEXT_BLACK
+                hsv: self.parent.color
 
             Ellipse:
                 pos: self.x + constants.WIRE_THICKNESS * 2, self.y + constants.WIRE_THICKNESS * 2

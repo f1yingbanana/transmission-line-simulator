@@ -6,6 +6,7 @@
 #
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import *
 import numpy as np
 from materialwidget import MaterialWidget
 from kivy.properties import *
@@ -70,7 +71,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         if self._line == None:
             self._line = self._ax.plot(self.oscilloscope.graph[0], self.oscilloscope.graph[1], \
-                linewidth = 4, color = PRIMARY)[0]
+                linewidth = 4, color = hsv_to_rgb(self.oscilloscope.color))[0]
             self._line.set_marker((4, 0, 0))
             self._line.set_markevery([])
             self._line.set_markersize(dp(5))

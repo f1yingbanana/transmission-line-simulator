@@ -12,21 +12,13 @@ class Oscilloscope(CircuitElement):
     Represents a single oscilloscope. This records any voltage passing by this
     point, with optional time controls.
     
-    maxTime:        the maximum duration we record the graph, in seconds.
-    minAmp:         the minimum amplitude in volts to stop recording the graph.
-                    That is, if the graph rises above this value, then
-                    subsequently falls below this value, we will stop recording
-                    the graph. Note that this compares with the absolute value 
-                    of voltage recorded.
-    maxWaves:       the maximum number of waves we record. A wave is defined as
-                    a rise and fall above minWaveAmp value.
-    minWaveAmp:     the minimum amplitude of which we consider a section a wave.
-    checkTime:      whether recording stops after maxTime.
-    checkWaves:     whether recording stops after maxWaves number of waves.
-    checkMinAmp:    whether recording stops after minimum amplitude has been
-                    reached.
+    maxTime:    the maximum duration we record the graph, in seconds.
+    graph:      the amplitude information collected.
+    color:      the color tag used in various drawings.
     """
     
+    hue = 0
+
     def __init__(self):
         """
         Initializes this resistor with given ohm value.
@@ -35,7 +27,10 @@ class Oscilloscope(CircuitElement):
         
         self.graph = ([0], [0])
         self.maxTime = 50e-9
+        self.color = 1, 1, 1
         self._isRecording = True
+        self.color = Oscilloscope.hue, 0.9, 0.75
+        Oscilloscope.hue = (Oscilloscope.hue + 0.381966) % 1
     
 
     def checkTime(self):
