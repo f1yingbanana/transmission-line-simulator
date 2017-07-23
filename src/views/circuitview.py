@@ -338,7 +338,7 @@ class CircuitView(MaterialWidget):
         ov.popup.reposition = self.repositionOscilloscope
         ov.size = float(self.height / 12), float(self.height / 4)
         ov.center_x = float(self._begin[0] + oscilloscope.position * scale)
-        ov.y = self._begin[1]
+        ov.y = self._end[1] - ov.height
         ov.deleteOscilloscope = self.deleteOscilloscope
         self.add_widget(ov)
 
