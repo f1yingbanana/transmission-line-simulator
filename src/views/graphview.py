@@ -66,8 +66,7 @@ class GraphView(MaterialWidget):
                 self._line = self._ax.plot(x, self.model.overallDistribution, \
                     linewidth = 5, color = PRIMARY)[0]
             else:
-                self._line.set_xdata(np.linspace(0, l, DISCRETE_STEPS + 1))
-                self._line.set_ydata(self.model.overallDistribution)
+                self._line.set_data(np.linspace(0, l, DISCRETE_STEPS + 1), self.model.overallDistribution)
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
                 v = self.model.maxAmplitude

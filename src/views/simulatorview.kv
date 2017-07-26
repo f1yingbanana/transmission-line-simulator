@@ -18,6 +18,7 @@
     circuitView: circuitView
     playbackControlView: playbackControlView
     contextMenuLayer: contextMenuLayer
+    dialogLayer: dialogLayer
     oscilloscopeGraphContainer: oscilloscopeGraphContainer
 
     canvas:
@@ -68,6 +69,7 @@
 
             OscilloscopeGraphContainer:
                 id: oscilloscopeGraphContainer
+                dialogLayer: dialogLayer
                 height: self.minimum_height
                 size_hint: 1, None
                 orientation: 'vertical'
@@ -77,5 +79,11 @@
 
     Widget:
         id: contextMenuLayer
+        pos: simulatorView.pos
+        size: simulatorView.size
+
+
+    Widget:
+        id: dialogLayer
         pos: simulatorView.pos
         size: simulatorView.size

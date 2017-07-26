@@ -5,6 +5,7 @@
 # Created: Jul-21-2017
 #
 
+import datetime
 import matplotlib.pyplot as plt
 from matplotlib.colors import *
 import numpy as np
@@ -13,6 +14,7 @@ from kivy.properties import *
 from util.constants import *
 from util.hoverbehavior import HoverBehavior
 from kivy.metrics import *
+from exportdialog import ExportDialog
 
 class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
@@ -27,6 +29,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         super(OscilloscopeGraphView, self).__init__(**kwargs)
 
         self.oscilloscope = oscilloscope
+        self.dialogLayer = None
 
         self._line = None
         self._fig, self._ax = plt.subplots()
@@ -169,4 +172,24 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     def reset(self):
         self._maxima = []
         self._lastCheckedIndex = 0
+
+
+    def onExportButtonClick(self):
+        """
+        Begins the export process by bringing up a dialog.
+        """
+        exportDialog = ExportDialog()
+        exportDialog.onConfirmClicked.append(self.exportData)
+        exportDialog.show(self.dialogLayer)
+        exportDialog.titleLabel.text = "Export Graph and Data"
+        exportDialog.subtitleLabel.text = "Exports the graph and data captured by this oscilloscope to the 'export' folder of this applet."
+        exportDialog.textField.title = "Filename"
+        exportDialog.textField.text = datetime.datetime.now().strftime("SimData %Y-%m-%d %H:%M:%S")
     
+
+    def exportData(self, path):
+        """
+        Exports the current data and graph to the given path.
+        """
+        print 'Exporting to export/' + path
+
