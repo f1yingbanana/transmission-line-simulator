@@ -26,13 +26,13 @@ class PowerSource(CircuitElement):
     width:      the width of the shape, in meters.
     """
     
-    def __init__(self, amplitude, resistance, width, totalWidth):
+    def __init__(self, amplitude, impedance, width, totalWidth):
         """
-        Initializes this power supply with given power and resistance.
+        Initializes this power supply with given power and impedance.
         """
         super(PowerSource, self).__init__()
         
-        self.resistance = resistance
+        self.impedance = impedance
         self.amplitude = amplitude
         self.width = width
         self.totalWidth = totalWidth

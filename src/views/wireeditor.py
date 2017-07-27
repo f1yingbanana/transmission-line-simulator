@@ -15,7 +15,7 @@ class WireEditor(PopupEditor):
     Supports wire editing.
     """
 
-    resistanceTextField = ObjectProperty(None)
+    impedanceTextField = ObjectProperty(None)
     lengthTextField = ObjectProperty(None)
     prevButton = ObjectProperty(None)
     nextButton = ObjectProperty(None)
@@ -35,12 +35,12 @@ class WireEditor(PopupEditor):
 
 
     def on_focus(self, instance, focus):
-        if instance == self.resistanceTextField.inputText and not focus:
-            # Update resistance.
-            if len(self.resistanceTextField.text) == 0:
-                self._wire.resistance = 0
+        if instance == self.impedanceTextField.inputText and not focus:
+            # Update impedance.
+            if len(self.impedanceTextField.text) == 0:
+                self._wire.impedance = 0
             else:
-                self._wire.resistance = float(self.resistanceTextField.text)
+                self._wire.impedance = float(self.impedanceTextField.text)
 
         if instance == self.lengthTextField.inputText and not focus:
             # Update position.
@@ -54,10 +54,10 @@ class WireEditor(PopupEditor):
 
 
     def updateValues(self):
-        self.resistanceTextField.text = '{:g}'.format(self._wire.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-        self.resistanceTextField.animateLabel(False)
+        self.impedanceTextField.text = '{:g}'.format(self._wire.impedance)
+        self.impedanceTextField.input_filter = 'float'
+        self.impedanceTextField.inputText.bind(focus = self.on_focus)
+        self.impedanceTextField.animateLabel(False)
 
         self.lengthTextField.text = '{:g}'.format(self._wire.length)
         self.lengthTextField.input_filter = 'float'

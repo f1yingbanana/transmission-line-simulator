@@ -430,7 +430,7 @@ class CircuitView(MaterialWidget):
         """
         Splits the wire at the given position.
         """
-        copy = Resistor(element.resistance)
+        copy = Resistor(element.impedance)
         copy.length = element.length - pos
         copy.next = element.next
         element.length = pos

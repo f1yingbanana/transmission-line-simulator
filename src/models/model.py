@@ -116,8 +116,8 @@ class Model(object):
             for e in es:
                 if abs(self.forwardCurrent[i]) > 0 and e.prev != None:
                     # Simulate forward
-                    r = e.resistance
-                    z = e.prev.resistance
+                    r = e.impedance
+                    z = e.prev.impedance
                     reflCoefficient = (r - z) / (r + z)
                     fwd -= reflCoefficient * self.forwardCurrent[i]
                     bwd += reflCoefficient * self.forwardCurrent[i]
@@ -127,8 +127,8 @@ class Model(object):
             for e in es:
                 if abs(self.backwardCurrent[i]) > 0 and e.next != None:
                     # Simulate backward
-                    r = e.resistance
-                    z = e.next.resistance
+                    r = e.impedance
+                    z = e.next.impedance
                     reflCoefficient = (r - z) / (r + z)
                     fwd += reflCoefficient * self.backwardCurrent[i]
                     bwd -= reflCoefficient * self.backwardCurrent[i]

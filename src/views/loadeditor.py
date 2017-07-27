@@ -15,7 +15,7 @@ class LoadEditor(PopupEditor):
     Supports wire editing.
     """
 
-    resistanceTextField = ObjectProperty(None)
+    impedanceTextField = ObjectProperty(None)
     prevButton = ObjectProperty(None)
     nextButton = ObjectProperty(None)
 
@@ -33,21 +33,21 @@ class LoadEditor(PopupEditor):
 
 
     def on_focus(self, instance, focus):
-        if instance == self.resistanceTextField.inputText and not focus:
-            # Update resistance.
-            if len(self.resistanceTextField.text) == 0:
-                self._load.resistance = 0
+        if instance == self.impedanceTextField.inputText and not focus:
+            # Update impedance.
+            if len(self.impedanceTextField.text) == 0:
+                self._load.impedance = 0
             else:
-                self._load.resistance = float(self.resistanceTextField.text)
+                self._load.impedance = float(self.impedanceTextField.text)
 
 
     def updateValues(self):
         self.prevButton.disabled = self._load.prev == None
         self.nextButton.disabled = self._load.next == None
-        self.resistanceTextField.text = '{:g}'.format(self._load.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-        self.resistanceTextField.animateLabel(False)
+        self.impedanceTextField.text = '{:g}'.format(self._load.impedance)
+        self.impedanceTextField.input_filter = 'float'
+        self.impedanceTextField.inputText.bind(focus = self.on_focus)
+        self.impedanceTextField.animateLabel(False)
 
 
     def showPrev(self):
