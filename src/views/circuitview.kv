@@ -48,6 +48,26 @@
             size: constants.WIRE_THICKNESS, self._end[1] - self._begin[1] - 3 * constants.WIRE_THICKNESS
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
+        RoundedRectangle:
+            pos: self._begin[0] - constants.WIRE_THICKNESS / 2.0, self._begin[1] - self.height / 15 - constants.WIRE_THICKNESS * 0.5
+            size: constants.WIRE_THICKNESS, self.height / 15 - constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+        RoundedRectangle:
+            pos: self._begin[0] - self.height / 20, self._begin[1] - self.height / 15 - constants.WIRE_THICKNESS * 0.5
+            size: self.height / 10, constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+        RoundedRectangle:
+            pos: self._begin[0] - self.height / 30, self._begin[1] - self.height / 15 - constants.WIRE_THICKNESS * 2.5
+            size: self.height / 15, constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
+        RoundedRectangle:
+            pos: self._begin[0] - self.height / 60, self._begin[1] - self.height / 15 - constants.WIRE_THICKNESS * 4.5
+            size: self.height / 30, constants.WIRE_THICKNESS
+            radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
+
 
 <Wire>:
     canvas:
@@ -129,6 +149,24 @@
             size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
 
     Label:
+        size: source.width / 2, source.height / 2
+        center_x: source.x
+        center_y: source.y + source.height
+        font_name: 'assets/fonts/MDIcons.ttf'
+        text: unichr(0xf278)
+        color: 0, 0, 0, 0.86
+        font_size: self.height / 1.5
+
+    Label:
+        size: source.width / 2, source.height / 2
+        center_x: source.x
+        center_y: source.y
+        font_name: 'assets/fonts/MDIcons.ttf'
+        text: unichr(0xf273)
+        color: 0, 0, 0, 0.86
+        font_size: self.height / 1.5
+
+    Label:
         pos: source.pos
         size: source.size
         font_name: 'assets/fonts/MDIcons.ttf'
@@ -143,21 +181,22 @@
     # top of the rect will be the circular marking, and the wire comes to a stop
     # at the middle bottom.
     id: osc
+    color: 1, 1, 1
     canvas:
         Color:
             rgba: constants.PRIMARY
         Line:
-            points: self.center_x, self.y, self.center_x, self.y + self.height - self.width / 2
+            points: self.center_x, self.y + self.height, self.center_x, self.y + self.width / 2
             width: constants.WIRE_THICKNESS / 2
         Color:
             rgba: constants.DARK_PRIMARY
         Ellipse:
-            size: constants.WIRE_THICKNESS * 2, constants.WIRE_THICKNESS * 2
-            pos: self.center_x - constants.WIRE_THICKNESS, self.y - constants.WIRE_THICKNESS
+            size: constants.WIRE_THICKNESS * (2 ** 0.5), constants.WIRE_THICKNESS * (2 ** 0.5)
+            pos: self.center_x - constants.WIRE_THICKNESS / (2 ** 0.5), self.y + self.height - constants.WIRE_THICKNESS / (2 ** 0.5)
 
 
     Widget:
-        pos: self.parent.x, self.parent.y + self.parent.height - self.parent.width
+        pos: self.parent.pos
         size: self.parent.width, self.parent.width
 
         canvas:
@@ -183,7 +222,7 @@
                 size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
 
             Color:
-                rgba: constants.TEXT_BLACK
+                hsv: self.parent.color
 
             Ellipse:
                 pos: self.x + constants.WIRE_THICKNESS * 2, self.y + constants.WIRE_THICKNESS * 2

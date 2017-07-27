@@ -6,6 +6,7 @@
 #
 
 #:import constants util.constants
+#:include src/views/exportdialog.kv
 
 <OscilloscopeGraphView>:
     size_hint_y: None
@@ -23,3 +24,12 @@
         id: coordLabel
         font_size: sp(12)
         color: constants.TEXT_BLACK
+
+    MaterialButton:
+        id: exportButton
+        x: self.parent.x + dp(8)
+        y: self.parent.y + dp(8)
+        size: dp(30), dp(30)
+        size_hint: None, None
+        icon: unichr(0xf22a)
+        onClick: [lambda: self.parent.onExportButtonClick()]

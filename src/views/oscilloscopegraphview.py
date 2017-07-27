@@ -5,13 +5,16 @@
 # Created: Jul-21-2017
 #
 
+import datetime
 import matplotlib.pyplot as plt
+from matplotlib.colors import *
 import numpy as np
 from materialwidget import MaterialWidget
 from kivy.properties import *
 from util.constants import *
 from util.hoverbehavior import HoverBehavior
 from kivy.metrics import *
+from exportdialog import ExportDialog
 
 class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
@@ -26,6 +29,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         super(OscilloscopeGraphView, self).__init__(**kwargs)
 
         self.oscilloscope = oscilloscope
+        self.dialogLayer = None
 
         self._line = None
         self._fig, self._ax = plt.subplots()
@@ -70,7 +74,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         if self._line == None:
             self._line = self._ax.plot(self.oscilloscope.graph[0], self.oscilloscope.graph[1], \
-                linewidth = 4, color = PRIMARY)[0]
+                linewidth = 4, color = hsv_to_rgb(self.oscilloscope.color))[0]
             self._line.set_marker((4, 0, 0))
             self._line.set_markevery([])
             self._line.set_markersize(dp(5))
@@ -168,4 +172,32 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     def reset(self):
         self._maxima = []
         self._lastCheckedIndex = 0
+
+
+    def onExportButtonClick(self):
+        """
+        Begins the export process by bringing up a dialog.
+        """
+        exportDialog = ExportDialog()
+        exportDialog.onConfirmClicked.append(self.exportData)
+        exportDialog.show(self.dialogLayer)
+        exportDialog.titleLabel.text = "Export Graph and Data"
+        exportDialog.subtitleLabel.text = "Saves the graph and data captured by this oscilloscope to the 'export' folder of this applet."
+        exportDialog.textField.title = "Filename"
+        exportDialog.textField.text = datetime.datetime.now().strftime("SimData %Y-%m-%d %H:%M:%S")
     
+
+    def exportData(self, path):
+        """
+        Exports the current data and graph to the given path.
+        """
+        root = ROOT_PATH
+
+        self._fig.canvas.print_png(root + '/export/' + path + '.png')
+
+        with open(root + '/export/' + path + '.csv', "w") as f:
+            f.write('Time (ns), Amplitude(V)')
+            for i in range(len(self.oscilloscope.graph[0])):
+                x = str(self.oscilloscope.graph[0][i])
+                y = str(self.oscilloscope.graph[1][i])
+                f.write(x + ', ' + y + '\n')

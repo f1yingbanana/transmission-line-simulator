@@ -39,7 +39,7 @@
         id: materialButtonLayout
         pos: materialButton.pos
         size: self.parent.size
-        padding: (dp(16) if materialButton.raised else dp(8), 0)
+        padding: dp(10), 0
 
         Label:
             id: materialButtonIcon
@@ -56,7 +56,7 @@
             width: self.texture_size[0]
             size_hint_x: None
             color: 1, 1, 1, 1
-            font_size: '14sp'
+            font_size: sp(14)
 
     Widget:
         canvas:

@@ -5,6 +5,7 @@
 # Created: Jul-21-2017
 #
 
+from kivy.properties import *
 from kivy.uix.boxlayout import BoxLayout
 from oscilloscopegraphview import OscilloscopeGraphView
 
@@ -13,6 +14,8 @@ class OscilloscopeGraphContainer(BoxLayout):
     This serves as a container for all the oscilloscope graphs. Depending on
     changes in the model, this will automatically add and delete graphs.
     """
+
+    dialogLayer = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(OscilloscopeGraphContainer, self).__init__(**kwargs)
@@ -40,6 +43,7 @@ class OscilloscopeGraphContainer(BoxLayout):
 
             if not found:
                 g = OscilloscopeGraphView(h)
+                g.dialogLayer = self.dialogLayer
                 self.graphViews.append(g)
                 self.add_widget(g)
 

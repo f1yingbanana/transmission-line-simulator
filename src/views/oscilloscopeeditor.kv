@@ -6,13 +6,10 @@
 #
 
 <OscilloscopeEditor>:
-    _fullSize: dp(200), dp(362)
+    _fullSize: dp(200), dp(182)
     _container: container
 
     maxTimeTextField: maxTimeTextField
-    minAmpTextField: minAmpTextFeld
-    maxWavesTextField: maxWavesTextField
-    minWaveAmpTextField: minWaveAmpTextField
     positionTextField: positionTextField
 
     prevButton: prevButton
@@ -35,36 +32,6 @@
                 size_hint_y: None
                 title: 'Max. recording time'
                 suffix: 'ns'
-
-            Widget:
-                height: dp(16)
-                size_hint_y: None
-
-            MaterialTextField:
-                id: minAmpTextFeld
-                size_hint_y: None
-                title: 'Stop recording below...'
-                suffix: 'V'
-
-            Widget:
-                height: dp(16)
-                size_hint_y: None
-
-            MaterialTextField:
-                id: maxWavesTextField
-                size_hint_y: None
-                title: 'Stop recording after...'
-                suffix: 'waves'
-
-            Widget:
-                height: dp(16)
-                size_hint_y: None
-
-            MaterialTextField:
-                id: minWaveAmpTextField
-                size_hint_y: None
-                title: 'Wave min. amplitude'
-                suffix: 'V'
 
             Widget:
                 height: dp(16)
