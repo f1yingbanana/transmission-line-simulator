@@ -182,7 +182,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         exportDialog.onConfirmClicked.append(self.exportData)
         exportDialog.show(self.dialogLayer)
         exportDialog.titleLabel.text = "Export Graph and Data"
-        exportDialog.subtitleLabel.text = "Exports the graph and data captured by this oscilloscope to the 'export' folder of this applet."
+        exportDialog.subtitleLabel.text = "Saves the graph and data captured by this oscilloscope to the 'export' folder of this applet."
         exportDialog.textField.title = "Filename"
         exportDialog.textField.text = datetime.datetime.now().strftime("SimData %Y-%m-%d %H:%M:%S")
     
@@ -191,5 +191,13 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         """
         Exports the current data and graph to the given path.
         """
-        print 'Exporting to export/' + path
+        root = ROOT_PATH
 
+        self._fig.canvas.print_png(root + '/export/' + path + '.png')
+
+        with open(root + '/export/' + path + '.csv', "w") as f:
+            f.write('Time (ns), Amplitude(V)')
+            for i in range(len(self.oscilloscope.graph[0])):
+                x = str(self.oscilloscope.graph[0][i])
+                y = str(self.oscilloscope.graph[1][i])
+                f.write(x + ', ' + y + '\n')

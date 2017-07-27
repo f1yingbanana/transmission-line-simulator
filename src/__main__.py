@@ -9,7 +9,9 @@ import os, sys, kivy
 kivy.require('1.9.0')
 
 import kivy.resources
-kivy.resources.resource_add_path(os.path.dirname(sys.argv[0]))
+import util.constants as constants
+constants.ROOT_PATH = os.path.dirname(sys.argv[0])
+kivy.resources.resource_add_path(constants.ROOT_PATH)
 
 from kivy.config import Config
 Config.set('graphics', 'window_state', 'maximized')
@@ -28,6 +30,8 @@ class SimulatorApp(App):
     """
     This is the root app for the simulator.
     """
+
+    rootPath = ''
     
     def build(self):
         """

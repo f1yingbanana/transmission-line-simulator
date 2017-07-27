@@ -80,3 +80,13 @@ class ExportDialog(Widget):
         self.dismiss(True)
 
 
+    def on_touch_down(self, touch):
+        if not self.collide_point(touch.pos[0], touch.pos[1]):
+            self.dismiss(True)
+
+        for c in self.children:
+            if c.on_touch_down(touch):
+                return True
+
+        return True
+
