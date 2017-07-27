@@ -5,6 +5,9 @@
 # Created: Jul-3-2017
 #
 
+import numpy as np
+from util.constants import *
+
 class CircuitElement(object):
     """
     An abstract class that contains basic information on elements on a circuit.
@@ -17,14 +20,62 @@ class CircuitElement(object):
     prev:       the previous connected circuit element, in current direction
                 order.
     impedance:  the impedance of the element, in ohms.
+    forward:    ndarray of discretized voltage (in V) in the element traveling 
+                forward (going out from the power source).
+    backward:   ndarray of discretized voltage (in V) in the element traveling 
+                forward (going into the power source).
+    xs:         the x coordinates of the discretized points in forward and
+                backward arrays.
+    speed:      how fast the wave propagates in this element in units of c.
     """
     
     def __init__(self):
-        self.position = 0
+        self._position = 0
         self._length = 0
+        self._speed = 1
         self._next = None
         self._prev = None
         self.impedance = 0
+        self.forward = np.array([])
+        self.backward = np.array([])
+        self.xs = np.array([])
+
+
+    def split(self):
+        """
+        Split the amplitude into forward and backward at the edge of the
+        element.
+        """
+        pass
+
+
+    def rotateForward(self):
+        """
+        Rotate every stored forward amplitude in the element.
+        """
+        pass
+
+
+    def rotateBackward(self):
+        """
+        Rotate every stored backward amplitude in the element.
+        """
+        pass
+
+
+    @property
+    def speed(self):
+        return self._speed
+
+
+    @speed.setter
+    def speed(self, value):
+        """
+        We set the speed and then expand / shrink our inernal representation of
+        forward and backward amplitude lists.
+        """
+        self._speed = max(1e-8, min(1, value))
+        self._updateArrays()
 
 
     @property
@@ -87,4 +138,28 @@ class CircuitElement(object):
             nxt.position = this.position + this.length
             this = nxt
             nxt = nxt.next
+
+        self._updateArrays()
+
+
+    @property
+    def position(self):
+        return self._position
+
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+        self._updateArrays()
+
+
+    def _updateArrays(self):
+        pts = max(2, int(STEPS_PER_NS * self.length / (self.speed * LIGHT_SPEED / NS_IN_S)))
+        self.xs = np.linspace(self.position, self.position + self.length, pts, False)
+        self.forward = np.zeros(pts)
+        self.backward = np.zeros(pts)
+
+
+    def reset(self):
+        self._updateArrays()
 

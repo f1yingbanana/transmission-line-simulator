@@ -21,6 +21,7 @@ from wireeditor import WireEditor
 from sourceeditor import SourceEditor
 from oscilloscopeeditor import OscilloscopeEditor
 from kivy.metrics import *
+from models.wire import Wire
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -96,12 +97,12 @@ class CircuitWidget(Widget, HoverBehavior):
         self.prev.onEditClicked()
 
 
-class Wire(CircuitWidget):
+class WireWidget(CircuitWidget):
     """
     This renders a wire.
     """
     def __init__(self, wireModel, **kwargs):
-        super(Wire, self).__init__(**kwargs)
+        super(WireWidget, self).__init__(**kwargs)
 
         self.element = wireModel
         titles = ['Edit Wire', 'Split Wire', 'Add Oscilloscope']
@@ -139,12 +140,12 @@ class Wire(CircuitWidget):
         self.deleteWire(self.element)
 
 
-class Load(CircuitWidget):
+class LoadWidget(CircuitWidget):
     """
     This renders a load.
     """
     def __init__(self, loadModel, **kwargs):
-        super(Load, self).__init__(**kwargs)
+        super(LoadWidget, self).__init__(**kwargs)
 
         titles = ['Edit Load', 'Reset Circuit']
         actions = [self.onEditClicked, self.onResetClicked]
@@ -158,12 +159,12 @@ class Load(CircuitWidget):
         self.resetCircuit()
 
 
-class Source(CircuitWidget):
+class SourceWidget(CircuitWidget):
     """
     This renders a power source.
     """
     def __init__(self, element, **kwargs):
-        super(Source, self).__init__(**kwargs)
+        super(SourceWidget, self).__init__(**kwargs)
 
         titles = ['Edit Source', 'Reset Circuit']
         actions = [self.onEditClicked, self.onResetClicked]
@@ -177,7 +178,7 @@ class Source(CircuitWidget):
         self.resetCircuit()
 
 
-class Oscilloscope(CircuitWidget):
+class OscilloscopeWidget(CircuitWidget):
     """
     This renders an oscilloscope. Oscilloscopes may only be placed on the bottom
     wire.
@@ -185,7 +186,7 @@ class Oscilloscope(CircuitWidget):
     color = ListProperty([1, 1, 1])
 
     def __init__(self, element, **kwargs):
-        super(Oscilloscope, self).__init__(**kwargs)
+        super(OscilloscopeWidget, self).__init__(**kwargs)
 
         titles = ['Edit Oscilloscope', 'Delete Oscilloscope']
         actions = [self.onEditClicked, self.onDeleteClicked]
@@ -199,7 +200,6 @@ class Oscilloscope(CircuitWidget):
 
     def onDeleteClicked(self):
         self.deleteOscilloscope(self.element)
-
 
 
 class CircuitView(MaterialWidget):
@@ -264,7 +264,7 @@ class CircuitView(MaterialWidget):
         lastX = 0
 
         for c in self.children:
-            if type(c) == Wire:
+            if type(c) == WireWidget:
                 c.x = float(self._begin[0] + c.element.position * scale + WIRE_THICKNESS)
                 c.width = float(max(0, c.element.length * scale - 2 * WIRE_THICKNESS))
                 lastX = c.x + c.element.position
@@ -280,10 +280,14 @@ class CircuitView(MaterialWidget):
         if self.model == None:
             return
 
+        print 'building'
+
+        print self.model.circuit.head.next
+
         self.clear_widgets()
 
         # Add a source.
-        source = Source(self.model.circuit.head)
+        source = SourceWidget(self.model.circuit.head)
         source.contextMenuLayer = self.contextMenuLayer
         source.resetCircuit = self.resetCircuit
         source.size = self.height / 8, self.height / 8
@@ -300,14 +304,14 @@ class CircuitView(MaterialWidget):
 
         while e.next != None:
             # This element is either a wire or oscilloscope.
-            if type(e) == Resistor:
+            if type(e) == Wire:
                 p1, p2 = self._addWireView(e, p1, p2)
 
             # Proceed to the next element
             e = e.next
 
         # Add a load.
-        load = Load(e)
+        load = LoadWidget(e)
         load.contextMenuLayer = self.contextMenuLayer
         load.resetCircuit = self.resetCircuit
         load.size = self.height / 18, self.height / 6
@@ -336,7 +340,7 @@ class CircuitView(MaterialWidget):
 
     def _addOscilloscopeView(self, oscilloscope):
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
-        ov = Oscilloscope(oscilloscope)
+        ov = OscilloscopeWidget(oscilloscope)
         ov.contextMenuLayer = self.contextMenuLayer
         ov.popup.reposition = self.repositionOscilloscope
         ov.size = float(self.height / 12), float(self.height / 4)
@@ -359,9 +363,10 @@ class CircuitView(MaterialWidget):
 
 
     def _addWireView(self, wire, p1, p2):
+        print 'adding ' + str(wire.position) + ', ' + str(wire.length)
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
 
-        w1 = Wire(wire)
+        w1 = WireWidget(wire)
         w1.wireScale = scale
         w1.updateCircuit = self.updateCircuit
         w1.addOscilloscope = self.addOscilloscope
@@ -378,7 +383,7 @@ class CircuitView(MaterialWidget):
 
         self.add_widget(w1)
 
-        w2 = Wire(wire)
+        w2 = WireWidget(wire)
         w2.wireScale = scale
         w2.updateCircuit = self.updateCircuit
         w2.addOscilloscope = self.addOscilloscope
@@ -430,7 +435,7 @@ class CircuitView(MaterialWidget):
         """
         Splits the wire at the given position.
         """
-        copy = Resistor(element.impedance)
+        copy = Wire(element.impedance, element.speed)
         copy.length = element.length - pos
         copy.next = element.next
         element.length = pos
@@ -489,8 +494,6 @@ class CircuitView(MaterialWidget):
                 if i.element.next == j.element:
                     i.next = j
                     j.prev = i
-
-
 
 
     def repositionOscilloscopes(self):

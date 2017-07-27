@@ -6,11 +6,12 @@
 #
 
 <WireEditor>:
-    _fullSize: dp(200), dp(182)
+    _fullSize: dp(200), dp(242)
     _container: container
 
     impedanceTextField: impedanceTextField
     lengthTextField: lengthTextField
+    speedTextField: speedTextField
 
     prevButton: prevButton
     nextButton: nextButton
@@ -42,6 +43,16 @@
                 size_hint_y: None
                 title: 'Length'
                 suffix: 'm'
+
+            Widget:
+                height: dp(16)
+                size_hint_y: None
+
+            MaterialTextField:
+                id: speedTextField
+                size_hint_y: None
+                title: 'Speed'
+                suffix: 'c'
 
         Widget:
             height: dp(16)

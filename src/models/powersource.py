@@ -8,6 +8,7 @@
 from circuitelement import CircuitElement
 from scipy import signal
 from util.constants import *
+import numpy as np
 
 class WaveShape:
     """
@@ -23,21 +24,20 @@ class PowerSource(CircuitElement):
     
     amplitude:  the maximum wave voltage, in volts.
     shape:      the shape of the wave.
-    width:      the width of the shape, in meters.
+    width:      the width of the shape, in ns (that is, width is actually how
+                long the wave will be emitted).
     """
     
-    def __init__(self, amplitude, impedance, width, totalWidth):
+    def __init__(self, amplitude, impedance, width):
         """
         Initializes this power supply with given power and impedance.
         """
         super(PowerSource, self).__init__()
         
         self.impedance = impedance
-        self.amplitude = amplitude
+        self._amplitude = amplitude
         self.width = width
-        self.totalWidth = totalWidth
-        self._shape = WaveShape.Gaussian
-        self._setPts = False
+        self.shape = WaveShape.Gaussian
     
     
     @property
@@ -49,36 +49,40 @@ class PowerSource(CircuitElement):
     def shape(self, value):
         self._shape = value
         
-        points = int(self.width / self.totalWidth * DISCRETE_STEPS)
+        points = int(self.width * STEPS_PER_NS)
         
         if value == WaveShape.Gaussian:
-            self._output = signal.gaussian(points, points / 7).tolist()
+            self.forward = signal.gaussian(points, points / 7.0)
         elif value == WaveShape.Square:
-            self._output = [1] * points
+            self.forward = np.ones(points)
         elif value == WaveShape.Triangle:
-            self._output = []
-            
-            for i in range(points / 2):
-                self._output.append(i * 2.0 / points)
-            
-            for i in range(points / 2):
-                self._output.append(1 - i * 2.0 / points)
-    
-    
-    def getOutput(self):
-        if not self._setPts:
-            self._setPts = True
-            self.shape = self._shape
+            self.forward = np.concatenate(np.arange(0, 1, 2.0 / points), np.arange(1, 0, 2.0 / points))
 
-        if len(self._output) == 0:
-            return 0
-        else:
-            return self._output.pop(0) * self.amplitude
-    
+        self.forward *= self.amplitude
+
+
+    @property
+    def amplitude(self):
+        return self._amplitude
+
+
+    @amplitude.setter
+    def amplitude(self, value):
+        self._amplitude = value
+        self.shape = self.shape
+
 
     def reset(self):
         """
         Resets the power source, allowing it to output a fresh wave.
         """
         self.shape = self.shape
-        self._setPts = False
+
+
+    def rotateForward(self):
+        """
+        Pops the last value and replace with 0.
+        """
+        self.forward = np.roll(self.forward, 1)
+        self.forward[0] = 0
+

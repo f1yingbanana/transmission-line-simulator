@@ -6,10 +6,10 @@
 #
 
 """
-This is the number of discrete units of current we will measure. Bigger value
-means smoother graphs.
+This is the number of discrete values of amplitude that will be recorded for
+each nanosecond of the simulation. Higher value leads to a smoother graph.
 """
-DISCRETE_STEPS = 200
+STEPS_PER_NS = 50
 
 PRIMARY = (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
 LIGHT_PRIMARY = (94 / 255.0, 146 / 255.0, 243 / 255.0, 1)
@@ -29,3 +29,6 @@ RIPPLE_DURATION = 0.3
 
 WIRE_THICKNESS = 8.0
 WIRE_HIGHLIGHT = (0, 0, 0, 0.2)
+
+LIGHT_SPEED = 299792458
+NS_IN_S = 1e9

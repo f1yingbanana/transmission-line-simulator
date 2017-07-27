@@ -17,6 +17,7 @@ class WireEditor(PopupEditor):
 
     impedanceTextField = ObjectProperty(None)
     lengthTextField = ObjectProperty(None)
+    speedTextField = ObjectProperty(None)
     prevButton = ObjectProperty(None)
     nextButton = ObjectProperty(None)
 
@@ -52,6 +53,16 @@ class WireEditor(PopupEditor):
 
             self.updateCircuit()
 
+        if instance == self.speedTextField.inputText and not focus:
+            # Update speed.
+            if len(self.speedTextField.text) == 0:
+                self._wire.speed = 1
+            else:
+                self._wire.speed = min(1, max(0, float(self.speedTextField.text)))
+                self.speedTextField.text = '{:g}'.format(self._wire.speed)
+
+            self.updateCircuit()
+
 
     def updateValues(self):
         self.impedanceTextField.text = '{:g}'.format(self._wire.impedance)
@@ -63,6 +74,11 @@ class WireEditor(PopupEditor):
         self.lengthTextField.input_filter = 'float'
         self.lengthTextField.inputText.bind(focus = self.on_focus)
         self.lengthTextField.animateLabel(False)
+
+        self.speedTextField.text = '{:g}'.format(self._wire.speed)
+        self.speedTextField.input_filter = 'float'
+        self.speedTextField.inputText.bind(focus = self.on_focus)
+        self.speedTextField.animateLabel(False)
 
         self.prevButton.disabled = self._wire.prev == None
         self.nextButton.disabled = self._wire.next == None
