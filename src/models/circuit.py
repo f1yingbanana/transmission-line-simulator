@@ -10,6 +10,7 @@ from powersource import PowerSource
 from resistor import Resistor
 from oscilloscope import Oscilloscope
 from util.constants import *
+from wire import Wire
 
 class Circuit(object):
     """
@@ -24,16 +25,12 @@ class Circuit(object):
         Initializes a brand new circuit with a power source, single cable and a
         single load at the right.
         """
-        source = PowerSource(10.0, 5.0, 1, 5.0)
-        source.getLength = self.getLength
-        cable = Resistor(5.0)
-        cable2 = Resistor(10.0)
+        source = PowerSource(10.0, 5.0, 1)
+        cable = Wire(5.0, 1)
         load = Resistor(0.0)
-        cable.length = 2.5
-        cable2.length = 2.5
+        cable.length = 5.0
         source.next = cable
-        cable.next = cable2
-        cable2.next = load
+        cable.next = load
         self.head = source
         self.headOscilloscope = None
     
@@ -145,7 +142,12 @@ class Circuit(object):
         return es
 
     def reset(self):
-        self.head.reset()
+        e = self.head
+
+        while e != None:
+            e.reset()
+            e = e.next
+
         e = self.headOscilloscope
 
         while e != None:

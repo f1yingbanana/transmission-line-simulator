@@ -69,7 +69,7 @@
             radius: constants.WIRE_THICKNESS / 2, constants.WIRE_THICKNESS / 2
 
 
-<Wire>:
+<WireWidget>:
     canvas:
         Color:
             rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
@@ -99,7 +99,7 @@
             size: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
 
 
-<Load>:
+<LoadWidget>:
     canvas:
         Color:
             rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
@@ -123,7 +123,7 @@
             size: self.width - 2 * constants.WIRE_THICKNESS, self.height - 2 * constants.WIRE_THICKNESS
 
 
-<Source>:
+<SourceWidget>:
     id: source
 
     canvas:
@@ -175,7 +175,7 @@
         font_size: self.height / 1.5
 
 
-<Oscilloscope>:
+<OscilloscopeWidget>:
     # Oscilloscope consists of a circular marking on the top and bits of wire on
     # the bottom. We assume the square with sidelength length positioned at the
     # top of the rect will be the circular marking, and the wire comes to a stop
