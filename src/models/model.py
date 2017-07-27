@@ -62,30 +62,34 @@ class Model(object):
             self._lastStep += 1.0 / STEPS_PER_NS / NS_IN_S
             self._step()
 
+            # Recompute overall
+            self.graph = [np.array([]), np.array([])]
+            e = self.circuit.head.next
+
+            while e.next != None:
+                self.graph[0] = np.concatenate((self.graph[0], e.xs))
+                v = e.forward + e.backward
+
+                if len(v) > 0:
+                    self.maxAmplitude = max(self.maxAmplitude, v.max(), v.min())
+
+                self.graph[1] = np.concatenate((self.graph[1], v))
+                e = e.next
+
             # Update every oscilloscope
             h = self.circuit.headOscilloscope
 
             i = 0
             
             while h != None:
+                if i >= len(self.graph[0]):
+                    break
+
                 while self.graph[0][i] < h.position:
                     i += 1
+
                 h.record(self._lastStep, self.graph[1][i - 1])
                 h = h.next
-
-        # Recompute overall
-        self.graph = [np.array([]), np.array([])]
-        e = self.circuit.head.next
-
-        while e.next != None:
-            self.graph[0] = np.concatenate((self.graph[0], e.xs))
-            v = e.forward + e.backward
-
-            if len(v) > 0:
-                self.maxAmplitude = max(self.maxAmplitude, v.max(), v.min())
-
-            self.graph[1] = np.concatenate((self.graph[1], v))
-            e = e.next
 
 
     def reset(self):

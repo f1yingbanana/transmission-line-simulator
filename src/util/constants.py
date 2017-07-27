@@ -9,7 +9,7 @@
 This is the number of discrete values of amplitude that will be recorded for
 each nanosecond of the simulation. Higher value leads to a smoother graph.
 """
-STEPS_PER_NS = 50
+STEPS_PER_NS = 20
 
 PRIMARY = (21 / 255.0, 101 / 255.0, 192 / 255.0, 1)
 LIGHT_PRIMARY = (94 / 255.0, 146 / 255.0, 243 / 255.0, 1)
