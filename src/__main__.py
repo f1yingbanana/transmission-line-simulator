@@ -19,6 +19,8 @@ Config.set('graphics', 'minimum_width', 1024)
 Config.set('graphics', 'minimum_height', 768)
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
+print "PATH IS: " + constants.ROOT_PATH
+
 import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
 
@@ -31,8 +33,6 @@ class SimulatorApp(App):
     This is the root app for the simulator.
     """
 
-    rootPath = ''
-    
     def build(self):
         """
         This returns a built widget for the app.

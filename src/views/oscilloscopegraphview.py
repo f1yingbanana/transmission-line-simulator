@@ -194,9 +194,12 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         """
         root = ROOT_PATH
 
-        self._fig.canvas.print_png(root + '/export/' + path + '.png')
+        if len(root) > 0:
+            root = root + '/'
 
-        with open(root + '/export/' + path + '.csv', "w") as f:
+        self._fig.canvas.print_png(root + 'export/' + path + '.png')
+
+        with open(root + 'export/' + path + '.csv', "w") as f:
             f.write('Time (ns), Amplitude(V)')
             for i in range(len(self.oscilloscope.graph[0])):
                 x = str(self.oscilloscope.graph[0][i])
