@@ -22,6 +22,7 @@ from sourceeditor import SourceEditor
 from oscilloscopeeditor import OscilloscopeEditor
 from kivy.metrics import *
 from models.wire import Wire
+from models.model import *
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -42,6 +43,9 @@ class CircuitWidget(Widget, HoverBehavior):
 
 
     def on_touch_down(self, touch):
+        if self.disabled:
+            return super(CircuitWidget, self).on_touch_down(touch)
+
         if self.collide_point(touch.pos[0], touch.pos[1]):
             self._menuPos = touch.pos
 
@@ -188,8 +192,8 @@ class OscilloscopeWidget(CircuitWidget):
     def __init__(self, element, **kwargs):
         super(OscilloscopeWidget, self).__init__(**kwargs)
 
-        titles = ['Edit Oscilloscope', 'Delete Oscilloscope']
-        actions = [self.onEditClicked, self.onDeleteClicked]
+        titles = ['Edit Oscilloscope', 'Move Left', 'Move Right', 'Delete Oscilloscope']
+        actions = [self.onEditClicked, self.onMoveLeftClicked, self.onMoveRightClicked, self.onDeleteClicked]
         self.menu = ContextMenu(titles, actions)
         self.element = element
         self.popup = OscilloscopeEditor(self.element)
@@ -200,6 +204,24 @@ class OscilloscopeWidget(CircuitWidget):
 
     def onDeleteClicked(self):
         self.deleteOscilloscope(self.element)
+
+
+    def onMoveLeftClicked(self):
+        e = self.element.wire
+
+        while self.element.position == e.position and e.prev != None:
+            e = e.prev
+
+        self.repositionOscilloscope(self.element, e.position)
+
+
+    def onMoveRightClicked(self):
+        e = self.element.wire
+
+        while self.element.position == e.position + e.length and e.next != None:
+            e = e.next
+
+        self.repositionOscilloscope(self.element, e.position + e.length)
 
 
 class CircuitView(MaterialWidget):
@@ -224,6 +246,7 @@ class CircuitView(MaterialWidget):
         super(CircuitView, self).__init__(**kwargs)
 
         self.oscilloscopeViews = []
+        self._cachedState = AppState.Editing
     
 
     def on_model(self, *args, **kwargs):
@@ -253,6 +276,18 @@ class CircuitView(MaterialWidget):
     def resetCircuit(self):
         self.model.reset()
         self.model.circuit = Circuit()
+
+
+    def update(self, dt):
+        # Disable editing on simulation
+        if self.model == None:
+            return
+
+        if self.model.appState != self._cachedState:
+            self._cachedState = self.model.appState
+
+            for c in self.children:
+                c.disabled = self._cachedState != AppState.Editing
 
 
     def updateCircuit(self):
@@ -342,8 +377,9 @@ class CircuitView(MaterialWidget):
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
         ov = OscilloscopeWidget(oscilloscope)
         ov.contextMenuLayer = self.contextMenuLayer
+        ov.repositionOscilloscope = self.repositionOscilloscope
         ov.popup.reposition = self.repositionOscilloscope
-        ov.size = float(self.height / 12), float(self.height / 4)
+        ov.size = float(self.height / 12), float(self.height / 5)
         ov.center_x = float(self._begin[0] + oscilloscope.position * scale)
         ov.y = self._end[1] - ov.height
         ov.deleteOscilloscope = self.deleteOscilloscope
@@ -435,11 +471,7 @@ class CircuitView(MaterialWidget):
         """
         Splits the wire at the given position.
         """
-        copy = Wire(element.impedance, element.speed)
-        copy.length = element.length - pos
-        copy.next = element.next
-        element.length = pos
-        element.next = copy
+        self.model.circuit.splitWire(element, pos)
         self.rebuildCircuit()
 
 
@@ -447,30 +479,7 @@ class CircuitView(MaterialWidget):
         """
         Removes the given wire from the model and the view.
         """
-        element.prev.next = element.next
-
-        # Delete any oscilloscopes on this segment, and also changes positioning
-        # for later oscilloscopes.
-        h = self.model.circuit.headOscilloscope
-
-        while h != None:
-            if h.position > element.position:
-                if h.position < element.position + element.length:
-                    # Delete oscilloscope.
-                    if h.prev != None:
-                        h.prev.next = h.next
-
-                    if h.next != None:
-                        h.next.prev = h.prev
-
-                    if h == self.model.circuit.headOscilloscope:
-                        self.model.circuit.headOscilloscope = h.next
-                else:
-                    # Move oscilloscope.
-                    h.position -= element.length
-
-            h = h.next
-
+        self.model.circuit.deleteWire(element)
         self.rebuildCircuit()
 
 
@@ -503,5 +512,5 @@ class CircuitView(MaterialWidget):
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
 
         for ov in self.oscilloscopeViews:
-            ov.size = float(self.height / 12), float(self.height / 4)
+            ov.size = float(self.height / 12), float(self.height / 5)
             ov.center_x = float(self._begin[0] + ov.element.position * scale)

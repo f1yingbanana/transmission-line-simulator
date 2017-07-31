@@ -36,7 +36,7 @@ class PowerSource(CircuitElement):
         
         self.impedance = impedance
         self._amplitude = amplitude
-        self.width = width
+        self._width = width
         self.shape = WaveShape.Gaussian
     
     
@@ -52,7 +52,9 @@ class PowerSource(CircuitElement):
         points = int(self.width * STEPS_PER_NS)
         
         if value == WaveShape.Gaussian:
-            self.forward = signal.gaussian(points, points / 7.0)
+            # We want to have value 1/e at +-(points-1)/2. But we want to have
+            # some more points at both ends to produce smoother graph. So.
+            self.forward = signal.gaussian(3 * points, points / 2.0 / 2 ** 0.5)
         elif value == WaveShape.Square:
             self.forward = np.ones(points)
         elif value == WaveShape.Triangle:
@@ -69,6 +71,17 @@ class PowerSource(CircuitElement):
     @amplitude.setter
     def amplitude(self, value):
         self._amplitude = value
+        self.shape = self.shape
+
+
+    @property
+    def width(self):
+        return self._width
+
+
+    @width.setter
+    def width(self, value):
+        self._width = value
         self.shape = self.shape
 
 
