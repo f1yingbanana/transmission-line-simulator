@@ -30,6 +30,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         self.oscilloscope = oscilloscope
         self.dialogLayer = None
+        self.updated = False
 
         self._line = None
         self._fig, self._ax = plt.subplots()

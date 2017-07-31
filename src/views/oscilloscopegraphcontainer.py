@@ -21,7 +21,6 @@ class OscilloscopeGraphContainer(BoxLayout):
         super(OscilloscopeGraphContainer, self).__init__(**kwargs)
 
         self.model = None
-        self.graphViews = []
 
 
     def update(self, dt):
@@ -31,28 +30,35 @@ class OscilloscopeGraphContainer(BoxLayout):
         # Checks whether there has been a new oscilloscope added, or reordered.
         h = self.model.circuit.headOscilloscope
 
-        self.clear_widgets()
-
         while h != None:
             found = False
 
-            for g in self.graphViews:
+            for g in self.children:
                 if g.oscilloscope == h:
                     found = True
-                    self.add_widget(g)
+                    g.updated = True
 
             if not found:
                 g = OscilloscopeGraphView(h)
                 g.dialogLayer = self.dialogLayer
-                self.graphViews.append(g)
                 self.add_widget(g)
+                g.updated = True
 
             h = h.next
+        
+        toRemove = []
 
-        for g in self.graphViews:
-            g.update(dt)
+        for g in self.children:
+            if g.updated:
+                g.update(dt)
+                g.updated = False
+            else:
+                toRemove.append(g)
 
+        for g in toRemove:
+            self.remove_widget(g)
+        
 
     def reset(self):
-        for g in self.graphViews:
+        for g in self.children:
             g.reset()
