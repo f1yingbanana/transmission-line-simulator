@@ -304,6 +304,7 @@ class CircuitView(MaterialWidget):
                 c.width = float(max(0, c.element.length * scale - 2 * WIRE_THICKNESS))
                 lastX = c.x + c.element.position
 
+        self.model.circuit.checkOscilloscopes()
         self.repositionOscilloscopes()
 
 

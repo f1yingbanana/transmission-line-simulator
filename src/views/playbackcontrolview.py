@@ -33,6 +33,8 @@ class PlaybackControlView(BoxLayout):
     def update(self, dt):
         if self.model != None:
             self._pauseButton.disabled = self.model.appState != AppState.Simulating
+            self._playButton.disabled = self.model.appState == AppState.Simulating
+            self._stopButton.disabled = self.model.appState == AppState.Editing
             self._speedLabel.text = str(int(self.model.simSpeed * 1e9)) + 'x'
             self._slowDownButton.disabled = self.model.simSpeed <= 1e-9
             self._speedUpButton.disabled = self.model.simSpeed >= 8e-9
@@ -41,7 +43,8 @@ class PlaybackControlView(BoxLayout):
 
 
     def onPlayButtonClick(self):
-        self.onReset()
+        if self.model.appState != AppState.Paused:
+            self.onReset()
         self.model.appState = AppState.Simulating
 
 

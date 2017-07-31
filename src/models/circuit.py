@@ -100,8 +100,8 @@ class Circuit(object):
                     if h.next != None:
                         h.next.prev = h.prev
 
-                    if h == self.model.circuit.headOscilloscope:
-                        self.model.circuit.headOscilloscope = h.next
+                    if h == self.headOscilloscope:
+                        self.headOscilloscope = h.next
                 else:
                     # Move oscilloscope.
                     h.position -= element.length
@@ -127,6 +127,21 @@ class Circuit(object):
 
         # Now reinsert
         self._insert(element)
+
+
+    def checkOscilloscopes(self):
+        # Checks and removes out of bound osclloscopes.
+        o = self.headOscilloscope
+        l = self.getLength()
+
+        while o != None:
+            if o.position > l:
+                if o.prev != None:
+                    o.prev.next = None
+                elif o == self.headOscilloscope:
+                    self.headOscilloscope = None
+
+            o = o.next
 
 
     def _insert(self, o):
