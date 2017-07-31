@@ -50,7 +50,7 @@ class OscilloscopeGraphContainer(BoxLayout):
 
         for g in self.children:
             if g.updated:
-                g.update(dt)
+                g.update(dt, self.model.appState)
                 g.updated = False
             else:
                 toRemove.append(g)
