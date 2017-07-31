@@ -315,10 +315,6 @@ class CircuitView(MaterialWidget):
         if self.model == None:
             return
 
-        print 'building'
-
-        print self.model.circuit.head.next
-
         self.clear_widgets()
 
         # Add a source.
@@ -399,7 +395,6 @@ class CircuitView(MaterialWidget):
 
 
     def _addWireView(self, wire, p1, p2):
-        print 'adding ' + str(wire.position) + ', ' + str(wire.length)
         scale = (self._end[0] - self._begin[0]) / self.model.circuit.getLength()
 
         w1 = WireWidget(wire)
