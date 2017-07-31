@@ -29,7 +29,7 @@ class MaterialTextField(HoverBehavior, RelativeLayout):
     suffix = StringProperty(None)
     title = StringProperty(None)
     text = StringProperty(None)
-
+    
     primaryColor = ListProperty()
     errorColor = ListProperty()
     unfocusedLabelColor = ListProperty()

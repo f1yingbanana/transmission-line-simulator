@@ -55,7 +55,7 @@ class OscilloscopeEditor(PopupEditor):
         self.nextButton.disabled = self._oscilloscope.next == None
 
         self.positionTextField.text = '{:g}'.format(self._oscilloscope.position)
-        self.positionTextField.input_filter = 'float'
+        self.positionTextField.inputText.input_filter = 'float'
         self.positionTextField.inputText.bind(focus = self.on_focus)
         self.positionTextField.animateLabel(False)
 
@@ -63,7 +63,7 @@ class OscilloscopeEditor(PopupEditor):
             self.maxTimeTextField.text = ''
         else:
             self.maxTimeTextField.text = '{:g}'.format(self._oscilloscope.maxTime * 1e9)
-        self.maxTimeTextField.input_filter = 'float'
+        self.maxTimeTextField.inputText.input_filter = 'float'
         self.maxTimeTextField.inputText.bind(focus = self.on_focus)
         self.maxTimeTextField.animateLabel(False)
 

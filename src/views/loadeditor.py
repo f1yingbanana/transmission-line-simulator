@@ -45,7 +45,7 @@ class LoadEditor(PopupEditor):
         self.prevButton.disabled = self._load.prev == None
         self.nextButton.disabled = self._load.next == None
         self.impedanceTextField.text = '{:g}'.format(self._load.impedance)
-        self.impedanceTextField.input_filter = 'float'
+        self.impedanceTextField.inputText.input_filter = 'float'
         self.impedanceTextField.inputText.bind(focus = self.on_focus)
         self.impedanceTextField.animateLabel(False)
 

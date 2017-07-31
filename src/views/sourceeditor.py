@@ -128,13 +128,13 @@ class SourceEditor(PopupEditor):
         self.prevButton.disabled = self._source.prev == None
         self.nextButton.disabled = self._source.next == None
         self.impedanceTextField.text = '{:g}'.format(self._source.impedance)
-        self.impedanceTextField.input_filter = 'float'
+        self.impedanceTextField.inputText.input_filter = 'float'
         self.impedanceTextField.inputText.bind(focus = self.on_focus)
         self.voltageTextField.text = '{:g}'.format(self._source.amplitude)
-        self.voltageTextField.input_filter = 'float'
+        self.voltageTextField.inputText.input_filter = 'float'
         self.voltageTextField.inputText.bind(focus = self.on_focus)
         self.widthTextField.text = '{:g}'.format(self._source.width)
-        self.widthTextField.input_filter = 'float'
+        self.widthTextField.inputText.input_filter = 'float'
         self.widthTextField.inputText.bind(focus = self.on_focus)
         self.impedanceTextField.animateLabel(False)
         self.voltageTextField.animateLabel(False)
