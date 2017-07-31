@@ -64,6 +64,51 @@ class Circuit(object):
         return o
 
 
+    def splitWire(self, e, pos):
+        c = Wire(e.impedance, e.speed)
+        c.length = e.length - pos
+        c.next = e.next
+        e.length = pos
+        e.next = c
+
+        # Now reset oscilloscopes' wire properties.
+        o = self.headOscilloscope
+
+        while o != None:
+            if e.position <= o.position and e.position + e.length >= o.position:
+                o.wire = e
+            elif c.position <= o.position and c.position + c.length >= o.position:
+                o.wire = c
+        
+            o = o.next
+
+
+    def deleteWire(self, element):
+        element.prev.next = element.next
+
+        # Delete any oscilloscopes on this segment, and also changes positioning
+        # for later oscilloscopes.
+        h = self.headOscilloscope
+
+        while h != None:
+            if h.position > element.position:
+                if h.position < element.position + element.length:
+                    # Delete oscilloscope.
+                    if h.prev != None:
+                        h.prev.next = h.next
+
+                    if h.next != None:
+                        h.next.prev = h.prev
+
+                    if h == self.model.circuit.headOscilloscope:
+                        self.model.circuit.headOscilloscope = h.next
+                else:
+                    # Move oscilloscope.
+                    h.position -= element.length
+
+            h = h.next
+
+
     def moveOscilloscope(self, element, pos):
         """
         Moves the given oscilloscope to somewhere else.
@@ -85,6 +130,18 @@ class Circuit(object):
 
 
     def _insert(self, o):
+        # First determine wire
+        e = self.head.next
+
+        while e.next != None:
+            if e.position <= o.position and e.position + e.length >= o.position:
+                break
+
+            e = e.next
+
+        o.wire = e
+
+        # Now insert into linked list.
         if self.headOscilloscope == None:
             self.headOscilloscope = o
             return
@@ -140,6 +197,7 @@ class Circuit(object):
             es.reverse()
         
         return es
+
 
     def reset(self):
         e = self.head

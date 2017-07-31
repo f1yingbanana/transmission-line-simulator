@@ -15,6 +15,7 @@ class Oscilloscope(CircuitElement):
     maxTime:    the maximum duration we record the graph, in seconds.
     graph:      the amplitude information collected.
     color:      the color tag used in various drawings.
+    wire:       the wire this oscilloscope is currently on.
     """
     
     hue = 0
@@ -30,6 +31,7 @@ class Oscilloscope(CircuitElement):
         self.color = 1, 1, 1
         self._isRecording = True
         self.color = Oscilloscope.hue, 0.9, 0.75
+        self.wire = None
         Oscilloscope.hue = (Oscilloscope.hue + 0.381966) % 1
     
 
