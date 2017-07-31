@@ -15,6 +15,7 @@ from util.constants import *
 from util.hoverbehavior import HoverBehavior
 from kivy.metrics import *
 from exportdialog import ExportDialog
+from models.model import *
 
 class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
@@ -61,13 +62,18 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         self.container.add_widget(self._fig.canvas)
 
 
-    def update(self, dt):
-        # Update maxima
-        self._updateMaxima()
-
+    def update(self, dt, state):
         # Draw a cursor if mouse is close to one of the data points, and display
         # it.
         self._markCoord()
+
+        if state != AppState.Simulating:
+            if self._line != None:
+                self._fig.canvas.draw()
+            return
+
+        # Update maxima
+        self._updateMaxima()
 
         # Update graph
         if not self.oscilloscope.isRecording():
@@ -194,9 +200,12 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         """
         root = ROOT_PATH
 
-        self._fig.canvas.print_png(root + '/export/' + path + '.png')
+        if len(root) > 0:
+            root = root + '/'
 
-        with open(root + '/export/' + path + '.csv', "w") as f:
+        self._fig.canvas.print_png(root + 'export/' + path + '.png')
+
+        with open(root + 'export/' + path + '.csv', "w") as f:
             f.write('Time (ns), Amplitude(V)')
             for i in range(len(self.oscilloscope.graph[0])):
                 x = str(self.oscilloscope.graph[0][i])

@@ -42,7 +42,7 @@ class SimulatorView(Widget):
     
 
     def update(self, dt):
-        self.graphView.update(dt)
+        self.graphView.update(dt, self.model.appState != AppState.Editing)
         self.playbackControlView.update(dt)
         self.circuitView.update(dt)
         self.circuitView.setGraphBounds(self.graphView.getBounds())

@@ -54,7 +54,7 @@ class GraphView(MaterialWidget):
         self.container.add_widget(self._fig.canvas)
 
 
-    def update(self, dt):
+    def update(self, dt, active):
         """
         Redraws the graph.
         """
@@ -70,6 +70,7 @@ class GraphView(MaterialWidget):
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
                 v = self.model.maxAmplitude
                 self._ax.set_ylim([-1.2 * v, 1.2 * v])
+                self._line.set_color(PRIMARY if active else TEXT_GRAY)
 
             self._ax.set_xlim([0, l])
             self._fig.canvas.draw()

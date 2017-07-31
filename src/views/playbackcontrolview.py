@@ -41,6 +41,7 @@ class PlaybackControlView(BoxLayout):
 
 
     def onPlayButtonClick(self):
+        self.onReset()
         self.model.appState = AppState.Simulating
 
 
@@ -49,7 +50,7 @@ class PlaybackControlView(BoxLayout):
 
 
     def onStopButtonClick(self):
-        self.onReset()
+        self.model.appState = AppState.Editing
 
 
     def onSlowDownButtonClick(self):

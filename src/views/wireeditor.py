@@ -66,17 +66,17 @@ class WireEditor(PopupEditor):
 
     def updateValues(self):
         self.impedanceTextField.text = '{:g}'.format(self._wire.impedance)
-        self.impedanceTextField.input_filter = 'float'
+        self.impedanceTextField.inputText.input_filter = 'float'
         self.impedanceTextField.inputText.bind(focus = self.on_focus)
         self.impedanceTextField.animateLabel(False)
 
         self.lengthTextField.text = '{:g}'.format(self._wire.length)
-        self.lengthTextField.input_filter = 'float'
+        self.lengthTextField.inputText.input_filter = 'float'
         self.lengthTextField.inputText.bind(focus = self.on_focus)
         self.lengthTextField.animateLabel(False)
 
         self.speedTextField.text = '{:g}'.format(self._wire.speed)
-        self.speedTextField.input_filter = 'float'
+        self.speedTextField.inputText.input_filter = 'float'
         self.speedTextField.inputText.bind(focus = self.on_focus)
         self.speedTextField.animateLabel(False)
 
