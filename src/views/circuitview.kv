@@ -72,7 +72,7 @@
 <WireWidget>:
     canvas:
         Color:
-            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered and not self.disabled else (0, 0, 0, 0)
 
         RoundedRectangle:
             pos: self.x, self.center_y - constants.WIRE_THICKNESS
@@ -102,7 +102,7 @@
 <LoadWidget>:
     canvas:
         Color:
-            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered and not self.disabled else (0, 0, 0, 0)
 
         Rectangle:
             pos: self.pos[0] - constants.WIRE_THICKNESS / 2.0, self.pos[1] - constants.WIRE_THICKNESS / 2.0
@@ -128,7 +128,7 @@
 
     canvas:
         Color:
-            rgba: constants.WIRE_HIGHLIGHT if self.hovered else (0, 0, 0, 0)
+            rgba: constants.WIRE_HIGHLIGHT if self.hovered and not self.disabled else (0, 0, 0, 0)
 
         Ellipse:
             pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0
@@ -155,6 +155,7 @@
         font_name: 'assets/fonts/MDIcons.ttf'
         text: unichr(0xf278)
         color: 0, 0, 0, 0.86
+        disabled_color: 0, 0, 0, 0.86
         font_size: self.height / 1.5
 
     Label:
@@ -164,6 +165,7 @@
         font_name: 'assets/fonts/MDIcons.ttf'
         text: unichr(0xf273)
         color: 0, 0, 0, 0.86
+        disabled_color: 0, 0, 0, 0.86
         font_size: self.height / 1.5
 
     Label:
@@ -172,6 +174,7 @@
         font_name: 'assets/fonts/MDIcons.ttf'
         text: unichr(0xf387)
         color: 0, 0, 0, 0.86
+        disabled_color: 0, 0, 0, 0.86
         font_size: self.height / 1.5
 
 
@@ -201,7 +204,7 @@
 
         canvas:
             Color:
-                rgba: constants.WIRE_HIGHLIGHT if osc.hovered else (0, 0, 0, 0)
+                rgba: constants.WIRE_HIGHLIGHT if osc.hovered and not osc.disabled else (0, 0, 0, 0)
 
             Ellipse:
                 pos: self.x - constants.WIRE_THICKNESS / 2.0, self.y - constants.WIRE_THICKNESS / 2.0

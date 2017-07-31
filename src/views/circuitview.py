@@ -22,6 +22,7 @@ from sourceeditor import SourceEditor
 from oscilloscopeeditor import OscilloscopeEditor
 from kivy.metrics import *
 from models.wire import Wire
+from models.model import *
 
 class CircuitWidget(Widget, HoverBehavior):
     """
@@ -42,6 +43,9 @@ class CircuitWidget(Widget, HoverBehavior):
 
 
     def on_touch_down(self, touch):
+        if self.disabled:
+            return super(CircuitWidget, self).on_touch_down(touch)
+
         if self.collide_point(touch.pos[0], touch.pos[1]):
             self._menuPos = touch.pos
 
@@ -242,6 +246,7 @@ class CircuitView(MaterialWidget):
         super(CircuitView, self).__init__(**kwargs)
 
         self.oscilloscopeViews = []
+        self._cachedState = AppState.Editing
     
 
     def on_model(self, *args, **kwargs):
@@ -271,6 +276,18 @@ class CircuitView(MaterialWidget):
     def resetCircuit(self):
         self.model.reset()
         self.model.circuit = Circuit()
+
+
+    def update(self, dt):
+        # Disable editing on simulation
+        if self.model == None:
+            return
+
+        if self.model.appState != self._cachedState:
+            self._cachedState = self.model.appState
+
+            for c in self.children:
+                c.disabled = self._cachedState != AppState.Editing
 
 
     def updateCircuit(self):

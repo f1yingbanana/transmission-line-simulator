@@ -44,6 +44,7 @@ class SimulatorView(Widget):
     def update(self, dt):
         self.graphView.update(dt)
         self.playbackControlView.update(dt)
+        self.circuitView.update(dt)
         self.circuitView.setGraphBounds(self.graphView.getBounds())
         self.oscilloscopeGraphContainer.update(dt)
 
