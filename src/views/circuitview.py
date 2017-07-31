@@ -276,6 +276,7 @@ class CircuitView(MaterialWidget):
     def resetCircuit(self):
         self.model.reset()
         self.model.circuit = Circuit()
+        self.rebuildCircuit()
 
 
     def update(self, dt):
