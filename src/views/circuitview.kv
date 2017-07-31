@@ -80,7 +80,7 @@
             radius: constants.WIRE_THICKNESS, constants.WIRE_THICKNESS
 
         Color:
-            rgba: constants.PRIMARY
+            rgba: constants.PRIMARY if not self.disabled else constants.TEXT_GRAY
 
         RoundedRectangle:
             pos: self.x + constants.WIRE_THICKNESS / 2, self.center_y - constants.WIRE_THICKNESS / 2
@@ -109,7 +109,7 @@
             size: self.size[0] + constants.WIRE_THICKNESS, self.size[1] + constants.WIRE_THICKNESS
 
         Color:
-            rgba: constants.PRIMARY
+            rgba: constants.PRIMARY if not self.disabled else constants.TEXT_GRAY
 
         Rectangle:
             pos: self.pos
@@ -135,7 +135,7 @@
             size: self.width + constants.WIRE_THICKNESS, self.height + constants.WIRE_THICKNESS
 
         Color:
-            rgba: constants.PRIMARY
+            rgba: constants.PRIMARY if not self.disabled else constants.TEXT_GRAY
 
         Ellipse:
             pos: self.pos
@@ -187,7 +187,7 @@
     color: 1, 1, 1
     canvas:
         Color:
-            rgba: constants.PRIMARY
+            rgba: constants.PRIMARY if not self.disabled else constants.TEXT_GRAY
         Line:
             points: self.center_x, self.y + self.height, self.center_x, self.y + self.width / 2
             width: constants.WIRE_THICKNESS / 2
@@ -211,7 +211,7 @@
                 size: self.width + constants.WIRE_THICKNESS, self.height + constants.WIRE_THICKNESS
 
             Color:
-                rgba: constants.PRIMARY
+                rgba: constants.PRIMARY if not self.disabled else constants.TEXT_GRAY
 
             Ellipse:
                 pos: self.pos

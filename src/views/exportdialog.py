@@ -58,14 +58,14 @@ class ExportDialog(Widget):
             self._boxAnim.cancel(self)
 
         if isEntering:
-            self._bgAnim = Animation(opacity = 1.0, d = 0.2, t = 'in_out_quad')
+            self._bgAnim = Animation(opacity = 1.0, d = 0.35, t = 'in_out_quad')
             self._bgAnim.start(self._bg)
-            self._boxAnim = Animation(center_y = self.center_y, d = 0.2, t = 'in_out_quad')
+            self._boxAnim = Animation(center_y = self.center_y, d = 0.35, t = 'in_out_quad')
             self._boxAnim.start(self._box)
         else:
-            self._bgAnim = Animation(opacity = 0, d = 0.2, t = 'in_out_quad')
+            self._bgAnim = Animation(opacity = 0, d = 0.35, t = 'in_out_quad')
             self._bgAnim.start(self._bg)
-            self._boxAnim = Animation(center_y = -self._box.height, d = 0.2, t = 'in_out_quad')
+            self._boxAnim = Animation(center_y = -self._box.height, d = 0.35, t = 'in_out_quad')
             self._boxAnim.start(self._box)
 
 
