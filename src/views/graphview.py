@@ -53,7 +53,6 @@ class GraphView(MaterialWidget):
     def _completeSetup(self, dt):
         self.container.add_widget(self._fig.canvas)
 
-
     def update(self, dt, active):
         """
         Redraws the graph.
@@ -73,7 +72,10 @@ class GraphView(MaterialWidget):
                 self._line.set_color(PRIMARY if active else TEXT_GRAY)
 
             self._ax.set_xlim([0, l])
-            self._fig.canvas.draw()
+
+
+    def redrawGraph(self):
+        self._fig.canvas.draw()
 
     
     def getBounds(self):

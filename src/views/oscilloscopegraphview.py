@@ -94,6 +94,9 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             v = max(v, 1)
             self._ax.set_ylim([-1.2 * v, 1.2 * v])
 
+
+    def redrawGraph(self):
+        # Redraws the graph.
         self._fig.canvas.draw()
 
 

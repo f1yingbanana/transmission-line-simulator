@@ -41,6 +41,7 @@ class SimulatorApp(App):
         # handle the creation of UI. Then make the controller return the widget.
         self.rootController = SimulatorController()
         Clock.schedule_interval(self.rootController.update, 1.0 / 60.0)
+        Clock.schedule_interval(self.rootController.redrawGraph, 1.0 / 60.0)
         
         return self.rootController.view
 
