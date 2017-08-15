@@ -276,6 +276,7 @@ class CircuitView(MaterialWidget):
     def resetCircuit(self):
         self.model.reset()
         self.model.circuit = Circuit()
+        self.rebuildCircuit()
 
 
     def update(self, dt):
@@ -304,6 +305,7 @@ class CircuitView(MaterialWidget):
                 c.width = float(max(0, c.element.length * scale - 2 * WIRE_THICKNESS))
                 lastX = c.x + c.element.position
 
+        self.model.circuit.checkOscilloscopes()
         self.repositionOscilloscopes()
 
 

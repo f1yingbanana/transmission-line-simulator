@@ -57,7 +57,12 @@ class OscilloscopeGraphContainer(BoxLayout):
 
         for g in toRemove:
             self.remove_widget(g)
-        
+
+
+    def redrawGraph(self):
+        for g in self.children:
+            g.redrawGraph()
+
 
     def reset(self):
         for g in self.children:
