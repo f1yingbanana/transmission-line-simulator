@@ -62,8 +62,8 @@ class PlaybackControlView(BoxLayout):
         # Displays dialog
         infoDialog = InfoDialog()
         infoDialog.show(self.dialogLayer)
-        infoDialog.titleLabel.text = "Export Graph and Data"
-        infoDialog.subtitleLabel.text = "Saves the data captured by this oscilloscope to the 'export' folder of this applet."
+        infoDialog.titleLabel.text = "Acknowledgement"
+        infoDialog.subtitleLabel.text = "This applet is written and designed by Jiacong Xu '17. Please contact me at jx52@cornell.edu."
 
 
     def onSlowDownButtonClick(self):
