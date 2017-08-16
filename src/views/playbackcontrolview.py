@@ -8,6 +8,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from models.model import *
+from infodialog import InfoDialog
 
 class PlaybackControlView(BoxLayout):
     """
@@ -23,6 +24,7 @@ class PlaybackControlView(BoxLayout):
     _speedLabel = ObjectProperty(None)
     _timeLabel = ObjectProperty(None)
     _statusLabel = ObjectProperty(None)
+    dialogLayer = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(PlaybackControlView, self).__init__(**kwargs)
@@ -54,6 +56,14 @@ class PlaybackControlView(BoxLayout):
 
     def onStopButtonClick(self):
         self.model.appState = AppState.Editing
+
+
+    def onInfoButtonClick(self):
+        # Displays dialog
+        infoDialog = InfoDialog()
+        infoDialog.show(self.dialogLayer)
+        infoDialog.titleLabel.text = "Acknowledgement"
+        infoDialog.subtitleLabel.text = "This applet is written and designed by Jiacong Xu '17. Please contact me at jx52@cornell.edu."
 
 
     def onSlowDownButtonClick(self):

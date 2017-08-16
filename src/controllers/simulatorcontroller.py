@@ -57,4 +57,3 @@ class SimulatorController(AbstractController):
             self._lastRedraw = self._elapsedTime
             self.view.redrawGraph()
             self._didRedraw = True
-            print self._lastRedrawTime
