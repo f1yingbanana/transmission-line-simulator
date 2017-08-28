@@ -62,8 +62,8 @@ class PlaybackControlView(BoxLayout):
         # Displays dialog
         infoDialog = InfoDialog()
         infoDialog.show(self.dialogLayer)
-        infoDialog.titleLabel.text = "Acknowledgement"
-        infoDialog.subtitleLabel.text = "This applet is written and designed by Jiacong Xu '17. Please contact me at jx52@cornell.edu."
+        infoDialog.titleLabel.text = "Transimission Line Simulator v1.0"
+        infoDialog.subtitleLabel.text = "This applet is written for Cornell AEP2640. It is written and designed by Jiacong Xu '17. Please contact me at jx52@cornell.edu for any bugs and installation problems."
 
 
     def onSlowDownButtonClick(self):
