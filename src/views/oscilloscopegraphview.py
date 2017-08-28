@@ -5,13 +5,17 @@
 # Created: Jul-21-2017
 #
 
+import datetime
 import matplotlib.pyplot as plt
+from matplotlib.colors import *
 import numpy as np
 from materialwidget import MaterialWidget
 from kivy.properties import *
 from util.constants import *
 from util.hoverbehavior import HoverBehavior
 from kivy.metrics import *
+from exportdialog import ExportDialog
+from models.model import *
 
 class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
@@ -26,6 +30,8 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         super(OscilloscopeGraphView, self).__init__(**kwargs)
 
         self.oscilloscope = oscilloscope
+        self.dialogLayer = None
+        self.updated = False
 
         self._line = None
         self._fig, self._ax = plt.subplots()
@@ -56,13 +62,18 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         self.container.add_widget(self._fig.canvas)
 
 
-    def update(self, dt):
-        # Update maxima
-        self._updateMaxima()
-
+    def update(self, dt, state):
         # Draw a cursor if mouse is close to one of the data points, and display
         # it.
         self._markCoord()
+
+        if state != AppState.Simulating:
+            if self._line != None:
+                self._fig.canvas.draw()
+            return
+
+        # Update maxima
+        self._updateMaxima()
 
         # Update graph
         if not self.oscilloscope.isRecording():
@@ -70,7 +81,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         if self._line == None:
             self._line = self._ax.plot(self.oscilloscope.graph[0], self.oscilloscope.graph[1], \
-                linewidth = 4, color = PRIMARY)[0]
+                linewidth = 4, color = hsv_to_rgb(self.oscilloscope.color))[0]
             self._line.set_marker((4, 0, 0))
             self._line.set_markevery([])
             self._line.set_markersize(dp(5))
@@ -83,6 +94,9 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
             v = max(v, 1)
             self._ax.set_ylim([-1.2 * v, 1.2 * v])
 
+
+    def redrawGraph(self):
+        # Redraws the graph.
         self._fig.canvas.draw()
 
 
@@ -168,4 +182,33 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     def reset(self):
         self._maxima = []
         self._lastCheckedIndex = 0
+
+
+    def onExportButtonClick(self):
+        """
+        Begins the export process by bringing up a dialog.
+        """
+        exportDialog = ExportDialog()
+        exportDialog.onConfirmClicked.append(self.exportData)
+        exportDialog.show(self.dialogLayer)
+        exportDialog.titleLabel.text = "Export Graph and Data"
+        exportDialog.subtitleLabel.text = "Saves the data captured by this oscilloscope to the 'export' folder of this applet."
+        exportDialog.textField.title = "Filename"
+        exportDialog.textField.text = datetime.datetime.now().strftime("SimData %Y-%m-%d %H:%M:%S")
     
+
+    def exportData(self, path):
+        """
+        Exports the current data and graph to the given path.
+        """
+        root = ROOT_PATH
+
+        if len(root) > 0:
+            root = root + '/'
+
+        with open(root + 'export/' + path + '.csv', "w") as f:
+            f.write('Time (ns), Amplitude(V)')
+            for i in range(len(self.oscilloscope.graph[0])):
+                x = str(self.oscilloscope.graph[0][i])
+                y = str(self.oscilloscope.graph[1][i])
+                f.write(x + ', ' + y + '\n')

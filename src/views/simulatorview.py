@@ -24,7 +24,9 @@ class SimulatorView(Widget):
     playbackControlView = ObjectProperty(None)
     circuitView = ObjectProperty(None)
     contextMenuLayer = ObjectProperty(None)
+    dialogLayer = ObjectProperty(None)
     oscilloscopeGraphContainer = ObjectProperty(None)
+
 
     def __init__(self, **kwargs):
         super(SimulatorView, self).__init__(**kwargs)
@@ -40,10 +42,16 @@ class SimulatorView(Widget):
     
 
     def update(self, dt):
-        self.graphView.update(dt)
         self.playbackControlView.update(dt)
+        self.graphView.update(dt, self.model.appState != AppState.Editing)
+        self.circuitView.update(dt)
         self.circuitView.setGraphBounds(self.graphView.getBounds())
         self.oscilloscopeGraphContainer.update(dt)
+
+
+    def redrawGraph(self):
+        self.graphView.redrawGraph()
+        self.oscilloscopeGraphContainer.redrawGraph()
 
 
     def onReset(self):

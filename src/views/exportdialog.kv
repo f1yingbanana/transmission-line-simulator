@@ -1,0 +1,92 @@
+#
+# Transmission Line Simulator
+# 
+# Author(s): Jiacong Xu
+# Created: Jul-24-2017
+#
+
+#:import constants util.constants
+
+<ExportDialog>:
+    id: ed
+    pos: self.parent.pos if self.parent != None else (0, 0)
+    size: self.parent.size if self.parent != None else (100, 100)
+    titleLabel: titleLabel
+    subtitleLabel: subtitleLabel
+    textField: textField
+    _box: box
+    _bg: bg
+    _cancelButton: cancelButton
+    _confirmButton: confirmButton
+
+    Widget:
+        id: bg
+        pos: self.parent.pos
+        size: self.parent.size
+        opacity: 0
+        canvas:
+            Color:
+                rgba: 0, 0, 0, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        on_touch_down: lambda x: True
+
+    MaterialWidget:
+        id: box
+        elevation: dp(24)
+        center: self.parent.center
+        width: dp(400)
+        height: layout.minimum_height
+
+        BoxLayout:
+            id: layout
+            pos: self.parent.pos
+            size: self.parent.size
+            orientation: 'vertical'
+
+            BoxLayout:
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                padding: dp(24)
+                spacing: dp(20)
+
+                Label:
+                    id: titleLabel
+                    font_size: sp(20)
+                    text: 'Title'
+                    bold: True
+                    size_hint_y: None
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    color: constants.TEXT_BLACK
+
+                Label:
+                    id: subtitleLabel
+                    font_size: sp(14)
+                    text: 'Subtitle'
+                    size_hint_y: None
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    color: constants.TEXT_GRAY
+
+                MaterialTextField:
+                    id: textField
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(52)
+                padding: dp(8)
+                spacing: dp(8)
+
+                Widget
+
+                MaterialButton:
+                    id: cancelButton
+                    title: 'CANCEL'
+
+                MaterialButton:
+                    id: confirmButton
+                    title: 'CONFIRM'
+

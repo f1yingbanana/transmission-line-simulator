@@ -19,4 +19,4 @@ class Resistor(CircuitElement):
         """
         super(Resistor, self).__init__()
         
-        self.resistance = ohm
+        self.impedance = ohm

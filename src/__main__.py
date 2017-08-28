@@ -9,13 +9,17 @@ import os, sys, kivy
 kivy.require('1.9.0')
 
 import kivy.resources
-kivy.resources.resource_add_path(os.path.dirname(sys.argv[0]))
+import util.constants as constants
+constants.ROOT_PATH = os.path.dirname(sys.argv[0])
+kivy.resources.resource_add_path(constants.ROOT_PATH)
 
 from kivy.config import Config
 Config.set('graphics', 'window_state', 'maximized')
 Config.set('graphics', 'minimum_width', 1024)
 Config.set('graphics', 'minimum_height', 768)
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+
+print "PATH IS: " + constants.ROOT_PATH
 
 import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
@@ -28,7 +32,7 @@ class SimulatorApp(App):
     """
     This is the root app for the simulator.
     """
-    
+
     def build(self):
         """
         This returns a built widget for the app.
@@ -37,6 +41,7 @@ class SimulatorApp(App):
         # handle the creation of UI. Then make the controller return the widget.
         self.rootController = SimulatorController()
         Clock.schedule_interval(self.rootController.update, 1.0 / 60.0)
+        Clock.schedule_interval(self.rootController.redrawGraph, 1.0 / 60.0)
         
         return self.rootController.view
 

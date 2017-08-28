@@ -53,8 +53,7 @@ class GraphView(MaterialWidget):
     def _completeSetup(self, dt):
         self.container.add_widget(self._fig.canvas)
 
-
-    def update(self, dt):
+    def update(self, dt, active):
         """
         Redraws the graph.
         """
@@ -62,19 +61,21 @@ class GraphView(MaterialWidget):
             l = self.model.circuit.getLength()
             
             if self._line == None:
-                x = np.linspace(0, l, DISCRETE_STEPS + 1)
-                self._line = self._ax.plot(x, self.model.overallDistribution, \
+                self._line = self._ax.plot(self.model.graph[0], self.model.graph[1], \
                     linewidth = 5, color = PRIMARY)[0]
             else:
-                self._line.set_xdata(np.linspace(0, l, DISCRETE_STEPS + 1))
-                self._line.set_ydata(self.model.overallDistribution)
+                self._line.set_data(self.model.graph[0], self.model.graph[1])
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
                 self._p1 = self._ax.transAxes.transform_point([1, 1])
                 v = self.model.maxAmplitude
                 self._ax.set_ylim([-1.2 * v, 1.2 * v])
+                self._line.set_color(PRIMARY if active else TEXT_GRAY)
 
             self._ax.set_xlim([0, l])
-            self._fig.canvas.draw()
+
+
+    def redrawGraph(self):
+        self._fig.canvas.draw()
 
     
     def getBounds(self):

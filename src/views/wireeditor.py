@@ -15,8 +15,9 @@ class WireEditor(PopupEditor):
     Supports wire editing.
     """
 
-    resistanceTextField = ObjectProperty(None)
+    impedanceTextField = ObjectProperty(None)
     lengthTextField = ObjectProperty(None)
+    speedTextField = ObjectProperty(None)
     prevButton = ObjectProperty(None)
     nextButton = ObjectProperty(None)
 
@@ -35,12 +36,12 @@ class WireEditor(PopupEditor):
 
 
     def on_focus(self, instance, focus):
-        if instance == self.resistanceTextField.inputText and not focus:
-            # Update resistance.
-            if len(self.resistanceTextField.text) == 0:
-                self._wire.resistance = 0
+        if instance == self.impedanceTextField.inputText and not focus:
+            # Update impedance.
+            if len(self.impedanceTextField.text) == 0:
+                self._wire.impedance = 0
             else:
-                self._wire.resistance = float(self.resistanceTextField.text)
+                self._wire.impedance = float(self.impedanceTextField.text)
 
         if instance == self.lengthTextField.inputText and not focus:
             # Update position.
@@ -52,17 +53,32 @@ class WireEditor(PopupEditor):
 
             self.updateCircuit()
 
+        if instance == self.speedTextField.inputText and not focus:
+            # Update speed.
+            if len(self.speedTextField.text) == 0:
+                self._wire.speed = 1
+            else:
+                self._wire.speed = min(1, max(0, float(self.speedTextField.text)))
+                self.speedTextField.text = '{:g}'.format(self._wire.speed)
+
+            self.updateCircuit()
+
 
     def updateValues(self):
-        self.resistanceTextField.text = '{:g}'.format(self._wire.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
-        self.resistanceTextField.animateLabel(False)
+        self.impedanceTextField.text = '{:g}'.format(self._wire.impedance)
+        self.impedanceTextField.inputText.input_filter = 'float'
+        self.impedanceTextField.inputText.bind(focus = self.on_focus)
+        self.impedanceTextField.animateLabel(False)
 
         self.lengthTextField.text = '{:g}'.format(self._wire.length)
-        self.lengthTextField.input_filter = 'float'
+        self.lengthTextField.inputText.input_filter = 'float'
         self.lengthTextField.inputText.bind(focus = self.on_focus)
         self.lengthTextField.animateLabel(False)
+
+        self.speedTextField.text = '{:g}'.format(self._wire.speed)
+        self.speedTextField.inputText.input_filter = 'float'
+        self.speedTextField.inputText.bind(focus = self.on_focus)
+        self.speedTextField.animateLabel(False)
 
         self.prevButton.disabled = self._wire.prev == None
         self.nextButton.disabled = self._wire.next == None

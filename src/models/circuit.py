@@ -10,6 +10,7 @@ from powersource import PowerSource
 from resistor import Resistor
 from oscilloscope import Oscilloscope
 from util.constants import *
+from wire import Wire
 
 class Circuit(object):
     """
@@ -24,16 +25,12 @@ class Circuit(object):
         Initializes a brand new circuit with a power source, single cable and a
         single load at the right.
         """
-        source = PowerSource(10.0, 5.0, 1, 5.0)
-        source.getLength = self.getLength
-        cable = Resistor(5.0)
-        cable2 = Resistor(10.0)
+        source = PowerSource(10.0, 5.0, 1)
+        cable = Wire(5.0, 1)
         load = Resistor(0.0)
-        cable.length = 2.5
-        cable2.length = 2.5
+        cable.length = 5.0
         source.next = cable
-        cable.next = cable2
-        cable2.next = load
+        cable.next = load
         self.head = source
         self.headOscilloscope = None
     
@@ -67,6 +64,51 @@ class Circuit(object):
         return o
 
 
+    def splitWire(self, e, pos):
+        c = Wire(e.impedance, e.speed)
+        c.length = e.length - pos
+        c.next = e.next
+        e.length = pos
+        e.next = c
+
+        # Now reset oscilloscopes' wire properties.
+        o = self.headOscilloscope
+
+        while o != None:
+            if e.position <= o.position and e.position + e.length >= o.position:
+                o.wire = e
+            elif c.position <= o.position and c.position + c.length >= o.position:
+                o.wire = c
+        
+            o = o.next
+
+
+    def deleteWire(self, element):
+        element.prev.next = element.next
+
+        # Delete any oscilloscopes on this segment, and also changes positioning
+        # for later oscilloscopes.
+        h = self.headOscilloscope
+
+        while h != None:
+            if h.position > element.position:
+                if h.position < element.position + element.length:
+                    # Delete oscilloscope.
+                    if h.prev != None:
+                        h.prev.next = h.next
+
+                    if h.next != None:
+                        h.next.prev = h.prev
+
+                    if h == self.headOscilloscope:
+                        self.headOscilloscope = h.next
+                else:
+                    # Move oscilloscope.
+                    h.position -= element.length
+
+            h = h.next
+
+
     def moveOscilloscope(self, element, pos):
         """
         Moves the given oscilloscope to somewhere else.
@@ -87,7 +129,34 @@ class Circuit(object):
         self._insert(element)
 
 
+    def checkOscilloscopes(self):
+        # Checks and removes out of bound osclloscopes.
+        o = self.headOscilloscope
+        l = self.getLength()
+
+        while o != None:
+            if o.position > l:
+                if o.prev != None:
+                    o.prev.next = None
+                elif o == self.headOscilloscope:
+                    self.headOscilloscope = None
+
+            o = o.next
+
+
     def _insert(self, o):
+        # First determine wire
+        e = self.head.next
+
+        while e.next != None:
+            if e.position <= o.position and e.position + e.length >= o.position:
+                break
+
+            e = e.next
+
+        o.wire = e
+
+        # Now insert into linked list.
         if self.headOscilloscope == None:
             self.headOscilloscope = o
             return
@@ -144,8 +213,14 @@ class Circuit(object):
         
         return es
 
+
     def reset(self):
-        self.head.reset()
+        e = self.head
+
+        while e != None:
+            e.reset()
+            e = e.next
+
         e = self.headOscilloscope
 
         while e != None:

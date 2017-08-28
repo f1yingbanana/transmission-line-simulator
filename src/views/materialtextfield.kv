@@ -10,7 +10,6 @@
     size: dp(200), dp(16) + sp(28)
     size_hint_y: None
 
-
     inputText: inputText
     prefix: prefix.text
     suffix: suffix.text
@@ -49,8 +48,8 @@
             width: self.texture_size[0]
             size_hint_x: None
             font_size: '16sp'
-            color: self.parent.parent.unfocusedLabelColor
-            text: self.parent.parent.prefix
+            color: root.unfocusedLabelColor
+            text: root.prefix
             opacity: 0
 
         Widget:
@@ -65,11 +64,11 @@
             background_color: 1, 1, 1, 0
             background_normal: ''
             background_disabled_normal: ''
-            cursor_color: self.parent.parent.primaryColor
+            cursor_color: root.primaryColor
             font_size: '16sp'
-            foreground_color: self.parent.parent.textColor
+            foreground_color: root.textColor
             padding: [0]
-            text: self.parent.parent.text
+            text: root.text
 
         Widget:
             width: dp(8) if len(suffix.text) > 0 else 0
@@ -80,8 +79,8 @@
             width: self.texture_size[0]
             size_hint_x: None
             font_size: '16sp'
-            color: self.parent.parent.unfocusedLabelColor
-            text: self.parent.parent.suffix
+            color: root.unfocusedLabelColor
+            text: root.suffix
             opacity: 0
 
 

@@ -11,7 +11,7 @@
     _fullSize: dp(200), dp(308)
     _container: container
 
-    resistanceTextField: resistanceTextField
+    impedanceTextField: impedanceTextField
     voltageTextField: voltageTextField
     widthTextField: widthTextField
 
@@ -83,16 +83,16 @@
                 id: widthTextField
                 size_hint_y: None
                 title: 'Wave Width'
-                suffix: 'm'
+                suffix: 'ns'
 
             Widget:
                 height: dp(16)
                 size_hint_y: None
 
             MaterialTextField:
-                id: resistanceTextField
+                id: impedanceTextField
                 size_hint_y: None
-                title: 'Resistance'
+                title: 'Impedance'
                 suffix: 'ohm'
 
         Widget:

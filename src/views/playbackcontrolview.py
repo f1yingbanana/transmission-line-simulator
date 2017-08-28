@@ -8,6 +8,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from models.model import *
+from infodialog import InfoDialog
 
 class PlaybackControlView(BoxLayout):
     """
@@ -23,6 +24,7 @@ class PlaybackControlView(BoxLayout):
     _speedLabel = ObjectProperty(None)
     _timeLabel = ObjectProperty(None)
     _statusLabel = ObjectProperty(None)
+    dialogLayer = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(PlaybackControlView, self).__init__(**kwargs)
@@ -33,6 +35,8 @@ class PlaybackControlView(BoxLayout):
     def update(self, dt):
         if self.model != None:
             self._pauseButton.disabled = self.model.appState != AppState.Simulating
+            self._playButton.disabled = self.model.appState == AppState.Simulating
+            self._stopButton.disabled = self.model.appState == AppState.Editing
             self._speedLabel.text = str(int(self.model.simSpeed * 1e9)) + 'x'
             self._slowDownButton.disabled = self.model.simSpeed <= 1e-9
             self._speedUpButton.disabled = self.model.simSpeed >= 8e-9
@@ -41,6 +45,8 @@ class PlaybackControlView(BoxLayout):
 
 
     def onPlayButtonClick(self):
+        if self.model.appState != AppState.Paused:
+            self.onReset()
         self.model.appState = AppState.Simulating
 
 
@@ -49,7 +55,15 @@ class PlaybackControlView(BoxLayout):
 
 
     def onStopButtonClick(self):
-        self.onReset()
+        self.model.appState = AppState.Editing
+
+
+    def onInfoButtonClick(self):
+        # Displays dialog
+        infoDialog = InfoDialog()
+        infoDialog.show(self.dialogLayer)
+        infoDialog.titleLabel.text = "Transimission Line Simulator v1.0"
+        infoDialog.subtitleLabel.text = "This applet is written for Cornell AEP2640. It is written and designed by Jiacong Xu '17. Please contact me at jx52@cornell.edu for any bugs and installation problems."
 
 
     def onSlowDownButtonClick(self):

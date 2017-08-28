@@ -12,7 +12,7 @@ from util.constants import *
 from kivy.animation import Animation
 from models.powersource import *
 from kivy.metrics import *
-from scipy import signal
+import util.signal as signal
 import matplotlib.pyplot as plt
 import numpy as np
 from kivy.uix.boxlayout import BoxLayout
@@ -22,7 +22,7 @@ class SourceEditor(PopupEditor):
     Supports wire editing.
     """
 
-    resistanceTextField = ObjectProperty(None)
+    impedanceTextField = ObjectProperty(None)
     widthTextField = ObjectProperty(None)
     voltageTextField = ObjectProperty(None)
     prevButton = ObjectProperty(None)
@@ -97,12 +97,12 @@ class SourceEditor(PopupEditor):
 
 
     def on_focus(self, instance, focus):
-        if instance == self.resistanceTextField.inputText and not focus:
-            # Update resistance.
-            if len(self.resistanceTextField.text) == 0:
-                self._source.resistance = 0
+        if instance == self.impedanceTextField.inputText and not focus:
+            # Update impedance.
+            if len(self.impedanceTextField.text) == 0:
+                self._source.impedance = 0
             else:
-                self._source.resistance = float(self.resistanceTextField.text)
+                self._source.impedance = float(self.impedanceTextField.text)
 
         if instance == self.voltageTextField.inputText and not focus:
             # Update voltage.
@@ -112,7 +112,7 @@ class SourceEditor(PopupEditor):
                 self._source.amplitude = float(self.voltageTextField.text)
 
         if instance == self.widthTextField.inputText and not focus:
-            # Update resistance.
+            # Update impedance.
             if len(self.widthTextField.text) == 0:
                 self._source.width = 0
             else:
@@ -127,16 +127,16 @@ class SourceEditor(PopupEditor):
     def updateValues(self):
         self.prevButton.disabled = self._source.prev == None
         self.nextButton.disabled = self._source.next == None
-        self.resistanceTextField.text = '{:g}'.format(self._source.resistance)
-        self.resistanceTextField.input_filter = 'float'
-        self.resistanceTextField.inputText.bind(focus = self.on_focus)
+        self.impedanceTextField.text = '{:g}'.format(self._source.impedance)
+        self.impedanceTextField.inputText.input_filter = 'float'
+        self.impedanceTextField.inputText.bind(focus = self.on_focus)
         self.voltageTextField.text = '{:g}'.format(self._source.amplitude)
-        self.voltageTextField.input_filter = 'float'
+        self.voltageTextField.inputText.input_filter = 'float'
         self.voltageTextField.inputText.bind(focus = self.on_focus)
         self.widthTextField.text = '{:g}'.format(self._source.width)
-        self.widthTextField.input_filter = 'float'
+        self.widthTextField.inputText.input_filter = 'float'
         self.widthTextField.inputText.bind(focus = self.on_focus)
-        self.resistanceTextField.animateLabel(False)
+        self.impedanceTextField.animateLabel(False)
         self.voltageTextField.animateLabel(False)
         self.widthTextField.animateLabel(False)
 

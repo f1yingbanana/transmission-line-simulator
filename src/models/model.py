@@ -8,6 +8,7 @@
 from util.constants import *
 from collections import deque
 from circuit import Circuit
+import numpy as np
 
 class AppState(object):
     """
@@ -23,12 +24,6 @@ class Model(object):
     An instance that keeps data on the simulation, including circuit info,
     wave generation, animations, and so on.
     
-    forwardCurrent:     a deque of discretized current values (in amps) in the
-                        circuit traveling forward (going out from the power
-                        source).
-    backwardCurrent:    a deque of discretized current values (in amps) in the
-                        circuit traveling backward (coming in to the power
-                        source).
     circuit:            model representing the current state of electrical
                         components in the system.
     waveSpeed:          speed of wave, in m/s.
@@ -44,12 +39,9 @@ class Model(object):
         """
         Initializes a brand new model for a fresh app start.
         """
-        self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
-        self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
-        self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
+        self.graph = [np.array([]), np.array([])]
         self.circuit = Circuit()
-        self.waveSpeed = 299792458
-        self.simSpeed = 1e-9
+        self.simSpeed = 1.0 / NS_IN_S
         self.elapsed = 0
         self._lastStep = 0
         self.maxAmplitude = 10
@@ -64,23 +56,41 @@ class Model(object):
         self.elapsed += dt * self.simSpeed
         
         # Determine how many steps must be made.
-        l = self.circuit.getLength()
-        dx = l / DISCRETE_STEPS
-        
-        segs = int((self.elapsed - self._lastStep) * self.waveSpeed / dx)
+        segs = int(STEPS_PER_NS * (self.elapsed - self._lastStep) * NS_IN_S)
         
         for s in range(segs):
+            self._lastStep += 1.0 / STEPS_PER_NS / NS_IN_S
             self._step()
+
+            # Recompute overall
+            self.graph = [np.array([]), np.array([])]
+            e = self.circuit.head.next
+
+            while e.next != None:
+                self.graph[0] = np.concatenate((self.graph[0], e.xs))
+                v = e.forward + e.backward
+
+                if len(v) > 0:
+                    self.maxAmplitude = max(self.maxAmplitude, v.max(), v.min())
+
+                self.graph[1] = np.concatenate((self.graph[1], v))
+                e = e.next
 
             # Update every oscilloscope
             h = self.circuit.headOscilloscope
+
+            i = 0
             
             while h != None:
-                i = int(DISCRETE_STEPS * h.position / l)
-                h.record(last + (self.elapsed - last) * (s + 1.0) / segs, self.overallDistribution[i])
+                if i >= len(self.graph[0]):
+                    break
+
+                while self.graph[0][i] < h.position:
+                    i += 1
+
+                h.record(self._lastStep, self.graph[1][i - 1])
                 h = h.next
-        
-    
+
 
     def reset(self):
         """
@@ -88,9 +98,7 @@ class Model(object):
         """
         self.elapsed = 0
         self._lastStep = 0
-        self.forwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
-        self.backwardCurrent = deque([0] * (DISCRETE_STEPS + 1))
-        self.overallDistribution = [0] * (DISCRETE_STEPS + 1)
+        self.graph = [np.array([]), np.array([])]
         self.circuit.reset()
         self.maxAmplitude = 10
 
@@ -99,57 +107,23 @@ class Model(object):
         """
         Simulates a discrete step for each part of the circuit.
         """
-        self._lastStep = self.elapsed
         
         # We go through each discretized value in forward and backward
         # currents, deciding whether it should move or not, and how it
         # should move.
-        l = self.circuit.getLength()
-        
-        for i in range(DISCRETE_STEPS + 1):
-            # Check if this segment contains a resistor. If so, we need
-            # to do a reflection.
-            es = self.circuit.getElements(i * l / DISCRETE_STEPS, True)
-            fwd = self.forwardCurrent[i]
-            bwd = self.backwardCurrent[i]
-            
-            for e in es:
-                if abs(self.forwardCurrent[i]) > 0 and e.prev != None:
-                    # Simulate forward
-                    r = e.resistance
-                    z = e.prev.resistance
-                    reflCoefficient = (r - z) / (r + z)
-                    fwd -= reflCoefficient * self.forwardCurrent[i]
-                    bwd += reflCoefficient * self.forwardCurrent[i]
-            
-            es = self.circuit.getElements(i * l / DISCRETE_STEPS, False)
-            
-            for e in es:
-                if abs(self.backwardCurrent[i]) > 0 and e.next != None:
-                    # Simulate backward
-                    r = e.resistance
-                    z = e.next.resistance
-                    reflCoefficient = (r - z) / (r + z)
-                    fwd += reflCoefficient * self.backwardCurrent[i]
-                    bwd -= reflCoefficient * self.backwardCurrent[i]
-        
-            self.forwardCurrent[i] = fwd
-            self.backwardCurrent[i] = bwd
-        
+        e = self.circuit.head
+
+        while e != None:
+            e.split()
+            e = e.next
+
         # Now shift
-        self.forwardCurrent.rotate(1)
-        self.backwardCurrent.rotate(-1)
-        
-        # Clear out the endpoints, but if power source is still emitting wave,
-        # set it to that
-        v = self.circuit.head.getOutput()
-        self.forwardCurrent[0] = v
-        self.backwardCurrent[-1] = 0
-        
-        # Recompute overall
-        for i in range(len(self.forwardCurrent)):
-            # print '[' + str(self.forwardCurrent[i]) + ', ' + \
-            # str(self.backwardCurrent[i]) + ']'
-            v = self.forwardCurrent[i] + self.backwardCurrent[i]
-            self.maxAmplitude = max(self.maxAmplitude, abs(v))
-            self.overallDistribution[i] = v
+        e = self.circuit.head
+
+        while e.next != None:
+            e.rotateBackward()
+            e = e.next
+
+        while e != None:
+            e.rotateForward()
+            e = e.prev
