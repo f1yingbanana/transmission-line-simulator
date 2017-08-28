@@ -12,7 +12,7 @@ from util.constants import *
 from kivy.animation import Animation
 from models.powersource import *
 from kivy.metrics import *
-from scipy import signal
+import util.signal as signal
 import matplotlib.pyplot as plt
 import numpy as np
 from kivy.uix.boxlayout import BoxLayout

@@ -6,7 +6,7 @@
 #
 
 from circuitelement import CircuitElement
-from scipy import signal
+import util.signal as signal
 from util.constants import *
 import numpy as np
 
