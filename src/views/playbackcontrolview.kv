@@ -11,7 +11,7 @@
 
 <PlaybackControlView>:
     id: playbackControlView
-    spacing: 20
+    spacing: dp(10)
     _playButton: playButton
     _pauseButton: pauseButton
     _stopButton: stopButton
@@ -23,33 +23,33 @@
 
     MaterialWidget:
         id: statusWidget
-        width: 230
+        width: dp(115)
         size_hint_x: None
 
         BoxLayout:
             id: statisLayout
             pos: statusWidget.pos
             size: statusWidget.size
-            padding: 20, 10
+            padding: dp(10), dp(5)
 
             Label:
                 id: statusLabel
                 size: self.texture_size
                 size_hint_x: None
                 text: 'Status: editing'
-                font_size: 24
+                font_size: sp(12)
                 color: constants.TEXT_BLACK
 
     MaterialWidget:
         id: elapsedWidget
-        width: max(elapsedLayout.minimum_width, 110)
+        width: max(elapsedLayout.minimum_width, dp(55))
         size_hint_x: None
 
         BoxLayout:
             id: elapsedLayout
             pos: elapsedWidget.pos
             size: elapsedWidget.size
-            padding: 20, 10
+            padding: dp(10), dp(5)
 
             Widget
 
@@ -58,7 +58,7 @@
                 size: self.texture_size
                 size_hint_x: None
                 text: '0 ns'
-                font_size: 24
+                font_size: sp(12)
                 color: constants.TEXT_BLACK
 
             Widget
@@ -66,7 +66,7 @@
 
     Widget:
         size_hint_x: None
-        width: 40
+        width: dp(20)
 
     MaterialButton:
         id: slowDownButton
@@ -83,14 +83,14 @@
             pos: speedBoxWidget.pos
             width: self.minimum_width
             height: speedBoxWidget.height
-            padding: 20, 10
+            padding: dp(10), dp(5)
 
             Label:
                 id: speedLabel
                 size: self.texture_size
                 size_hint_x: None
                 text: '1x'
-                font_size: 24
+                font_size: sp(12)
                 color: constants.TEXT_BLACK
 
     MaterialButton:
@@ -100,7 +100,7 @@
 
     Widget:
         size_hint_x: None
-        width: 40
+        width: dp(20)
 
     MaterialButton:
         id: playButton

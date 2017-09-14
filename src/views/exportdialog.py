@@ -8,6 +8,7 @@
 from kivy.uix.widget import Widget
 from kivy.properties import *
 from kivy.animation import Animation
+import re
 
 class ExportDialog(Widget):
     """
@@ -33,6 +34,12 @@ class ExportDialog(Widget):
         self._confirmButton.onClick.append(self._onConfirmClicked)
         self.onConfirmClicked = []
     
+        self.textField.bind(text=self.on_text)
+
+
+    def on_text(self, instance, value):
+        instance.text = re.sub(r'[^\w .-]+', '', value)
+
 
     def show(self, layer):
         layer.add_widget(self)

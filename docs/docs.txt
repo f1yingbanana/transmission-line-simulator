@@ -1,0 +1,18 @@
+Documentation:
+
+Most of the code has comments in them. Most public methods have docstrings.
+
+For people trying to create executables: try looking into kivy's recommended
+packagers. However I have attempted and failed at packaging such an executable.
+
+For people looking to speed up the app: matplotlib is the major bottleneck.
+Multiple oscilloscopes slow down the whole system to a complete stop.
+
+Attempted:
+1. Multithreading the redrawing: graphs start to flicker and become unreadable.
+2. Spacing the redrawing: the perceived lag is still there since graph updates
+   slowly.
+3. Replacing matplotlib: there IS another package supported in Kivy on Kivy
+   garden, but it is severely lacking features.
+4. Why are we even coding this in python: required by teaching professor. IMHO
+   we will be much better off coding this on any other platform...
