@@ -6,6 +6,7 @@
 #
 
 import datetime
+import os
 import matplotlib.pyplot as plt
 from matplotlib.colors import *
 import numpy as np
@@ -16,6 +17,7 @@ from util.hoverbehavior import HoverBehavior
 from kivy.metrics import *
 from exportdialog import ExportDialog
 from models.model import *
+
 
 class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
     """
@@ -35,10 +37,10 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         self._line = None
         self._fig, self._ax = plt.subplots()
-        self._fig.set_tight_layout({"pad": 3})
+        self._fig.set_tight_layout({"pad": dp(1.5)})
         self._ax.grid(True)
-        self._ax.set_ylabel('voltage (V)', fontsize = 16)
-        self._ax.set_xlabel('time (ns)', fontsize = 16)
+        self._ax.set_ylabel('voltage (V)', fontsize = sp(8))
+        self._ax.set_xlabel('time (ns)', fontsize = sp(8))
 
         # A list of computed maximum values.
         self._maxima = []
@@ -54,10 +56,10 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         self.window = 20
 
         for item in self._ax.get_yticklabels() + self._ax.get_xticklabels():
-            item.set_fontsize(16)
+            item.set_fontsize(sp(8))
         
         for i in self._ax.spines.itervalues():
-            i.set_linewidth(4)
+            i.set_linewidth(dp(2))
         
         self.container.add_widget(self._fig.canvas)
 
@@ -81,7 +83,7 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
 
         if self._line == None:
             self._line = self._ax.plot(self.oscilloscope.graph[0], self.oscilloscope.graph[1], \
-                linewidth = 4, color = hsv_to_rgb(self.oscilloscope.color))[0]
+                linewidth = dp(3), color = hsv_to_rgb(self.oscilloscope.color))[0]
             self._line.set_marker((4, 0, 0))
             self._line.set_markevery([])
             self._line.set_markersize(dp(5))
@@ -194,19 +196,21 @@ class OscilloscopeGraphView(MaterialWidget, HoverBehavior):
         exportDialog.titleLabel.text = "Export Graph and Data"
         exportDialog.subtitleLabel.text = "Saves the data captured by this oscilloscope to the 'export' folder of this applet."
         exportDialog.textField.title = "Filename"
-        exportDialog.textField.text = datetime.datetime.now().strftime("SimData %Y-%m-%d %H:%M:%S")
+        exportDialog.textField.text = datetime.datetime.now().strftime("SimData %H.%M.%S %m-%d-%Y")
     
 
     def exportData(self, path):
         """
         Exports the current data and graph to the given path.
         """
-        root = ROOT_PATH
+        root = os.path.join(ROOT_PATH, 'export')
 
-        if len(root) > 0:
-            root = root + '/'
+        if not os.path.exists(root):
+            os.makedirs(root)
 
-        with open(root + 'export/' + path + '.csv', "w") as f:
+        fpath = os.path.join(root, path + '.csv')
+        
+        with open(fpath, "w") as f:
             f.write('Time (ns), Amplitude(V)')
             for i in range(len(self.oscilloscope.graph[0])):
                 x = str(self.oscilloscope.graph[0][i])
