@@ -36,7 +36,7 @@ class GraphView(MaterialWidget):
         self._p1 = self.size
         
         self._fig, self._ax = plt.subplots()
-        self._fig.set_tight_layout({"pad": 3})
+        self._fig.set_tight_layout({"pad": dp(1.5)})
         self._ax.grid(True)
         # self._ax.set_ylabel('Voltage (V)', fontsize = sp(16))
         self._ax.set_xlabel('Position (m)', fontsize = sp(16))
@@ -62,7 +62,7 @@ class GraphView(MaterialWidget):
             
             if self._line == None:
                 self._line = self._ax.plot(self.model.graph[0], self.model.graph[1], \
-                    linewidth = 5, color = PRIMARY)[0]
+                    linewidth = dp(3), color = PRIMARY)[0]
             else:
                 self._line.set_data(self.model.graph[0], self.model.graph[1])
                 self._p0 = self._ax.transAxes.transform_point([0, 0])
