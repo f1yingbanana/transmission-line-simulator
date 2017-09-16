@@ -97,7 +97,6 @@ class PowerSource(CircuitElement):
         Reduces the voltage to match the first wire connected to the source.
         """
         t = float(self.next.impedance) / (self.impedance + self.next.impedance)
-        print t
         self.forward[-1] *= t
 
 
