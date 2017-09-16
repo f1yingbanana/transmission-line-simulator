@@ -92,6 +92,14 @@ class PowerSource(CircuitElement):
         self.shape = self.shape
 
 
+    def split(self):
+        """
+        Reduces the voltage to match the first wire connected to the source.
+        """
+        t = float(self.next.impedance) / (self.impedance + self.next.impedance)
+        self.forward[-1] *= t
+
+
     def rotateForward(self):
         """
         Pops the last value and replace with 0.
