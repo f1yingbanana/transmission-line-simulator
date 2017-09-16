@@ -79,7 +79,7 @@ class Model(object):
             # Update every oscilloscope
             h = self.circuit.headOscilloscope
 
-            i = 0
+            i = 1
             
             while h != None:
                 while i < len(self.graph[0]) and self.graph[0][i] < h.position:
