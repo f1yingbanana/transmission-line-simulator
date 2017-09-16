@@ -33,7 +33,10 @@ class Wire(CircuitElement):
         amp = self.forward[-1]
         r = self.next.impedance
         z = self.impedance
-        reflCoefficient = (r - z) / (r + z)
+        if r + z == 0:
+            reflCoefficient = 0
+        else:
+            reflCoefficient = (r - z) / (r + z)
         self.forward[-1] -= reflCoefficient * amp
         self.backward[-1] += reflCoefficient * amp
         
@@ -41,7 +44,10 @@ class Wire(CircuitElement):
         amp = self.backward[0]
         r = self.prev.impedance
         z = self.impedance
-        reflCoefficient = (r - z) / (r + z)
+        if r + z == 0:
+            reflCoefficient = 0
+        else:
+            reflCoefficient = (r - z) / (r + z)
         self.backward[0] -= reflCoefficient * amp
         self.forward[0] += reflCoefficient * amp
         
