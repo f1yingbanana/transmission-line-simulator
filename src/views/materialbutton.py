@@ -71,7 +71,9 @@ class MaterialButton(ButtonBehavior, MaterialWidget, HoverBehavior):
 
 
     def on_disabled(self, instance, value):
-        super(MaterialButton, self).on_disabled(instance, value)
+        # Seems that if super doesn't have this method this will fail, although
+        # this used to be silently doing nothing before.
+        # super(MaterialButton, self).on_disabled(instance, value)
 
         self._animateHover()
 
