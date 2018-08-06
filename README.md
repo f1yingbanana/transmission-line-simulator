@@ -19,7 +19,7 @@ This project is a simulator for co-axial transmission lines. It allows user to c
 # Deployment Windows
 1. Download the [latest release](../../releases/latest).
 
-2. In the command prompt, navigate to your python installation folder (default is "C:\python27", so type in `cd C:\python27` and hit enter). Type `pip install -r ` (notice the trailing space) then drag the `requirements.txt` file from the downloaded folder into the command prompt and hit enter.
+2. In the command prompt, navigate to your python installation folder (default is "C:\python27", so type in `cd C:\python27` and hit enter). Type `Scripts\pip install -r ` (notice there is a trailing space) then drag the `requirements.txt` file from the downloaded folder into the command prompt and hit enter.
 
 3. Type `Scripts\garden install matplotlib` and hit enter.
 
