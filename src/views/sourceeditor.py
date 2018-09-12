@@ -95,7 +95,6 @@ class SourceEditor(PopupEditor):
         return fig.canvas
 
 
-
     def on_focus(self, instance, focus):
         if instance == self.impedanceTextField.inputText and not focus:
             # Update impedance.
@@ -139,6 +138,10 @@ class SourceEditor(PopupEditor):
         self.impedanceTextField.animateLabel(False)
         self.voltageTextField.animateLabel(False)
         self.widthTextField.animateLabel(False)
+
+        # Animation is true here to make sure the selection ends up in the correct position on top
+        # of the popup show animation.
+        self.animateSwitch(self._source.shape, True)
 
 
     def animateSwitch(self, mode, animated):

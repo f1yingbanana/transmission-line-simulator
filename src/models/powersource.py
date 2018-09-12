@@ -58,7 +58,7 @@ class PowerSource(CircuitElement):
         elif value == WaveShape.Square:
             self.forward = np.ones(points)
         elif value == WaveShape.Triangle:
-            self.forward = np.concatenate(np.arange(0, 1, 2.0 / points), np.arange(1, 0, 2.0 / points))
+            self.forward = np.concatenate((np.arange(0, 1, 2.0 / points), np.arange(1, 0, -2.0 / points)))
 
         self.forward *= self.amplitude
 
