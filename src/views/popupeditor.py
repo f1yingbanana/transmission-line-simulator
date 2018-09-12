@@ -35,7 +35,6 @@ class PopupEditor(MaterialWidget):
         pass
 
 
-
     def show(self, layer, pos, animated):
         # Determine orientation
         self.orientation = 'upright'
